@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sock</title>
+	<link rel="icon" href="favicon.gif" sizes="16x16">
+	<script src="main.js" async defer></script>
+	<script>addEventListener("DOMContentLoaded", () => document.documentElement.className = matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light")</script>
+	<link href="docs.css" rel="stylesheet">
+</head>
+<body>
+	<header>
+		<h1><a class="no-underline" id="title-link" href=""><svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 26" width="16" height="26" fill="none" stroke="currentColor" shape-rendering="crispEdges"><rect x="7.5" y="0.5" width="8" height="2" /><rect x="7.5" y="4.5" width="8" height="2" /><path d="M7.5,8.5 H15.5 V16.5 L6.5,25.5 H0.5 V19.5 L7.5,12.5 Z" /></svg>Sock</a></h1>
+
+		<button id="theme-toggle" aria-label="Theme toggle">
+			<span id="theme-toggle-state" class="hidden">Light</span>
+			<svg xmlns="http://www.w3.org/2000/svg" id="theme-toggle-icon-light" class="theme-toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+			<svg xmlns="http://www.w3.org/2000/svg" id="theme-toggle-icon-dark" class="theme-toggle-icon hidden" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+		</button>
+
+		<form id="search-form">
+			<label for="search" class="hidden">Search API</label>
+			<input id="search" type="search" autocomplete="off">
+			<button id="search-submit">
+				<span class="hidden">Search</span>
+				<svg xmlns="http://www.w3.org/2000/svg" style="display: block;" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+			</button>
+		</form>
+	</header>
+	<main></main>
+<!--
+This HTML and its JavaScript uses Feather icons:
+
+Copyright (c) 2013-2017 Cole Bemis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+</body>
+</html>

@@ -1,0 +1,1600 @@
+
+<section>
+	<p>Welcome to the Sock API documentation.</p>
+	<div class="api-table">
+		<div>
+			<h3>Wren Core</h3>
+			<ul class="flat">
+				<li><a class="no-underline" href="#Num">Num</a></li>
+				<li><a class="no-underline" href="#Bool">Bool</a></li>
+				<li><a class="no-underline" href="#String">String</a></li>
+				<li><a class="no-underline" href="#Null">Null</a></li>
+				<li><a class="no-underline" href="#Range">Range</a></li>
+				<li><a class="no-underline" href="#List">List</a></li>
+				<li><a class="no-underline" href="#Map">Map</a></li>
+				<li><a class="no-underline" href="#Sequence">Sequence</a></li>
+				<li><a class="no-underline" href="#Object">Object</a></li>
+				<li><a class="no-underline" href="#Fn">Fn</a></li>
+				<li><a class="no-underline" href="#Fiber">Fiber</a></li>
+				<li><a class="no-underline" href="#Class">Class</a></li>
+				<li><a class="no-underline" href="#System">System</a></li>
+			</ul>
+		</div>
+		<div>
+			<h3>Sock Core</h3>
+			<ul class="flat">
+				<li><a class="no-underline" href="#Game">Game</a></li>
+				<li><a class="no-underline" href="#Time">Time</a></li>
+				<li><a class="no-underline" href="#Input">Input</a></li>
+				<li><a class="no-underline" href="#Asset">Asset</a></li>
+				<li><a class="no-underline" href="#Path">Path</a></li>
+				<li><a class="no-underline" href="#Sprite">Sprite</a></li>
+				<li><a class="no-underline" href="#Quad">Quad</a></li>
+				<li><a class="no-underline" href="#Screen">Screen</a></li>
+				<li><a class="no-underline" href="#Camera">Camera</a></li>
+				<li><a class="no-underline" href="#Vec">Vec</a></li>
+				<li><a class="no-underline" href="#Transform">Transform</a></li>
+				<li><a class="no-underline" href="#Color">Color</a></li>
+				<li><a class="no-underline" href="#JSON">JSON</a></li>
+				<li><a class="no-underline" href="#Buffer">Buffer</a></li>
+				<li><a class="no-underline" href="#Promise">Promise</a></li>
+			</ul>
+		</div>
+		<div>
+			<h3>Sock Audio</h3>
+			<ul class="flat">
+				<li><a class="no-underline" href="#Audio Concepts">Audio Concepts</a></li>
+				<li><a class="no-underline" href="#Audio">Audio</a></li>
+				<li><a class="no-underline" href="#AudioControls">AudioControls</a></li>
+				<li><a class="no-underline" href="#Voice">Voice</a></li>
+				<li><a class="no-underline" href="#AudioBus">AudioBus</a></li>
+				<li><a class="no-underline" href="#FilterEffect">FilterEffect</a></li>
+				<li><a class="no-underline" href="#EchoEffect">EchoEffect</a></li>
+				<li><a class="no-underline" href="#ReverbEffect">ReverbEffect</a></li>
+			</ul>
+		</div>
+		<div>
+			<h3>Sock Platform Specific</h3>
+			<ul class="flat">
+				<li><a class="no-underline" href="#Platform">Platform</a></li>
+				<li><a class="no-underline" href="#Window">Window</a></li>
+				<li><a class="no-underline" href="#JavaScript">JavaScript</a></li>
+			</ul>
+		</div>
+		<div>
+			<h3>Tutorials</h3>
+			<ul class="flat">
+				<li><a class="no-underline" href="#Input Remapping">Input Remapping</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+
+<!-- CORE TYPES -->
+
+<section>
+	<h2>Bool</h2>
+	<p>A boolean value. Has two instances: <code>true</code> and <code>false</code>.</p>
+</section>
+
+<section>
+	<h2>Num</h2>
+	<p>A double-precision float point number.</p>
+</section>
+
+<section>
+	<h2>String</h2>
+	<p>Text stored as an immutable array of UTF-8 bytes.</p>
+</section>
+
+<section>
+	<h2>Null</h2>
+	<p>A special class with just one instance: <code>null</code>.</p>
+	<p><code>null</code> is the only other value other than <code>false</code> to evaluates to false.</p>
+</section>
+
+<section>
+	<h2>Range</h2>
+	<p>An object that represents a consecutive range of numbers.</p>
+	<p>They are created using the <code>..</code> and <code>...</code> operators:</p>
+	<pre>
+(7..9).toList   // [ 7, 8, 9 ]
+(7...9).toList  // [ 7, 8 ]
+	</pre>
+	<p>A step is specified by using <code>..</code> on a range:</p>
+	<pre>
+(4..8..2).toList   // [ 4, 6, 8 ]
+	</pre>
+</section>
+
+
+<!-- ENUMERATIONS -->
+
+<section data-summary='A texture scale filter: "linear" | "nearest"'>
+	<h2 data-type="type">TextureScaleFilter</h2>
+	<p>Controls texture scale filtering.</p>
+	<table>
+		<tr>
+			<th>Value</th>
+			<th>Description</th>
+			<th>Example (5x scaled image)</th>
+		</tr>
+		<tr>
+			<td><code>"linear"</code></td>
+			<td>Linear interporlation.</td>
+			<td><img src="media/buppy.png" style="width: 200px;"></td>
+		</tr>
+		<tr>
+			<td><code>"nearest"</code></td>
+			<td>Nearest-neighbour, i.e. pixel filtering.</td>
+			<td><img src="media/buppy.png" class="pixel" style="width: 200px;"></td>
+		</tr>
+	</table>
+</section>
+
+<section data-summary='A texture wrap mode: "clamp" | "repeat" | "mirror"'>
+	<h2 data-type="type">TextureWrapMode</h2>
+	<p>Controls how textures handle UVs that go outside the texture bounds.</p>
+	<table>
+		<tr>
+			<th>Value</th>
+			<th>Description</th>
+			<th>Example</th>
+		</tr>
+		<tr>
+			<td><code>"clamp"</code></td>
+			<td>Clamp to edge.</td>
+			<td><img src="media/wrap_clamp.jpg" alt="'clamp' mode applied to a 3x3 grid of a photo. The photo contains a Gameboy Color and several cartridges."></td>
+		</tr>
+		<tr>
+			<td><code>"repeat"</code></td>
+			<td>Repeat.</td>
+			<td><img src="media/wrap_repeat.jpg" alt="'repeat' mode applied to a 3x3 grid of a photo. The photo contains a Gameboy Color and several cartridges."></td>
+		</tr>
+		<tr>
+			<td><code>"mirror"</code></td>
+			<td>Mirrored repeat.</td>
+			<td><img src="media/wrap_mirror.jpg" alt="'mirror' mode applied to a 3x3 grid of a photo. The photo contains a Gameboy Color and several cartridges."></td>
+		</tr>
+	</table>
+</section>
+
+
+<!-- GAME -->
+
+<section>
+	<h2>Game</h2>
+	<p>A catch-all class for managing game state.</p>
+</section>
+
+<section>
+	<h2>Game.title: String</h2>
+	<p>Sets the game's title in a platform dependent way:</p>
+	<table>
+		<tr>
+			<th>Platform</th>
+			<th>Notes</th>
+		</tr>
+		<tr>
+			<td>Web</td>
+			<td>Sets the tab's title.</td>
+		</tr>
+		<tr>
+			<td>Desktop</td>
+			<td>Sets the window's title.</td>
+		</tr>
+	</table>
+	<pre>
+		Game.title = "Duck Wizard"
+	</pre>
+</section>
+
+<section data-tag="resolution size">
+	<h2>Game.width: Num</h2>
+	<h2>Game.height: Num</h2>
+	<p>The game's viewport size in pixels.</p>
+	<p>In <a href="#Game.setSize(_,_)">fixed resolution mode</a> this may be smaller than maximum viewport size.</p>
+	<p>Setting the width or height is equivalent to calling <a href="#Game.setSize(_,_)"><code>Game.setSize(width, height)</code></a>.</p>
+</section>
+
+<section data-tag="resolution">
+	<h2>Game.setSize(width: Num, height: Num)</h2>
+	<p>Sets the viewport resolution to a fixed size (whereas by default, the viewport is sized to fill the window).</p>
+	<p>In this mode, the viewport will be upscaled to fill the window, which can be controlled using the following options:</p>
+	<ul>
+		<li><a href="#Game.maxScale"><code>Game.maxScale</code></a></li>
+		<li><a href="#Game.pixelPerfectScaling"><code>Game.pixelPerfectScaling</code></a></li>
+		<li><a href="#Game.scaleFilter"><code>Game.scaleFilter</code></a></li>
+	</ul>
+	<p>The fixed resolution can be removed by calling <a href="#Game.clearSize()"><code>Game.clearSize()</code></a>.</p>
+	<p>This does not change <a href="#Window.setSize()">the window size</a>.</p>
+	<script type="application/wren">
+		Game.setSize(64, 64)
+		Game.begin {
+			Game.clear(#22f)
+			Game.print("this game\nis small.\n..or even\nant sized")
+		}
+	</script>
+</section>
+
+<section>
+	<h2>Game.clearSize()</h2>
+	<p>Removes <a href="#Game.setSize(_,_)">fixed resolution mode</a>.</p>
+</section>
+
+<section>
+	<h2>Game.maxScale: Num</h2>
+	<p>Sets the maximum viewport scale in <a href="#Game.setSize(_,_)">fixed resolution mode</a>.</p>
+	<p>For example, a value of 2 would mean the viewport would not be scaled up to more than twice it's original size.</p>
+	<p>Defaults to infinity (i.e. no scale limit).</p>
+	<script type="application/wren">
+		Game.setSize(64, 64)
+		Game.maxScale = 1
+		Game.begin {
+			Game.clear(#08f)
+			Game.print("1:1 pixels\nso small..", 3, 20)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>Game.pixelPerfectScaling: Bool</h2>
+	<p>Affects viewport scaling in <a href="#Game.setSize(_,_)">fixed resolution mode</a>.</p>
+	<p>If true, the viewport is only scaled in integer multiples, ensuring pixels are uniformly sized.<br>Otherwise the viewport is scaled as large as possible.</p>
+	<p>Defaults to false.</p>
+	<script type="application/wren">
+		// Try resizing the window while this is running.
+		Game.setSize(200, 120)
+
+		Game.begin {
+			if (Input.pressed("MouseLeft")) Game.pixelPerfectScaling = !Game.pixelPerfectScaling
+
+			Game.clear(#444)
+			Game.print("click to toggle")
+		}
+	</script>
+</section>
+
+<section data-tag="interporlation">
+	<h2>Game.scaleFilter: TextureScaleFilter</h2>
+	<p>Controls the game's scale filtering in <a href="#Game.setSize(_,_)">fixed resolution mode</a>.</p>
+	<pre>Game.scaleFilter = "linear"</pre>
+</section>
+
+<section data-tag="maximise">
+	<h2>Game.fullscreen: Bool</h2>
+	<p>Controls if the game is shown in fullscreen mode.</p>
+	<script type="application/wren">
+		if (Input.pressed("MouseLeft")) Game.fullscreen = !Game.fullscreen
+		Game.print("click to toggle fullscreen")
+	</script>
+	<details>
+		<summary>Platform notes</summary>
+		<h3>Web</h3>
+		<p>On the web we may have to resort to showing a dialog with a prompt to enable fullscreen.</p>
+		<img src="media/web_fullscreen.png" alt="Screenshot of Sock's fullscreen dialog">
+		<p>This is because some browsers block fullscreen control outside of event handlers.</p>
+		<p>To avoid this, you can bind a <a href="#JavaScript">JavaScript</a> event listener to toggle fullscreen using the global <code>sock.toggleFullscreen()</code>.</p>
+		<script type="application/wren" data-tag="noloop">
+			// Press the F key to toggle fullscreen.
+			Platform.JavaScript.eval("""
+				onkeydown = (ev) => {
+					if (ev.code === 'KeyF') sock.toggleFullscreen()
+				}
+			""")
+		</script>
+	</details>
+</section>
+
+<section data-tag="framerate refreshrate">
+	<h2>Game.fps: Num | null</h2>
+	<p>Controls the game's framerate. Defaults to 60.</p>
+	<p>If set, the update function will only be called that many times per frame.</p>
+	<p>If <code>null</code>, the update function will be called whenever the screen refreshes.</p>
+	<script type="application/wren">
+		if (Input.pressed("1")) Game.fps = 4
+		if (Input.pressed("2")) Game.fps = 10
+		if (Input.pressed("3")) Game.fps = 60
+		Game.print(Time.frame)
+	</script>
+</section>
+
+<section data-tag="pointer">
+	<h2>Game.cursor: String</h2>
+	<p>Sets the system cursor. Defaults to <code>"default"</code>.</p>
+	<table>
+		<tr>
+			<th>Cursor</th>
+			<th>Appearance</th>
+		</tr>
+		<tr>
+			<td><code>"default"</code></td>
+			<td><img src="media/cursor_default.png" alt="Screenshot of Windows 10 representation of the &quot;default&quot; cursor."></td>
+		</tr>
+		<tr>
+			<td><code>"pointer"</code></td>
+			<td><img src="media/cursor_pointer.png" alt="Screenshot of Windows 10 representation of the &quot;pointer&quot; cursor."></td>
+		</tr>
+		<tr>
+			<td><code>"wait"</code></td>
+			<td><img src="media/cursor_wait.png" alt="Screenshot of Windows 10 representation of the &quot;wait&quot; cursor."></td>
+		</tr>
+		<tr>
+			<td><code>"hidden"</code></td>
+			<td>The cursor is hidden.</td>
+		</tr>
+	</table>
+	<script type="application/wren">Game.cursor = "wait"</script>
+</section>
+
+<section>
+	<h2>Game.clear()</h2>
+	<h2>Game.clear(color: Num)</h2>
+	<p>Clears the screen with the given color (defaults to black).</p>
+	<script type="application/wren" data-tag="noclear">
+		Game.print("press any button to clear", Input.mouse.x + 10, Input.mouse.y)
+		if (Input.anyPressed) Game.clear()
+	</script>
+</section>
+
+<section data-tag="debug text font">
+	<h2>Game.print(s: String)</h2>
+	<h2>Game.print(s: String, x: Num, y: Num)</h2>
+	<p>Draws debug text to the screen.</p>
+	<p>It uses an embeded bitmap of ASCII characters from the <a href="https://github.com/slavfox/Cozette">Cozette font</a>.</p>
+	<img src="media/cozette_ascii.gif" class="pixel" style="width: 192px; padding: 6px; background: #000;">
+	<p>If <code>x</code> and <code>y</code> are not provided, each line of text will be drawn from top-to-bottom, starting at the top-left corner.<br>The cursor position is reset at the end of the frame.</p>
+	<p>The text color is controlled using <a href="#Game.printColor"><code>Game.printColor</code></a> (defaults to white).</p>
+	<script type="application/wren">
+		Game.print("Aw yeah!")
+		Game.print("This is happenin'!")
+		Game.print("~ Sonic the Hedgehog", 30, 50)
+		Game.print("~ 1998")
+	</script>
+</section>
+
+<section data-tag="debug text font">
+	<h2>Game.printColor: Num</h2>
+	<p>Sets the color of text drawn with <a href="#Game.print(_)">Game.print()</a>.</p>
+	<p>Defaults to white.</p>
+	<script type="application/wren">
+		Game.printColor = #f44
+		Game.print("Roses are red")
+		Game.printColor = #04f
+		Game.print("violets are blue")
+		Game.printColor = #0f4
+		Game.print("examples are great")
+		Game.printColor = #ff2
+		Game.print("and so are you!")
+	</script>
+</section>
+
+<section data-tag="url link web">
+	<h2>Game.openURL(url: String)</h2>
+	<p>Navigate to the given URL is a platform dependent manner.</p>
+	<table>
+		<tr>
+			<th>Platform</th>
+			<th>Action</th>
+		</tr>
+		<tr>
+			<td>Web</td>
+			<td>Opens in a new tab.</td>
+		</tr>
+		<tr>
+			<td>Desktop</td>
+			<td>Opens in the default browser.</td>
+		</tr>
+	</table>
+	<pre>Game.openURL("https://google.com")</pre>
+</section>
+
+<section data-tag="update start loop callback">
+	<h2>Game.begin(update: Fn)</h2>
+	<p>Starts the game, using the provided update function.</p>
+	<p>The update function must have no arguments.</p>
+	<p>An error is thrown if this a called a second time.</p>
+	<script type="application/wren">
+		Game.begin {
+			Game.print("hello world!")
+		}
+	</script>
+</section>
+
+<section data-tag="close exit">
+	<h2>Game.quit()</h2>
+	<p>Quits the game once this frame ends.</p>
+	<p>Use <a href="#Game.quitNow()"><code>Game.quitNow()</code></a> also immediately suspend script execution.</p>
+	<script type="application/wren">
+		if (Input.anyPressed) {
+			Game.print("goodbye!")
+			Game.quit()
+			Game.print("i'll miss you!")
+		}
+	</script>
+</section>
+
+<section data-tag="close exit">
+	<h2>Game.quitNow()</h2>
+	<p>Immediately suspends script execution and then <a href="#Game.quit()">quits the game</a>.</p>
+	<script type="application/wren">
+		if (Input.anyPressed) {
+			Game.print("goodbye!")
+			Game.quitNow()
+			Game.print("i'll miss you!")
+		}
+	</script>
+</section>
+
+
+<!-- VEC -->
+
+<!-- <section>
+	<h2>vec + vec -> vec</h2>
+	<p>A 2D vector.</p>
+</section>
+
+<section>
+	<h2>-vec -> vec</h2>
+	<p>A 2D vector.</p>
+</section> -->
+
+
+<!-- TIME -->
+
+<section>
+	<h2>Time</h2>
+	<p>Provides information about elapsed time.</p>
+</section>
+
+<section>
+	<h2>Time.time</h2>
+	<p>The number of seconds since the game started.</p>
+	<script type="application/wren">
+		Game.print((Time.time * 100).floor / 100)
+	</script>
+</section>
+
+<section>
+	<h2>Time.frame</h2>
+	<p>The number of elapsed frames.</p>
+	<script type="application/wren">
+		Game.print(Time.frame)
+	</script>
+	<!-- <script type="application/wren">
+		if (Time.frame % 60 == 0) Game.beep()
+	</script> -->
+</section>
+
+<section>
+	<h2>Time.delta</h2>
+	<p>The number of seconds since the last frame.</p>
+	<script type="application/wren">
+		// FPS independent movement speed.
+		var x = 0
+
+		Game.begin {
+			if (Input.pressed("1")) Game.fps = 10
+			if (Input.pressed("2")) Game.fps = 20
+			if (Input.pressed("3")) Game.fps = 60
+
+			x = x + Time.delta * 60
+			if (x > Game.width) x = 0
+
+			Game.clear()
+			Game.print("press 1, 2 and 3 to change FPS")
+			Game.print("#", x, 20)
+		}
+	</script>
+</section>
+
+
+<!-- INPUT -->
+
+<section>
+	<h2>Input</h2>
+	<p>Provides the ability to query input state. The following devices are supported:</p>
+	<ul>
+		<li>Mouse</li>
+		<li>Keyboard</li>
+		<li>Touch</li>
+		<li>Gamepad</li>
+	</ul>
+</section>
+
+<section data-tag="kb keyboard key gamepad controller layout map mapping">
+	<h2 data-type="type">InputID</h2>
+	<p>A String which represents an input source.</p>
+	<h3>Mouse</h3>
+	<ul>
+		<li><code>MouseLeft</code></li>
+		<li><code>MouseMiddle</code></li>
+		<li><code>MouseRight</code></li>
+		<li><code>MouseWheelUp</code></li>
+		<li><code>MouseWheelDown</code></li>
+	</ul>
+	<h3>Keyboard</h3>
+	<p>Keyboard IDs map to the physical location on an American QWERTY keyboard, rather than the key printed on them.</p>
+	<p>For example if a AZERTY user pressed their "A" key, the input "Q" will be emitted. The actual key can be found using <a href="#Input.localize(_)"><code>Input.localize()</code></a>.</p>
+	<figure>
+		<div class="overflow" style="width: 925px; display: inline-block;">
+			<div class="key-row" style="margin-bottom: 20px;">
+				<kbd style="font-size: 12px; margin-right: 50px;" title="Escape">Escape</kbd>
+				<kbd>F1</kbd>
+				<kbd>F2</kbd>
+				<kbd>F3</kbd>
+				<kbd style="margin-right: 25px;">F4</kbd>
+				<kbd>F5</kbd>
+				<kbd>F6</kbd>
+				<kbd>F7</kbd>
+				<kbd style="margin-right: 25px;">F8</kbd>
+				<kbd>F9</kbd>
+				<kbd>F10</kbd>
+				<kbd>F11</kbd>
+				<kbd style="margin-right: 25px;">F12</kbd>
+				<kbd title="Print screen"></kbd>
+				<kbd class="wbr" style="font-size: 12px;" title="ScrollLock">Scroll<wbr>Lock</kbd>
+				<kbd style="font-size: 12px;" title="Pause">Pause</kbd>
+			</div>
+			<div class="key-row">
+				<kbd>`</kbd>
+				<kbd>1</kbd>
+				<kbd>2</kbd>
+				<kbd>3</kbd>
+				<kbd>4</kbd>
+				<kbd>5</kbd>
+				<kbd>6</kbd>
+				<kbd>7</kbd>
+				<kbd>8</kbd>
+				<kbd>9</kbd>
+				<kbd>0</kbd>
+				<kbd>-</kbd>
+				<kbd>=</kbd>
+				<kbd style="width: 100px; margin-right: 25px;">Backspace</kbd>
+				<kbd style="font-size: 12px;" title="Insert">Insert</kbd>
+				<kbd style="font-size: 12px;" title="Home">Home</kbd>
+				<kbd style="font-size: 12px;" title="PageUp">PageUp</kbd>
+			</div>
+			<div class="key-row">
+				<kbd style="width: 75px">Tab</kbd>
+				<kbd>Q</kbd>
+				<kbd>W</kbd>
+				<kbd>E</kbd>
+				<kbd>R</kbd>
+				<kbd>T</kbd>
+				<kbd>Y</kbd>
+				<kbd>U</kbd>
+				<kbd>I</kbd>
+				<kbd>O</kbd>
+				<kbd>P</kbd>
+				<kbd>[</kbd>
+				<kbd>]</kbd>
+				<kbd style="width: 75px; margin-right: 25px;">\</kbd>
+				<kbd style="font-size: 12px;" title="Delete">Delete</kbd>
+				<kbd style="font-size: 12px;" title="End">End</kbd>
+				<kbd class="wbr" style="font-size: 12px;" title="PageDown">Page<wbr>Down</kbd>
+			</div>
+			<div class="key-row">
+				<kbd style="width: 87.5px; font-size: 14px;" title="CapsLock">CapsLock</kbd>
+				<kbd>A</kbd>
+				<kbd>S</kbd>
+				<kbd>D</kbd>
+				<kbd>F</kbd>
+				<kbd>G</kbd>
+				<kbd>H</kbd>
+				<kbd>J</kbd>
+				<kbd>K</kbd>
+				<kbd>L</kbd>
+				<kbd>;</kbd>
+				<kbd>'</kbd>
+				<kbd style="width: 112.5px;">Enter</kbd>
+			</div>
+			<div class="key-row">
+				<kbd style="width: 112.5px;">ShiftLeft</kbd>
+				<kbd>Z</kbd>
+				<kbd>X</kbd>
+				<kbd>C</kbd>
+				<kbd>V</kbd>
+				<kbd>B</kbd>
+				<kbd>N</kbd>
+				<kbd>M</kbd>
+				<kbd>,</kbd>
+				<kbd>.</kbd>
+				<kbd>/</kbd>
+				<kbd style="width: 137.5px; margin-right: 75px;">ShiftRight</kbd>
+				<kbd class="wbr" title="ArrowUp">Arrow<wbr>Up</kbd>
+			</div>
+			<div class="key-row">
+				<kbd class="wbr" style="width: 62.5px; font-size: 12px;" title="ControlLeft">Control<wbr>Left</kbd>
+				<kbd style="width: 62.5px; font-size: 12px;" title="MetaLeft">MetaLeft</kbd>
+				<kbd style="width: 62.5px; font-size: 12px;" title="AltLeft">AltLeft</kbd>
+				<kbd style="width: 312.5px;">Space</kbd>
+				<kbd style="width: 62.5px; font-size: 11px;" title="AltRight">AltRight</kbd>
+				<kbd style="width: 62.5px; font-size: 11px;" title="MetaRight">MetaRight</kbd>
+				<kbd style="width: 62.5px;" title="Fn or Menu"></kbd>
+				<kbd class="wbr" style="width: 62.5px; font-size: 12px; margin-right: 25px;" title="ControlRight">Control<wbr>Right</kbd>
+				<kbd class="wbr" title="ArrowLeft">Arrow<wbr>Left</kbd>
+				<kbd class="wbr" title="ArrowDown">Arrow<wbr>Down</kbd>
+				<kbd class="wbr" title="ArrowRight">Arrow<wbr>Right</kbd>
+			</div>
+		</div>
+		<figcaption class="hidden">Input IDs for each keyboard key.</figcaption>
+	</figure>
+	<h3>Gamepad</h3>
+	<p>Currently multiple gamepads are not supported.</p>
+	<figure>
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="70 20 760 400" width="760" height="380" fill="none" stroke="currentColor">
+			<path d="M 350,300 c -30,0 -70,90 -100,100 c -30,0 -50,-40 -50,-70 q 0,-60 70,-225 q 40,-35 110,-35 h 128 q 70,0 110,35 q 70,165 70,225 c 0,30 -20,70 -50,70 c -30,-10 -70,-100 -100,-100 z" />
+			<path d="M 368,70 l -10,-10 q -70,3 -84,41 M 520,70 l 10,-10 q 70,3 84,41" />
+			<path d="M 290,79 q 1,-11 6,-14 l 19,-4 l 2,5 M 599,79 q -1,-11 -6,-14 l -19,-4 l -2,5" />
+			<path fill="var(--bg)" cursor="help" d="M 315.5,115.5 h 26 v 25 h 25 v 26 h -25 v 25 h -26 v -25 h -25 v -26 h 25 z"><title>DPad</title></path>
+			<g fill="var(--bg)" cursor="help">
+				<circle cx="380" cy="227" r="30"><title>LeftStick</title></circle>
+				<circle cx="380" cy="227" r="21" fill="none" />
+				<circle cx="507" cy="227" r="30"><title>RightStick</title></circle>
+				<circle cx="507" cy="227" r="21" fill="none" />
+				<circle cx="408" cy="153" r="11"><title>Select</title></circle>
+				<circle cx="479" cy="153" r="11"><title>Start</title></circle>
+				<circle cx="444" cy="105" r="18"><title>Guide</title></circle>
+				<circle cx="568" cy="122" r="16"><title>FaceUp</title></circle>
+				<circle cx="568" cy="187" r="16"><title>FaceDown</title></circle>
+				<circle cx="535" cy="154" r="16"><title>FaceLeft</title></circle>
+				<circle cx="600" cy="154" r="16"><title>FaceRight</title></circle>
+			</g>
+			<g stroke-dasharray="2">
+				<g text-anchor="end">
+					<path d="M 288.5,64.5 l -30,-15 H 186" />
+					<text x="180" y="55">LeftTrigger</text>
+					<path d="M 273.5,90.5 l -12,-6 H 186" />
+					<text x="180" y="90">LeftBumper</text>
+					<path d="M 306.5,125.5 l -10,-5 H 186" />
+					<text x="180" y="125">DPadUp</text>
+					<path d="M 283.5,154.5 H 186" />
+					<text x="180" y="160">DPadLeft</text>
+					<path d="M 306.5,185.5 l -10,5 H 186" />
+					<text x="180" y="195">DPadDown</text>
+					<path d="M 355.5,173.5 v 20 l -30 30 H 186" />
+					<text x="180" y="230">DPadRight</text>
+					<path d="M 353.5,251.5 l -8,8 H 186" />
+					<text x="180" y="265">(click) LeftStick</text>
+					<text x="180" y="290">LeftStickUp</text>
+					<text x="180" y="315">LeftStickDown</text>
+					<text x="180" y="340">LeftStickLeft</text>
+					<text x="180" y="365">LeftStickRight</text>
+				</g>
+				<path d="M 601.5,64.5 l 30,-15 H 700" />
+				<text x="705" y="55">RightTrigger</text>
+				<path d="M 614.5,90.5 l 12,-6 H 700" />
+				<text x="705" y="90">RightBumper</text>
+				<path d="M 591.5,120.5 H 700" />
+				<text x="705" y="125">FaceUp</text>
+				<path d="M 623.5,154.5 H 700" />
+				<text x="705" y="160">FaceRight</text>
+				<path d="M 591.5,189.5 H 700" />
+				<text x="705" y="195">FaceDown</text>
+				<path d="M 534.5,177.5 v 16 l 30 30 H 700" />
+				<text x="705" y="230">FaceLeft</text>
+				<path d="M 533.5,251.5 l 8,8 H 700" />
+				<text x="705" y="265">RightStick (click)</text>
+				<text x="705" y="290">RightStickUp</text>
+				<text x="705" y="315">RightStickDown</text>
+				<text x="705" y="340">RightStickLeft</text>
+				<text x="705" y="365">RightStickRight</text>
+				<path d="M 420.5,166.5 l 6,6 V 360.5 l -8,8" />
+				<text x="412" y="374" text-anchor="end">Select</text>
+				<path d="M 466.5,166.5 l -6,6 V 360.5 l 8,8" />
+				<text x="475" y="374">Start</text>
+				<path d="M 443.5,129.5 V 381" />
+				<text x="443" y="400" text-anchor="middle">Guide</text>
+			</g>
+		</svg>
+		<figcaption class="hidden">Gamepad Input IDs displayed on a diagram on a controller.</figcaption>
+	</figure>
+	<h3>See also</h3>
+	<ul>
+		<li><a href="#Input Remapping">Tutorial: Input Remapping</a></li>
+	</ul>
+</section>
+
+<section>
+	<h2 data-type="type">InputList</h2>
+	<p>An <a href="#InputID"><code>InputID</code></a> or <code><a href="#Sequence">Sequence</a></code> of <code><a href="#InputID">InputID</a></code>s.</p>
+	<p>The list format allows one value to be read from multiple inputs. This is useful for supporting multiple binds per action.</p>
+</section>
+
+<section>
+	<h2>Input.held(id: InputList): Bool</h2>
+	<p>Check if the given input is currently held.</p>
+	<p>If multiple inputs are provided, returns true if any are currently held.</p>
+	<script type="application/wren">
+		if (Input.held("MouseLeft")) Game.print("mouse is held")
+	</script>
+</section>
+
+<section data-tag="button btn press click digital">
+	<h2>Input.pressed(id: InputList): Bool</h2>
+	<p>Check if the given input was pressed this frame.</p>
+	<p>If multiple inputs are provided, returns true if atleast one is held, and all held inputs are pressed.</p>
+	<script type="application/wren">
+		var n = 0
+		Game.begin {
+			if (Input.pressed("MouseLeft")) n = n + 1
+			Game.clear()
+			Game.print("you have clicked %(n) times")
+		}
+	</script>
+</section>
+
+<section data-tag="button btn digital">
+	<h2>Input.released(id: InputList): Bool</h2>
+	<p>Check if the given input was released this frame.</p>
+	<p>If multiple inputs are provided, returns true if atleast one was released and none are held.</p>
+	<script type="application/wren">
+		var kick = Audio.load("kick.wav")
+		var rim = Audio.load("rim.wav")
+		var ids = [ "MouseLeft", "Z" ]
+
+		Game.begin {
+			if (Input.pressed(ids)) kick.play()
+			if (Input.released(ids)) rim.play()
+		}
+	</script>
+</section>
+
+<section data-tag="button btn digital">
+	<h2>Input.anyPressed: Bool</h2>
+	<p>If any input was pressed this frame.</p>
+</section>
+
+<section data-tag="bind rebind button btn">
+	<h2>Input.whichPressed: InputID | null</h2>
+	<p>Returns the input that was pressed this frame, or <code>null</code>.</p>
+	<script type="application/wren">
+		var id
+		Game.begin {
+			id = Input.whichPressed || id
+			Game.clear()
+			Game.print("you pressed: %(id)")
+		}
+	</script>
+</section>
+
+<section data-tag="trigger axis">
+	<h2>Input.value(id: InputList): Num</h2>
+	<p>Get an input's value, a decimal number between 0 and 1.</p>
+	<p>If multiple inputs are provided, returns the maximum of the input's values.</p>
+	<pre>thrustAmount = Input.value("RightTrigger")</pre>
+	<script type="application/wren">
+		var x = 32
+		Game.begin {
+			x = x + Input.value("MouseLeft")
+			Game.clear()
+			Game.print("click and hold to watch me move!", x, 32)
+		}
+	</script>
+</section>
+
+<section data-tag="axis stick dpad movement">
+	<h2>Input.value(negative: InputList, positive: InputList): Num</h2>
+	<p>Combines the <a href="#Input.value(_)">values</a> of two inputs into a single value between -1 and 1.</p>
+	<p>This is useful for 1D actions such platformer character movement.</p>
+	<script type="application/wren">
+		var x = 32
+		Game.begin {
+			x = x + Input.value("A", "D")
+			Game.clear()
+			Game.print("move me with A and D!", x, 32)
+		}
+	</script>
+	<script type="application/wren">
+		// This example requires a controller.
+		var x = 32
+		Game.begin {
+			x = x + Input.value("LeftStickLeft", "LeftStickRight") * 3
+			Game.clear()
+			Game.print("move me with the left stick!", x, 32)
+		}
+	</script>
+</section>
+
+<section data-tag="axis stick dpad movement">
+	<h2>Input.value(negativeX: InputList, positiveX: InputList, negativeY: InputList, positiveY: InputList): Vec</h2>
+	<p>Combines the <a href="#Input.value(_)">values</a> of four inputs into a single 2D value.</p>
+	<p>The <code>x</code> and <code>y</code> components are each between -1 and 1.</p>
+	<p>This is useful for 2D actions such as character movement.</p>
+	<script type="application/wren">
+		var p = Vec.new(32, 32)
+		Game.begin {
+			p = p + Input.value("A", "D", "W", "S")
+			Game.clear()
+			Game.print("move me with WASD!", p.x, p.y)
+		}
+	</script>
+	<script type="application/wren">
+		// This example requires a controller.
+		var p = Vec.new(32, 32)
+		Game.begin {
+			p = p + Input.value("LeftStickLeft", "LeftStickRight", "LeftStickUp", "LeftStickDown") * 3
+			Game.clear()
+			Game.print("move me with the left stick!", p.x, p.y)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>Input.mouse: Vec</h2>
+	<p>The current mouse position, relative to the game viewport.</p>
+	<p>On mobile, this returns the latest touch position.</p>
+	<script type="application/wren">
+		Game.print("<-- the mouse is here", Input.mouse.x + 16, Input.mouse.y + 6)
+	</script>
+</section>
+
+<section>
+	<h2>Input.mouseDelta: Vec</h2>
+	<p>The change in <a href="#Input.mouse">mouse position</a> since the last frame.</p>
+	<script type="application/wren">
+		var p = Vec.new(32, 32)
+		
+		Game.begin {
+			Game.print("hold mouse button to drag it!")
+			if (Input.held("MouseLeft")) p = p + Input.mouseDelta
+			Game.print("#", p.x, p.y)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>Input.mouseWheel: Num</h2>
+	<p>The mouse wheel delta this frame.</p>
+	<script type="application/wren">
+		var y = 200
+		Game.begin {
+			y = y + Input.mouseWheel.clamp(-9, 9)
+			Game.clear()
+			Game.print("scroll to move me!", 32, y)
+		}
+	</script>
+</section>
+
+<section data-tag="touch finger mobile pen tablet">
+	<h2>Input.touches: TouchInput[]</h2>
+	<p>List of active touches.</p>
+	<p>When a touch has ended, it will be in this list, but it will be removed at the end of the frame.</p>
+	<script type="application/wren">
+		for (touch in Input.touches) {
+			Game.print(touch.id, touch.x, touch.y - 30)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>Input.touch(id: Num): TouchInput | null</h2>
+	<p>Get an active touch by its ID.</p>
+</section>
+
+<section  data-tag="text keyboard">
+	<h2 data-type="info">Text Input</h2>
+	<p>Sock provides the following API to receive text input from the user:</p>
+	<ul>
+		<li><a href="#Input.textBegin()"><code>Input.textBegin()</code></a></li>
+		<li><a href="#Input.textDescription"><code>Input.textDescription</code></a></li>
+		<li><a href="#Input.textString"><code>Input.textString</code></a></li>
+		<li><a href="#Input.textIsActive"><code>Input.textIsActive</code></a></li>
+		<li><a href="#Input.textSelection"><code>Input.textSelection</code></a></li>
+	</ul>
+	<p>This API is intended to be cross-platform. For example on mobile and console it uses the native on-screen keyboard.</p>
+	<p>This API is intended to be multi-lingual, and supports IME input.</p>
+	<h3>How to use</h3>
+	<p>When you are ready to accept text input, call <a href="#Input.textBegin()"><code>Input.textBegin()</code></a>.</p>
+	<p>You can also optionally set <a href="#Input.textDescription"><code>Input.textDescription</code></a> to describe the desired text to the user (e.g. via a UI prompt).</p>
+	<p>While in text input mode <a href="#Input.textIsActive"><code>Input.textIsActive</code></a> will return <code>true</code>.</p>
+	<p>The text itself is returned by <a href="#Input.textString"><code>Input.textString</code></a>.</p>
+	<p>The selection range is returned by <a href="#Input.textSelection"><code>Input.textSelection</code></a>.</p>
+	<p>Text input ends once the user submits the text or closes the input (e.g. by pressing Enter or Escape).</p>
+	<script type="application/wren">
+		// Start input on click.
+		if (!Input.textIsActive && Input.pressed("MouseLeft")) {
+			Input.textDescription = "Name"
+			Input.textBegin()
+		}
+
+		if (Input.textIsActive) {
+			var sel = Input.textSelection
+		
+			// Draw selection rectangle.
+			if (sel.from != sel.to) {
+				Quad.draw(4 + sel.min * 6, 20, (sel.max - sel.min) * 6, 10, #08f)
+			}
+
+			// Draw blinking cursor.
+			if (Time.time.repeat < 0.5) {
+				Quad.draw(4 + sel.to * 6, 18, 2, 14, #bbb)
+			}
+
+			// Draw prompt and text.
+			Game.print("please enter your name:")
+			Game.print(Input.textString)
+		} else {
+			if (!Input.textString.isEmpty) Game.print("hello %(Input.textString)")
+
+			Game.print("click to begin")
+		}
+	</script>
+</section>
+
+<section data-tag="text keyboard">
+	<h2>Input.textBegin()</h2>
+	<h2>Input.textBegin(type: String)</h2>
+	<p>Starts <a href="#Text Input">text input</a>.</p>
+	<p>Can additionally specify the kind of input UI to show:</p>
+	<ul>
+		<li><code>"text"</code> (default)</li>
+		<li><code>"password"</code></li>
+	</ul>
+	<pre>Input.textBegin()</pre>
+	<pre>Input.textBegin("password")</pre>
+</section>
+
+<section data-tag="text keyboard">
+	<h2>Input.textDescription: String</h2>
+	<p>Sets the prompt to show during <a href="#Text Input">text input</a>.</p>
+	<pre>Input.textDescription = "Character name"</pre>
+</section>
+
+<section data-tag="text keyboard">
+	<h2 data-tag="readonly">Input.textString: String</h2>
+	<p>The text entered by the user via <a href="#Text Input">text input</a></p>
+	<p>Empty if no text was entered.</p>
+</section>
+
+<section data-tag="text keyboard">
+	<h2 data-tag="readonly">Input.textIsActive: Bool</h2>
+	<p>If <a href="#Text Input">text input</a> is currently active.</p>
+</section>
+
+<section data-tag="text cursor keyboard">
+	<h2 data-tag="readonly">Input.textSelection: Range</h2>
+	<p>The user's <a href="#Text Input">text input</a> selection range.</p>
+	<p>The range is directional: <a href="#range.to"><code>to</code></a> gives the end and <a href="#range.from"><code>from</code></a> gives the start.</p>
+	<p>The cursor position is at <a href="#range.to"><code>to</code></a>.</p>
+	<P>The indices are in terms of codepoints.</P>
+	<pre>// Draw a text cursor.
+Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
+</section>
+
+<section>
+	<h2>Input.localize(id: InputID): InputID</h2>
+	<p>If the physical location of an input ID differs from the physical input's label, this returns the ID that would match the physical label.</p>
+	<p>These may differ if the user is using a non-standard input layout, since Sock identifies inputs by their <a href="#InputID">physical location</a>.</p>
+	<p>For example if the user is using an AZERTY keyboard, <code>Input.localize("Q")</code> will return <code>"A"</code>.</p>
+	<script type="application/wren">
+		// Try with a non-QWERTY keyboard such as AZERTY.
+		var id
+		Game.begin {
+			Game.clear()
+			id = Input.whichPressed || id
+			Game.print("%(id) -> %(Input.localize(id))")
+		}
+	</script>
+</section>
+
+
+<!-- TOUCH -->
+
+<section>
+	<h2>TouchInput</h2>
+	<p>A single touch/finger.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">touchInput.id: Num</h2>
+	<p>An integer that was assigned to this touch.</p>
+	<p>No two active touches will have the same ID. However an inactive touch's ID may be reused later.</p>
+</section>
+
+<section data-tag="pressure tablet">
+	<h2 data-tag="readonly">touchInput.force: Num</h2>
+	<p>The touch's force between 0 and 1.</p>
+	<p>Can be used to read tablet pen pressure.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">touchInput.center: Vec</h2>
+	<h2 data-tag="readonly">touchInput.x: Num</h2>
+	<h2 data-tag="readonly">touchInput.y: Num</h2>
+	<p>The center of the touch, relative to the viewport.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">touchInput.pressed: Bool</h2>
+	<p>If the touch started this frame.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">touchInput.held: Bool</h2>
+	<p>If the touch is still active.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">touchInput.released: Bool</h2>
+	<p>If the touch ended this frame.</p>
+</section>
+
+
+<!-- ASSET -->
+
+<section>
+	<h2>Asset</h2>
+	<p>Used to query and read assets.</p>
+</section>
+
+<section data-tag="text string read">
+	<h2>Asset.exists(path: String): Bool</h2>
+	<p>Check if an asset exists.</p>
+	<script type="application/wren" data-tag="once">
+		Game.print("'example.txt' exists: %(Asset.exists("example.txt"))")
+		Game.print("'cardenio.txt' exists: %(Asset.exists("cardenio.txt"))")
+	</script>
+</section>
+
+<section data-tag="text string read">
+	<h2>Asset.loadString(path: String): String</h2>
+	<p>Read an asset as a string.</p>
+	<script type="application/wren" data-tag="once">
+		Game.print(Asset.loadString("example.txt"))
+	</script>
+</section>
+
+
+<!-- PATH -->
+
+<section>
+	<h2>Path</h2>
+	<p>Asset path utility.</p>
+</section>
+
+<section>
+	<h2>Path.current: String</h2>
+	<p>Returns the asset path of the current Wren script.</p>
+	<script type="application/wren" data-tag="once">
+		import "scripts/path_resolve_1"
+
+		// === path_resolve_1.wren ===
+		// Game.print("hello from '%(Path.current)'")
+	</script>
+</section>
+
+<section>
+	<h2>Path.resolve(path: String): String</h2>
+	<p>Resolves an asset path relative to the current Wren script path.</p>
+	<script type="application/wren" data-tag="once">
+		import "scripts/path_resolve_2"
+
+		// === path_resolve_2.wren ===
+		// Game.print(Path.resolve("another_script.wren"))
+		// Game.print(Path.resolve("../cats/sid.jpg"))
+	</script>
+</section>
+
+<section>
+	<h2>Path.resolve(pathCurr: String, pathNext: String): String</h2>
+	<p>Resolves an asset path <code>pathNext</code> relative to a reference asset <code>pathCurr</code>.</p>
+	<script type="application/wren" data-tag="once">
+		Game.print(Path.resolve("/videos/cutscenes/intro.mp4", "../tutorials/jumping.mp4"))
+	</script>
+</section>
+
+
+<!-- SPRITE -->
+
+<section>
+	<h2>Sprite</h2>
+	<p>A hardware accelerated 2D texture.</p>
+</section>
+
+<section>
+	<h2>Sprite.load(path: String): Sprite</h2>
+	<p>Load a sprite from an asset.</p>
+</section>
+
+<section>
+	<h2>Sprite.defaultWrapMode: TextureWrapMode</h2>
+	<p>Controls the default value of <a href="#sprite.wrapMode"><code>sprite.wrapMode</code></a> for newly created sprites.</p>
+	<p>Defaults to <code>"clamp"</code>.</p>
+	<pre>Sprite.defaultWrapMode = "repeat"</pre>
+</section>
+
+<section data-tag="interporlation">
+	<h2>Sprite.defaultScaleFilter: TextureScaleFilter</h2>
+	<p>Controls the default value of <a href="#sprite.scaleFilter"><code>sprite.scaleFilter</code></a> for newly created sprites.</p>
+	<p>Defaults to <code>"nearest"</code>.</p>
+	<pre>Sprite.defaultScaleFilter = "linear"</pre>
+</section>
+
+<section>
+	<h2 data-tag="readonly">sprite.width: Num</h2>
+	<h2 data-tag="readonly">sprite.height: Num</h2>
+	<p>The sprite's size in pixels.</p>
+</section>
+
+<section>
+	<h2>sprite.wrapMode: TextureWrapMode</h2>
+	<p>Controls how the sprite handle UVs that go outside its bounds.</p>
+	<p>When a Sprite is created this is set to <a href="#Sprite.defaultWrapMode"><code>Sprite.defaultWrapMode</code></a>, which itself defaults to <code>"clamp"</code>.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("hearts.png")
+		spr.wrapMode = "repeat"
+		
+		Game.begin {
+			// Draw the sprite across the entire viewport.
+			// Set UV size to viewport size...
+			// and animate UV offset.
+			spr.draw(
+				0, 0, Game.width, Game.height,
+				Time.frame, Time.frame / 3, Game.width, Game.height
+			)
+		}
+	</script>
+</section>
+
+<section data-tag="interporlation">
+	<h2>sprite.scaleFilter: TextureScaleFilter</h2>
+	<p>Controls how the sprite is displayed when up-scaled or down-scaled.</p>
+	<p>When a Sprite is created this is set to <a href="#Sprite.defaultScaleFilter"><code>Sprite.defaultScaleFilter</code></a>, which itself defaults to <code>"nearest"</code>.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("buppy.png")
+		
+		Game.begin {
+			spr.scaleFilter = Input.held("MouseLeft") ? "linear" : "nearest"
+
+			Game.clear()
+			Game.print("hold mouse button to change filter")
+			Game.print(spr.scaleFilter)
+			spr.draw(6, 36, 200, 200)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>sprite.color: Num</h2>
+	<p>Applies a color to the sprite when drawn.</p>
+	<p>Defaults to white.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("toys.jpg")
+		
+		Game.begin {
+			spr.color = Color.hsl(Time.time / 10, 1, 0.5)
+			spr.draw(32, 32)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>sprite.transform: Transform</h2>
+	<p>Applies a transformation to the sprite when drawn.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("cat.jpg")
+		
+		Game.begin {
+			spr.transform = Transform.scale(Time.time.sin.sign, 1)
+			spr.draw(64, 64)
+		}
+	</script>
+</section>
+
+
+<section>
+	<h2>sprite.transformOrigin: Vec</h2>
+	<h2>sprite.setTransformOrigin(x: Num, y: Num)</h2>
+	<p>The origin used by <a href="#sprite.transform"><code>sprite.transform</code></a>.</p>
+	<p>Defaults to the center of the sprite.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("sword.png")
+		
+		Game.begin {
+			Game.clear(#444)
+			spr.setTransformOrigin(49, 206)
+			spr.transform = Transform.rotate(Time.time.sin / 10)
+			spr.draw(200, 80)
+		}
+	</script>
+</section>
+
+
+<!-- COLOR -->
+
+<section>
+	<h2>Color.hsl(h: Num, s: Num, l: Num): Num</h2>
+	<h2>Color.hsl(h: Num, s: Num, l: Num, a: Num): Num</h2>
+	<p>Create a color from hue-saturation-lightness (HSL) coordinates.</p>
+	<script type="application/wren">
+		Game.clear(Color.hsl(Time.time / 4, 0.5, 1))
+	</script>
+</section>
+
+<!-- AUDIO -->
+
+<section data-tag="audio sound graph audiograph flow routing">
+	<h2 data-type="info">Audio Concepts</h2>
+	<p>Sock's audio is routed in the following way:</p>
+	<style>
+		.audio-box-list {
+			display: inline-flex;
+			align-items: end;
+		}
+		.audio-box {
+			width: 7em;
+			height: 7em;
+			line-height: 7em;
+			border: 1px solid;
+			display: block;
+			text-decoration: none;
+			flex-shrink: 0;
+		}
+		.audio-box.next {
+			border-color: var(--bg-alt);
+		}
+		.audio-box + .audio-box {
+			border-left: none;
+		}
+		.audio-arrow {
+			width: 7em;
+			height: 7em;
+			line-height: 7em;
+			flex-shrink: 0;
+		}
+	</style>
+	<figure>
+		<div class="audio-box-list" style="margin: 10px 0;">
+			<a class="audio-box" href="#Audio">Audio</a>
+			<div class="audio-arrow">played as</div>
+			<a class="audio-box" href="#Voice">Voice</a>
+			<span class="audio-box next">0-4 effects</span>
+			<a class="audio-box next" href="#voice.volume">volume</a>
+			<div class="audio-box-list" style="margin-bottom: 4em;">
+				<div class="audio-arrow">optional bus</div>
+				<a class="audio-box" href="#AudioBus">AudioBus</a>
+				<span class="audio-box next">0-4 effects</span>
+				<a class="audio-box next" href="#audioBus.volume">volume</a>
+			</div>
+			<div class="audio-arrow">master bus</div>
+			<a class="audio-box next" href="#Audio.volume">volume</a>
+		</div>
+	</figure>
+	<ul>
+		<li><a href="#Audio"><code>Audio</code></a> represents loaded sound information. When played, a <a href="#Voice"><code>Voice</code></a> is created.</li>
+		<li>Each <a href="#Voice"><code>Voice</code></a> has volume control and can have 0 to 4 effects.</li>
+		<li>Each <a href="#Voice"><code>Voice</code></a> can optionally be played through an <a href="#AudioBus"><code>AudioBus</code></a>.</li>
+		<ul>
+			<li>Each <a href="#AudioBus"><code>bus</code></a> has volume control and can have 0 to 4 effects.</li>
+			<li>Multiple <a href="#Voice"><code>voices</code></a> can be played through one <a href="#AudioBus"><code>bus</code></a>.</li>
+		</ul>
+		<li>All audio is lastly played through the master bus, which has <a href="#Audio.volume">volume control</a>.</li>
+	</ul>
+	<h3>Audio Effects</h3>
+	<p>Each voice and bus has 0 to 4 effects.</p>
+	<p>You can think of these as slots that you insert and remove effects into. The effects are processed from slot 0 to 4, skipping any empty slots.</p>
+	<figure>
+		<div class="audio-box-list" style="margin: 10px 0;">
+			<a class="audio-box" href="#ReverbEffect">0: reverb</a>
+			<a class="audio-box" href="#FilterEffect">1: LP filter</a>
+			<span class="audio-box">2: empty</span>
+			<span class="audio-box">3: empty</span>
+		</div>
+		<figcaption>Reverb played into a lowpass filter.</figcaption>
+	</figure>
+	<p>Effects are managed using <a href="#AudioControls"><code>AudioControls</code></a> instance methods, which <code>Voice</code> and <code>Bus</code> both extend.</p>
+	<p>Effects are added using the following methods:</p>
+	<ul>
+		<li><a href="#audioControls.addLowpass(_,_)"><code>audioControls.addLowpass(slot, frequency)</code></a></li>
+		<li><a href="#audioControls.addHighpass(_,_)"><code>audioControls.addHighpass(slot, frequency)</code></a></li>
+		<li><a href="#audioControls.addBandpass(_,_)"><code>audioControls.addBandpass(slot, frequency)</code></a></li>
+		<li><a href="#audioControls.addEcho(_,_,_)"><code>audioControls.addEcho(slot, delay, decay)</code></a></li>
+		<li><a href="#audioControls.addReverb(_)"><code>audioControls.addReverb(slot)</code></a></li>
+	</ul>
+	<p></p>
+</section>
+
+<section data-tag="sound">
+	<h2>Audio</h2>
+	<p>Manages loading audio and controlling general audio paramters (e.g. <a href="#Audio.volume">master volume</a>).</p>
+	<p>An instance of Audio represents the da</p>
+</section>
+
+<section data-tag="ogg vorbis mp3 wav stream clip sound decode">
+	<h2>Audio.load(path: String): Audio</h2>
+	<p>Load audio into memory from an asset.</p>
+	<p>Support <code>.wav</code>, <code>.ogg</code> and <code>.mp3</code>.</p>
+	<script type="application/wren" data-tag="noloop">
+		Audio.load("demo.mp3").play()
+	</script>
+</section>
+
+<section data-tag="master mix mixer">
+	<h2>Audio.volume: Num</h2>
+	<h2>Audio.fadeVolume(volume: Num, seconds: Num)</h2>
+	<p>Set the master volume.</p>
+	<p>Defaults to 1 (normal volume). Clamped between 0 and infinity when set.</p>
+	<script type="application/wren">
+		// A example of a volume slider.
+		Audio.load("demo.mp3").play()
+
+		Game.begin {
+			var x = 100
+			var y = 100
+			var w = 50
+			var h = 200
+
+			if (Input.held("MouseLeft")) Audio.volume = Input.mouse.y.map(y, y + h, 1, 0).clamp(0, 1)
+
+			Game.clear()
+			Quad.draw(x, y, w, h, #444)
+			Quad.draw(x, y + h * (1 - Audio.volume), w, h * Audio.volume, #fff)
+			Game.print(Audio.volume, x + w + 4, y)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>audio.play(): Voice</h2>
+	<h2>audio.play(bus: AudioBus): Voice</h2>
+	<p>Creates a new voice for the audio and starts playing it.</p>
+	<p>If a bus is specified, the voice is played in that bus.</p>
+	<script type="application/wren" data-tag="noloop">
+		Audio.load("demo.mp3").play()
+	</script>
+</section>
+
+<section>
+	<h2>audio.playAtVolume(volume: Num): Voice</h2>
+	<h2>audio.playAtVolume(bus: AudioBus, volume: Num): Voice</h2>
+	<p>Creates a new voice for the audio and starts playing it at the specified <a href="Audio.volume">volume</a>.</p>
+	<p>If a bus is specified, the voice is played in that bus.</p>
+	<script type="application/wren" data-tag="noloop">
+		// This will be very quiet!
+		Audio.load("demo.mp3").playAtVolume(0.05)
+	</script>
+</section>
+
+<section>
+	<h2 data-tag="readonly">audio.duration: Num</h2>
+	<p>The duration of the audio in seconds.</p>
+	<script type="application/wren" data-tag="once">
+		Game.print(Audio.load("kick.wav").duration)
+	</script>
+</section>
+
+<section data-tag="lp filter effect">
+	<h2>audioControls.addLowpass(slot: Num, frequency: Num): FilterEffect</h2>
+	<h2>audioControls.addLowpass(slot: Num, frequency: Num, resonance: Num): FilterEffect</h2>
+	<p>Adds a lowpass filter to an audio source.</p>
+	<script type="application/wren" data-tag="noloop">
+		Audio.load("demo.mp3").play().addLowpass(0, 500)
+	</script>
+</section>
+
+<section data-tag="hp filter effect">
+	<h2>audioControls.addHighpass(slot: Num, frequency: Num): FilterEffect</h2>
+	<h2>audioControls.addHighpass(slot: Num, frequency: Num, resonance: Num): FilterEffect</h2>
+	<p>Adds a highpass filter to an audio source.</p>
+	<script type="application/wren" data-tag="noloop">
+		Audio.load("demo.mp3").play().addHighpass(0, 1000)
+	</script>
+</section>
+
+<section data-tag="bp filter effect">
+	<h2>audioControls.addBandpass(slot: Num, frequency: Num): FilterEffect</h2>
+	<h2>audioControls.addBandpass(slot: Num, frequency: Num, resonance: Num): FilterEffect</h2>
+	<p>Adds a bandpass filter to an audio source.</p>
+	<script type="application/wren" data-tag="noloop">
+		Audio.load("demo.mp3").play().addBandpass(0, 2000)
+	</script>
+</section>
+
+<section data-tag="delay reverb effect">
+	<h2>audioControls.addEcho(slot: Num, delay: Num): EchoEffect</h2>
+	<h2>audioControls.addEcho(slot: Num, delay: Num, decay: Num): EchoEffect</h2>
+	<p>Adds an echo effect to an audio source.</p>
+	<script type="application/wren" data-tag="noloop">
+		var voice = Audio.load("piano_loop.mp3").play()
+		voice.loop = true
+		voice.addEcho(0, 0.79, 0.3)
+	</script>
+</section>
+
+<section data-tag="room effect">
+	<h2>audioControls.addReverb(slot: Num): ReverbEffect</h2>
+	<p>Adds an reverb effect to an audio source.</p>
+	<script type="application/wren" data-tag="noloop">
+		var voice = Audio.load("piano_loop.mp3").play()
+		voice.loop = true
+		voice.addReverb(0)
+	</script>
+</section>
+
+<!-- PLATFORM -->
+
+<section>
+	<h2>Platform</h2>
+	<p>Provides access to platform specific APIs, and information about the current platform.</p>
+	<p>Provides the following classes. If a class is not available on the current platform, its getter returns <code>null</code>.</p>
+	<table>
+		<tr>
+			<th>Class</th>
+			<th>Desktop</th>
+			<th>Web</th>
+		</tr>
+		<tr>
+			<td><a href="#Window"><code>Platform.Window</code></a></td>
+			<td>✅</td>
+			<td>❌</td>
+		</tr>
+		<tr>
+			<td><a href="#JavaScript"><code>Platform.JavaScript</code></a></td>
+			<td>❌</td>
+			<td>✅</td>
+		</tr>
+	</table>
+</section>
+
+<section data-tag="os">
+	<h2 data-tag="readonly">Platform.name: String</h2>
+	<p>Gets the name of the current platform.</p>
+	<table>
+		<tr>
+			<th>Platform name</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>"desktop"</code></td>
+			<td>A PC running Windows, Mac or Linux.<br>The operating system can be found via <a href="#Platform.os"><code>Platform.os</code></a>.</td>
+		</tr>
+		<tr>
+			<td><code>"web"</code></td>
+			<td>Web browser on any device.<br>The browser name can be found via <a href="#Platform.browser"><code>Platform.browser</code></a>.</td>
+		</tr>
+	</table>
+</section>
+
+<section data-tag="operating system windows mac osx linux">
+	<h2 data-tag="readonly">Platform.os: String</h2>
+	<p>Gets the name of the current operating system.</p>
+	<table>
+		<tr>
+			<th>OS name</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>"windows"</code></td>
+			<td>Microsoft Windows.</td>
+		</tr>
+		<tr>
+			<td><code>"mac"</code></td>
+			<td>MacOS.</td>
+		</tr>
+		<tr>
+			<td><code>"ios"</code></td>
+			<td>iOS or iPadOS.</td>
+		</tr>
+		<tr>
+			<td><code>"android"</code></td>
+			<td>Android.</td>
+		</tr>
+		<tr>
+			<td><code>"linux"</code></td>
+			<td>Linux distribution (e.g. Ubuntu) (excluding Android)</td>
+		</tr>
+	</table>
+	<script type="application/wren" data-tag="once">
+		Game.print(Platform.os)
+	</script>
+</section>
+
+<section data-tag="browser web">
+	<h2 data-tag="readonly">Platform.browser: String | null</h2>
+	<p>Gets the name of the current browser. Returns <code>null</code> if not running in a browser.</p>
+	<table>
+		<tr>
+			<th>Browser name</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>"chrome"</code></td>
+			<td>Google Chrome or browsers built on Chromium (excluding Edge).</td>
+		</tr>
+		<tr>
+			<td><code>"firefox"</code></td>
+			<td>Mozilla's Firefox.</td>
+		</tr>
+		<tr>
+			<td><code>"safari"</code></td>
+			<td>Apple's Safari.</td>
+		</tr>
+		<tr>
+			<td><code>"edge"</code></td>
+			<td>Microsoft Edge.</td>
+		</tr>
+		<tr>
+			<td><code>"unknown"</code></td>
+			<td>The browser cannot be determined.</td>
+		</tr>
+	</table>
+	<script type="application/wren" data-tag="once">
+		Game.print(Platform.browser)
+	</script>
+</section>
+
+<!-- JAVASCRIPT -->
+
+<section data-tag="js browser web">
+	<h2>JavaScript</h2>
+	<p>Provides JavaScript script execution in the browser.</p>
+	<p>Accessed via <code><a href="#Platform">Platform</a>.JavaScript</code>.</p>
+	<h3>JavaScript globals</h3>
+	<p>Sock exposes the following object via the JavaScript global <code>sock</code>:</p>
+	<pre data-lang="typescript">
+sock = {
+	canvas: HTMLCanvasElement;
+	gl: WebGLRenderingContext;
+	audio: AudioContext;
+	toggleFullscreen(): void;
+	togglePointerLock(): void;
+}
+</pre>
+</section>
+
+<section data-tag="js browser web">
+	<h2>JavaScript.eval(script: String): any</h2>
+	<p>Evaluates JavaScript code inside of a function.</p>
+	<p>If the function returns a value, it is returned from the method as an equivalent Wren value.</p>
+	<script type="application/wren" data-tag="once">
+		Platform.JavaScript.eval("alert('hello from JS')")
+	</script>
+	<script type="application/wren" data-tag="once">
+		var agent = Platform.JavaScript.eval("return navigator.userAgent")
+
+		Game.print(agent)
+	</script>
+</section>
+
+<section data-tag="js browser web">
+	<h2>JavaScript.eval(argValues: any[], argNames: String[], script: String): any</h2>
+	<p>Evaluates JavaScript code inside of a function, passing in the provided Wren arguments (as equivalent JavaScript values).</p>
+	<p>If the function returns a value, it is returned from the method as an equivalent Wren value.</p>
+	<script type="application/wren" data-tag="once">
+		var result = Platform.JavaScript.eval([ 3, 4 ], [ "x", "y" ], "return Math.hypot(x, y)")
+
+		Game.print(result)
+	</script>
+</section>
+
+<section data-tag="js browser web">
+	<h2>JavaScript.evalAsync(script: String): Promise&lt;any&gt;</h2>
+	<h2>JavaScript.evalAsync(argValues: any[], argNames: String[], script: String): Promise&lt;any&gt;</h2>
+	<p>Evaluates JavaScript code inside of an async function.</p>
+	<p>These methods are equivalent to <a href="#JavaScript.eval(_)"><code>JavaScript.eval(s)</code></a> and <a href="#JavaScript.eval(_,_,_)"><code>JavaScript.eval(values, names, s)</code></a>, except that these return a wren <a href="#Promise"><code>Promise</code></a> that contain the function's returned value.</p>
+	<script type="application/wren" data-tag="once">
+		var promise = Platform.JavaScript.evalAsync([ "/media/example.txt" ], [ "url" ], """
+			let response = await fetch(url);
+			let text = await response.text();
+			return text;
+		""")
+		var result = promise.await
+
+		Game.print(result)
+	</script>
+</section>
+
+<!-- TUTORIALS -->
+
+<section data-tag="input remap remapping bind binding">
+	<h2 data-type="tutorial">Input Remapping</h2>
+	<p>In Sock, no distinction is made between buttons and axes. They are accesssed by a unified API.</p>
+	<p>For example we can check if the "F" key was pressed by calling <code>Input.pressed("F")</code>. In the same way, we can check if a gamepad's left stick was 'pressed' downward by calling <code>Input.pressed("LeftStickDown")</code>.</p>
+	<p>This approach helps simplifiy implementing input remapping. It also encourages making input remapping more accessible by letting users map any input to any action.</p>
+	<p>See <a href="#InputID">InputID</a> reference to see all available inputs.</p>
+	<script type="application/wren" data-tag="once">
+		// TODO
+	</script>
+</section>

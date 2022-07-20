@@ -1,0 +1,1 @@
+Game.print("hello from '%(Path.current)'")
