@@ -1,5 +1,5 @@
 
-| Asset | Owner | License (if applicable) |
+| Asset | Owner/Author | License (if applicable) |
 | -- | -- | -- |
 | buppy.png | Luca | CC0 |
 | wrap_clamp.jpg | Luca | CC0 |
@@ -9,3 +9,4 @@
 | cursor_default.png | Microsoft | |
 | cursor_pointer.png | Microsoft | |
 | cursor_wait.png | Microsoft | |
+| atan2.png | Sbyrnes321, via Wikimedia Commons. Adapted by Luca. | CC0 |

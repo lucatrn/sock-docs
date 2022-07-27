@@ -72,15 +72,514 @@
 
 <!-- CORE TYPES -->
 
+<!-- BOOL -->
+
 <section>
 	<h2>Bool</h2>
 	<p>A boolean value. Has two instances: <code>true</code> and <code>false</code>.</p>
 </section>
 
-<section>
+<!-- NUM -->
+
+<section data-tag="number double">
 	<h2>Num</h2>
-	<p>A double-precision float point number.</p>
+	<p>A double-precision floating point number.</p>
 </section>
+
+<section>
+	<h2 data-tag="readonly">Num.infinity: Num</h2>
+	<p>The value of infinity.</p>
+	<p>See also <a href="#num.isInfinity">num.isInfinity</a>.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">Num.nan: Num</h2>
+	<p>The value of NaN.</p>
+	<p>See also <a href="#num.isInfinity">num.isNan</a>.</p>
+</section>
+
+<section data-tag="trig">
+	<h2 data-tag="readonly">Num.pi: Num</h2>
+	<p>The value of π: 3.14159...</p>
+</section>
+
+<section data-tag="trig">
+	<h2 data-tag="readonly">Num.tau: Num</h2>
+	<p>The value of 2π: 6.28318...</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">Num.largest: Num</h2>
+	<p>The largest decimal value that can be represented by a <code>Num</code> (approximately 1.8×10<sup>308</sup>).</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">Num.smallest: Num</h2>
+	<p>The smallest positive decimal value that can be represented by a <code>Num</code> (approximately 2.2÷10<sup>308</sup>).</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">Num.maxSafeInteger: Num</h2>
+	<p>The largest integer that can be represented by a <code>Num</code>: 9007199254740991.</p>
+	<p><i>Safe</i> refers to the fact that some integers above this value cannot be represented by a <code>Num</code>.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">Num.minSafeInteger: Num</h2>
+	<p>The smallest integer that can be represented by a <code>Num</code>: -9007199254740991.</p>
+	<p><i>Safe</i> refers to the fact that some integers below this value cannot be represented by a <code>Num</code>.</p>
+</section>
+
+<section data-tag="parse">
+	<h2>Num.fromString(s: String): Num | null</h2>
+	<p>Parse a decimal number from a string.</p>
+	<p>Returns <code>null</code> if the number cannot be parsed.</p>
+</section>
+
+<section data-tag="absolute positive">
+	<h2>num.abs: Num</h2>
+	<p>Get the absolute/positive value of a number.</p>
+</section>
+
+<section data-tag="sgn">
+	<h2>num.sign: Num</h2>
+	<p>Returns +1, -1 or 0 depending on the sign of a number.</p>
+</section>
+
+<section>
+	<h2>num.round: Num</h2>
+	<p>Rounds a number to the nearest integer.</p>
+	<pre>
+		(3.1).round   // 3
+		(-3.1).round  // -3
+		(3.5).round   // 4
+	</pre>
+</section>
+
+<section data-tag="flr round">
+	<h2>num.floor: Num</h2>
+	<p>Rounds a number <b>down</b> to the nearest integer.</p>
+	<pre>
+		(3.9).floor   // 3
+		(-3.9).floor  // -4
+	</pre>
+</section>
+
+<section data-tag="round">
+	<h2>num.ceil: Num</h2>
+	<p>Rounds a number <b>up</b> to the nearest integer.</p>
+	<pre>
+		(3.1).ceil   // 4
+		(-3.1).ceil  // -3
+	</pre>
+</section>
+
+<section data-tag="trunc">
+	<h2>num.truncate: Num</h2>
+	<p>Removes the fractional part of a number (<b>round toward zero</b>).</p>
+	<pre>
+		(3.9).truncate   // 3
+		(-3.9).truncate  // -3
+	</pre>
+</section>
+
+<section data-tag="root squareroot">
+	<h2>num.sqrt: Num</h2>
+	<p>Returns the square root of a number. Returns NaN if the number is negative.</p>
+	<pre>4.sqrt  // 2</pre>
+</section>
+
+<section data-tag="root cuberoot">
+	<h2>num.cbrt: Num</h2>
+	<p>Returns the cube root of a number.</p>
+	<pre>8.cbrt  // 2</pre>
+</section>
+
+<section data-tag="exponent power">
+	<h2>num.exp: Num</h2>
+	<p><code>n.exp</code> returns e<sup><code>n</code></sup> (e is <a href="https://en.wikipedia.org/wiki/E_(mathematical_constant)">euler's number</a>).</p>
+	<pre>0.exp  // 1</pre>
+</section>
+
+<section data-tag="power">
+	<h2>num.pow(power: Num): Num</h2>
+	<p>Returns the number raised to the given power. Returns NaN if the number is negative.</p>
+	<pre>2.pow(3)  // 8</pre>
+</section>
+
+<section data-tag="logarithm">
+	<h2>num.log: Num</h2>
+	<p>Returns the natural logarithm of the number. Returns NaN if the number is negative.</p>
+	<pre>1.log  // 0</pre>
+</section>
+
+<section data-tag="log logarithm">
+	<h2>num.log2: Num</h2>
+	<p>Returns the base-2 logarithm of the number. Returns NaN if the number is negative.</p>
+	<pre>8.log2  // 3</pre>
+</section>
+
+<section data-tag="maximum">
+	<h2>num.min(n: Num): Num</h2>
+	<p>Get the minimum of two numbers.</p>
+</section>
+
+<section data-tag="minimum">
+	<h2>num.max(n: Num): Num</h2>
+	<p>Get the maximum of two numbers.</p>
+</section>
+
+<section data-tag="minimum maximum">
+	<h2>num.clamp(min: Num, max: Num): Num</h2>
+	<p>Clamps a number between <code>min</code> and <code>max</code>.</p>
+</section>
+
+<section data-tag="fraction">
+	<h2>num.fraction: Num</h2>
+	<p>Get the fractional part of a number, with the same sign as the original number.</p>
+	<pre>
+		(5.7).fraction   // 0.7
+		(-5.7).fraction  // -0.7
+	</pre>
+</section>
+
+<section data-tag="modulo periodic">
+	<h2>num.repeatFraction: Num</h2>
+	<p>Loops a number on the range 0 to 1.</p>
+	<pre>
+		(5.7).repeatFraction   // 0.7
+		(-5.7).repeatFraction  // 0.3
+	</pre>
+</section>
+
+<section data-tag="modulo periodic">
+	<h2>num.repeat(len: Num): Num</h2>
+	<p>Loops a number on the range 0 to <code>len</code>.</p>
+	<pre>
+		(57).repeat(10)   // 7
+		(-57).repeat(10)  // 3
+	</pre>
+	<script type="application/wren">
+		Game.print("O", Time.frame.repeat(50), 8)
+	</script>
+</section>
+
+<section data-tag="modulo periodic">
+	<h2>num.repeat(min: Num, max: Num): Num</h2>
+	<p>Loops a number on the range <code>min</code> to <code>max</code>.</p>
+	<pre>
+		(57).repeat(10, 20)   // 17
+		(-57).repeat(10, 20)  // 13
+	</pre>
+	<script type="application/wren">
+		Game.print("O", Time.frame.repeat(50, 100), 8)
+	</script>
+</section>
+
+<section data-tag="repeat periodic">
+	<h2>num.pingpong(len: Num): Num</h2>
+	<p>Bounces a number within the range 0 to <code>len</code> (inclusive).</p>
+	<script type="application/wren">
+		Game.print("O", Time.frame.pingpong(50), 8)
+	</script>
+</section>
+
+<section data-tag="lerp interporlation">
+	<h2>num.lerp(b: Num, t: Num): Num</h2>
+	<p><code>a.lerp(b, t)</code> linearly interporlates between <code>a</code> and <code>b</code> using <code>t</code>.</p>
+	<p>The value of <code>t</code> from 0 to 1 maps to <code>a</code> to <code>b</code>, though values outside 0 to 1 are valid.</p>
+	<pre>
+		300.lerp(400, 0.25)  // 325
+		300.lerp(400, 1.50)  // 450
+	</pre>
+</section>
+
+<section data-tag="lerp interporlation">
+	<h2>num.inverseLerp(b: Num, target: Num): Num</h2>
+	<p><code>a.inverseLerp(b, target)</code> returns the <code>t</code> value that will give <code>a.<a href="#num.lerp(_,_)">lerp</a>(b, t) == target</code>.</p>
+	<p>The <code>target</code> can be outside the range <code>a</code> to <code>b</code>.</p>
+	<p>If <code>a == b</code> then NaN is returned.</p>
+	<pre>
+		300.inverseLerp(400, 325)  // 0.25
+		300.inverseLerp(400, 450)  // 1.5
+		300.inverseLerp(300, 450)  // NaN
+	</pre>
+</section>
+
+<section data-tag="lerp interporlation remap">
+	<h2>num.map(a1: Num, b1: Num, a2: Num, b2: Num): Num</h2>
+	<p>Remaps a number from the range <code>a1</code> to <code>b1</code> to the range <code>a2</code> to <code>b2</code>.</p>
+	<p>The number can be outside the range <code>a1</code> to <code>b1</code>, in which case the result will also be outside the range <code>a2</code> to <code>b2</code>.</p>
+	<p>If <code>a1 == b1</code> then either <code>a2</code> or <code>b2</code> is returned depending on which side of <code>a1</code> the number is on.</p>
+	<script type="application/wren">
+		// Map mouse Y position:
+		//   from [ 0, h - 1 ] (top to bottom of viewport)
+		//   to   [ 2, 99 ]    (arbitarily chosen quad sizes)
+		var w = Game.width
+		var h = Game.height
+		var y = Input.mouse.y
+		var r = y.map(0, h - 1, 2, 99)
+		Quad.draw(w/2 - r/2, h/2 - r/2, r, r, #fff)
+		Game.print("r: %(r)")
+	</script>
+</section>
+
+<section data-tag="interporlation clamp">
+	<h2>num.smoothstep: Num</h2>
+	<p>Applies the <a href="https://en.wikipedia.org/wiki/Smoothstep">smoothstep function</a> to the given number.</p>
+	<p>Maps from the range 0 to 1 to the range 0 to 1 (clamped).</p>
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" viewBox="50 0 1550 1200" style="font-size:36.00pt;">
+		<!-- Adapted from CC0 Wikimedia Commons: https://commons.wikimedia.org/wiki/File:Smoothstep_and_Smootherstep.svg -->
+		<g fill="currentColor">
+			<g transform="translate(138.6,1105.5)" style="text-anchor:end"> <text><tspan> 0</tspan></text> </g>
+			<g transform="translate(138.6,1001.3)" style="text-anchor:end"> <text><tspan> 0.1</tspan></text> </g>
+			<g transform="translate(138.6,897.2)" style="text-anchor:end"> <text><tspan> 0.2</tspan></text> </g>
+			<g transform="translate(138.6,793.0)" style="text-anchor:end"> <text><tspan> 0.3</tspan></text> </g>
+			<g transform="translate(138.6,688.9)" style="text-anchor:end"> <text><tspan> 0.4</tspan></text> </g>
+			<g transform="translate(138.6,584.7)" style="text-anchor:end"> <text><tspan> 0.5</tspan></text> </g>
+			<g transform="translate(138.6,480.6)" style="text-anchor:end"> <text><tspan> 0.6</tspan></text> </g>
+			<g transform="translate(138.6,376.4)" style="text-anchor:end"> <text><tspan> 0.7</tspan></text> </g>
+			<g transform="translate(138.6,272.3)" style="text-anchor:end"> <text><tspan> 0.8</tspan></text> </g>
+			<g transform="translate(138.6,168.2)" style="text-anchor:end"> <text><tspan> 0.9</tspan></text> </g>
+			<g transform="translate(138.6,64.0)" style="text-anchor:end"> <text><tspan> 1</tspan></text> </g>
+			<g transform="translate(163.8,1159.5)" style="text-anchor:middle"> <text><tspan> 0</tspan></text> </g>
+			<g transform="translate(299.9,1159.5)" style="text-anchor:middle"> <text><tspan> 0.1</tspan></text> </g>
+			<g transform="translate(435.9,1159.5)" style="text-anchor:middle"> <text><tspan> 0.2</tspan></text> </g>
+			<g transform="translate(572.0,1159.5)" style="text-anchor:middle"> <text><tspan> 0.3</tspan></text> </g>
+			<g transform="translate(708.0,1159.5)" style="text-anchor:middle"> <text><tspan> 0.4</tspan></text> </g>
+			<g transform="translate(844.1,1159.5)" style="text-anchor:middle"> <text><tspan> 0.5</tspan></text> </g>
+			<g transform="translate(980.1,1159.5)" style="text-anchor:middle"> <text><tspan> 0.6</tspan></text> </g>
+			<g transform="translate(1116.2,1159.5)" style="text-anchor:middle"> <text><tspan> 0.7</tspan></text> </g>
+			<g transform="translate(1252.2,1159.5)" style="text-anchor:middle"> <text><tspan> 0.8</tspan></text> </g>
+			<g transform="translate(1388.2,1159.5)" style="text-anchor:middle"> <text><tspan> 0.9</tspan></text> </g>
+			<g transform="translate(1524.3,1159.5)" style="text-anchor:middle"> <text><tspan> 1</tspan></text> </g>
+			<g transform="translate(593.0,150.0)" style="font-size:42pt; text-anchor:end"> <text><tspan>x.smoothstep</tspan></text> </g>
+		</g>
+		<g stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" fill="none" stroke="currentColor">
+			<path d='M163.8,987.8 L190.8,987.8 M1524.3,987.8 L1497.3,987.8 M163.8,883.7 L190.8,883.7 M1524.3,883.7 L1497.3,883.7 M163.8,779.5 L190.8,779.5 M1524.3,779.5 L1497.3,779.5 M163.8,675.4 L190.8,675.4 M1524.3,675.4 L1497.3,675.4 M163.8,571.2 L190.8,571.2 M1524.3,571.2 L1497.3,571.2 M163.8,467.1 L190.8,467.1 M1524.3,467.1 L1497.3,467.1 M163.8,362.9 L190.8,362.9 M1524.3,362.9 L1497.3,362.9 M163.8,258.8 L190.8,258.8 M1524.3,258.8 L1497.3,258.8 M163.8,154.7 L190.8,154.7 M1524.3,154.7 L1497.3,154.7 M299.9,1092.0 L299.9,1065.0 M299.9,50.5 L299.9,77.5 M435.9,1092.0 L435.9,1065.0 M435.9,50.5 L435.9,77.5 M572.0,1092.0 L572.0,1065.0 M572.0,50.5 L572.0,77.5 M708.0,1092.0 L708.0,1065.0 M708.0,50.5 L708.0,77.5 M844.1,1092.0 L844.1,1065.0 M844.1,50.5 L844.1,77.5 M980.1,1092.0 L980.1,1065.0 M980.1,50.5 L980.1,77.5 M1116.2,1092.0 L1116.2,1065.0 M1116.2,50.5 L1116.2,77.5 M1252.2,1092.0 L1252.2,1065.0 M1252.2,50.5 L1252.2,77.5 M1388.2,1092.0 L1388.2,1065.0 M1388.2,50.5 L1388.2,77.5 M163.8,50.5 L163.8,1092.0 L1524.3,1092.0 L1524.3,50.5 L163.8,50.5 Z' />
+			<path stroke-width="6" stroke="var(--accent-color)" d='M163.8,1092.0 L177.5,1091.7 L191.3,1090.7 L205.0,1089.2 L218.8,1087.0 L232.5,1084.3 L246.3,1081.0 L260.0,1077.1 L273.7,1072.7 L287.5,1067.7 L301.2,1062.3 L315.0,1056.3 L328.7,1049.8 L342.5,1042.8 L356.2,1035.4 L369.9,1027.5 L383.7,1019.2 L397.4,1010.4 L411.2,1001.2 L424.9,991.6 L438.6,981.7 L452.4,971.3 L466.1,960.6 L479.9,949.5 L493.6,938.1 L507.4,926.3 L521.1,914.2 L534.8,901.9 L548.6,889.2 L562.3,876.3 L576.1,863.0 L589.8,849.6 L603.6,835.9 L617.3,822.0 L631.0,807.9 L644.8,793.5 L658.5,779.0 L672.3,764.3 L686.0,749.5 L699.8,734.5 L713.5,719.3 L727.2,704.1 L741.0,688.7 L754.7,673.2 L768.5,657.7 L782.2,642.1 L796.0,626.4 L809.7,610.7 L823.4,594.9 L837.2,579.1 L850.9,563.4 L864.7,547.6 L878.4,531.8 L892.1,516.1 L905.9,500.4 L919.6,484.8 L933.4,469.3 L947.1,453.8 L960.9,438.4 L974.6,423.2 L988.3,408.0 L1002.1,393.0 L1015.8,378.2 L1029.6,363.5 L1043.3,349.0 L1057.1,334.6 L1070.8,320.5 L1084.5,306.6 L1098.3,292.9 L1112.0,279.5 L1125.8,266.2 L1139.5,253.3 L1153.3,240.6 L1167.0,228.3 L1180.7,216.2 L1194.5,204.4 L1208.2,193.0 L1222.0,181.9 L1235.7,171.2 L1249.5,160.8 L1263.2,150.9 L1276.9,141.3 L1290.7,132.1 L1304.4,123.3 L1318.2,115.0 L1331.9,107.1 L1345.6,99.7 L1359.4,92.7 L1373.1,86.2 L1386.9,80.2 L1400.6,74.8 L1414.4,69.8 L1428.1,65.4 L1441.8,61.5 L1455.6,58.2 L1469.3,55.5 L1483.1,53.3 L1496.8,51.8 L1510.6,50.8 L1524.3,50.5' />
+		</g>
+	</svg>
+	<script type="application/wren">
+		var t = Time.time.pingpong(1)
+		Game.print("linear", 20, 20 + t * 150)
+		Game.print("smoothstep", 200, 20 + t.smoothstep * 150)
+	</script>
+</section>
+
+<section>
+	<h2 data-type="info">Turns</h2>
+	<p>Sock's trigonometry methods specify angles in <a href="https://en.wikipedia.org/wiki/Turn_(angle)">turns</a>, where 1 turn is equivalent to 360 degrees.</p>
+	<ul>
+		<p>To convert turns to degrees, multiply by 360.</p>
+		<p>To convert turns to radians, multiply by <code>Num.tau</code>.</p>
+	</ul>
+</section>
+
+<section data-tag="trig periodic wave">
+	<h2>num.cos: Num</h2>
+	<h2>num.sin: Num</h2>
+	<h2>num.tan: Num</h2>
+	<p>Get the cosine/sine/tangent of an angle measured in <a href="#Turns">turns</a>.</p>
+	<pre>(0.25).sin  // 1</pre>
+	<img src="media/sin.png" alt="Plot of the num.pulse function, over the range x = [-2, 2]." style="margin: 2em auto;">
+	<details>
+		<summary>Show other diagrams</summary>
+		<img src="media/cos.png" alt="Plot of the num.pulse function, over the range x = [-2, 2]." style="margin: 2em auto;">
+		<img src="media/tan.png" alt="Plot of the num.pulse function, over the range x = [-2, 2]." style="margin: 2em auto;">
+	</details>
+</section>
+
+<section data-tag="inverse trig">
+	<h2>num.acos: Num</h2>
+	<h2>num.asin: Num</h2>
+	<h2>num.atan: Num</h2>
+	<p>Get the arccosine/arcsine/arctangent of a number, returning an angle measured in <a href="#Turns">turns</a>.</p>
+	<pre>(1).asin  // 0.25</pre>
+</section>
+
+<section data-tag="inverse trig atan2">
+	<h2>num.atan(y: Num): Num</h2>
+	<p><code>x.atan(y)</code> returns the minimum angle formed between the positive x-axis and the line from (0, 0) to (<code>x</code>, <code>y</code>).</p>
+	<p>The returned angle is measured in <a href="#Turns">turns</a>, between -0.5 and 0.5.</p>
+	<img src="media/atan2.png">
+	<script type="application/wren">
+		var x = Input.mouse.x - Game.width/2
+		var y = Input.mouse.y - Game.height/2
+		var a = -x.atan(y)
+		Game.print(".", Game.width/2, Game.height/2)
+		Game.print("angle: %(a)")
+	</script>
+</section>
+
+<section data-tag="wave square periodic">
+	<h2>num.pulse: Num</h2>
+	<p>A periodic function that generates a pulse/square wave.</p>
+	<p><code>pulse</code> uses the same general shape as <a href="#num.sin"><code>num.sin</code></a>.</p>
+	<figure>
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="preview" width="802" viewBox="0 10 802 280" xunitlength="183" yunitlength="88" xmin="-2" xmax="2" ymin="-1.3" ymax="1.3" ox="386" oy="134.4" font-size="20">
+			<path d="M8,252H20V76 H111V252H203V76 H295V252H385V76 H478V252H569V76 H661V252H752V76 H765" fill="none" stroke-width="3" stroke="var(--accent-color)" />
+			<path d="M11.036,164.4 760.964,164.4 M386,41.036 386,287.764 M386,170.9 386,157.9 M477.5,170.9 477.5,157.9 M569,170.9 569,157.9 M660.5,170.9 660.5,157.9 M752,170.9 752,157.9 M294.5,170.9 294.5,157.9 M203,170.9 203,157.9 M111.5,170.9 111.5,157.9 M20,170.9 20,157.9 M392.5,164.4 379.5,164.4 M392.5,252.4 379.5,252.4 M392.5,76.4 379.5,76.4" stroke-width="2" stroke="currentColor" fill="none"></path>
+			<text x="482" y="188" text-anchor="start">0.5</text>
+			<text x="572" y="188" text-anchor="start">1</text>
+			<text x="663" y="188" text-anchor="start">1.5</text>
+			<text x="756" y="188" text-anchor="start">2</text>
+			<text x="291" y="188" text-anchor="end">-0.5</text>
+			<text x="200" y="188" text-anchor="end">-1</text>
+			<text x="108" y="188" text-anchor="end">-1.5</text>
+			<text x="17" y="188" text-anchor="end">-2</text>
+			<text x="375" y="85" text-anchor="end">1</text>
+			<text x="400" y="261" text-anchor="start">-1</text>
+			<text x="386" y="30" text-anchor="middle">t.pulse</text>
+			<text x="775" y="173" text-anchor="start">t</text>
+		</svg>
+		<figcaption class="hidden">Plot of the <code>num.pulse</code> function.</figcaption>
+	</figure>
+	<script type="application/wren">
+		Quad.draw(10, 105, 240, 1, #888)
+		Game.print("sin", 20, 100 + Time.time.sin * 40)
+		Game.print("pulse", 200, 100 + Time.time.pulse * 40)
+	</script>
+</section>
+
+<section data-tag="wave tri triangle periodic">
+	<h2>num.tri: Num</h2>
+	<p>A periodic function that generates a triangle wave.</p>
+	<p><code>tri</code> uses the same general shape as <a href="#num.sin"><code>num.sin</code></a>.</p>
+	<figure>
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="preview" width="802" viewBox="0 10 802 280" xunitlength="183" yunitlength="88" xmin="-2" xmax="2" ymin="-1.3" ymax="1.3" ox="386" oy="134.4" font-size="20">
+			<path d="M20,164 L65,76 L157,252 L251,76 L338,252 L434,76 L521,252 L618,76 L704,252 L752,164" fill="none" stroke-width="3" stroke="var(--accent-color)" />
+			<path d="M11.036,164.4 760.964,164.4 M386,41.036 386,287.764 M386,170.9 386,157.9 M477.5,170.9 477.5,157.9 M569,170.9 569,157.9 M660.5,170.9 660.5,157.9 M752,170.9 752,157.9 M294.5,170.9 294.5,157.9 M203,170.9 203,157.9 M111.5,170.9 111.5,157.9 M20,170.9 20,157.9 M392.5,164.4 379.5,164.4 M392.5,252.4 379.5,252.4 M392.5,76.4 379.5,76.4" stroke-width="2" stroke="currentColor" fill="none"></path>
+			<text x="453" y="188" text-anchor="start">0.5</text>
+			<text x="570" y="188" text-anchor="start">1</text>
+			<text x="639" y="188" text-anchor="start">1.5</text>
+			<text x="747" y="188" text-anchor="start">2</text>
+			<text x="291" y="188" text-anchor="end">-0.5</text>
+			<text x="217" y="188" text-anchor="end">-1</text>
+			<text x="108" y="188" text-anchor="end">-1.5</text>
+			<text x="25" y="188" text-anchor="end">-2</text>
+			<text x="375" y="85" text-anchor="end">1</text>
+			<text x="400" y="261" text-anchor="start">-1</text>
+			<text x="386" y="30" text-anchor="middle">t.tri</text>
+			<text x="775" y="173" text-anchor="start">t</text>
+		</svg>
+		<figcaption class="hidden">Plot of the <code>num.tri</code> function.</figcaption>
+	</figure>
+	<script type="application/wren">
+		Game.print("triangle", 100, 100 + Time.time.tri * 40)
+	</script>
+</section>
+
+<section data-tag="color">
+	<h2>num.red: Num</h2>
+	<h2>num.green: Num</h2>
+	<h2>num.blue: Num</h2>
+	<h2>num.alpha: Num</h2>
+	<p>Returns a <a href="#Color">color</a>'s component as a byte between 0 and 255.</p>
+	<p>In other words, it converts the number to a 32bit integer and returns the byte at the corresponding position.</p>
+	<pre>
+		var c = #11223344
+		c.red    // 0x11
+		c.green  // 0x22
+		c.blue   // 0x33
+		c.alpha  // 0x44
+	</pre>
+</section>
+
+<section data-tag="int">
+	<h2>num.isInteger: Bool</h2>
+	<p>Check if a number is an integer.</p>
+</section>
+
+<section data-tag="infinite">
+	<h2>num.isInfinity: Bool</h2>
+	<p>Check if a number is positive or negiative infinity.</p>
+	<pre>(1/0).isInfinity  // true</pre>
+</section>
+
+<section>
+	<h2>num.isNan: Bool</h2>
+	<p>Check if a number is NaN.</p>
+	<pre>(0/0).isNan  // true</pre>
+</section>
+
+<section data-tag="modulo remainder quotient">
+	<h2>num % num</h2>
+	<p>Get the remainder of <code>left</code> ÷ <code>right</code>.</p>
+	<p>Result has same sign as <code>left</code>.</p>
+	<p>If <code>right</code> is 0 then result is NaN.</p>
+	<p>See also <a href="#num.repeat(_)"><code>num.repeat()</code></a>.</p>
+	<pre>
+		57 % 10   // 7
+		-57 % 10  // -7
+	</pre>
+</section>
+
+<section data-tag="bit bitwise negation not">
+	<h2>~ num</h2>
+	<p>Get the 32bit bitwise negation of a number.</p>
+	<pre>
+		~0xfffffff0  // 0x0000000f
+	</pre>
+</section>
+
+<section data-tag="bit bitwise and band">
+	<h2>num & num</h2>
+	<p>Get the 32bit bitwise AND of two numbers.</p>
+	<pre>
+		0xff00 & 0xf0f0  // 0xf000
+	</pre>
+</section>
+
+<section data-tag="bit bitwise or bor">
+	<h2>num | num</h2>
+	<p>Get the 32bit bitwise OR of two numbers.</p>
+	<pre>
+		0xff00 | 0xf0f0  // 0xfff0
+	</pre>
+</section>
+
+<section data-tag="bit bitwise xor bxor">
+	<h2>num ^ num</h2>
+	<p>Get the 32bit bitwise XOR of two numbers.</p>
+	<pre>
+		0xff00 ^ 0xf0f0  // 0x0ff0
+	</pre>
+</section>
+
+<section data-tag="bit bitwise shift lshift left leftshift">
+	<h2>num &lt;&lt; num</h2>
+	<p>Get the 32bit bitwise left-shift of a number.</p>
+	<pre>
+		32 &lt;&lt;  1 // 64
+	</pre>
+</section>
+
+<section data-tag="bit bitwise shift rshift right rightshift">
+	<h2>num >> num</h2>
+	<p>Get the 32bit bitwise right-shift of a number.</p>
+	<pre>
+		32 >> 1  // 16
+	</pre>
+</section>
+
+<section data-tag="range dotdot">
+	<h2>num .. num</h2>
+	<p>Creates an inclusive <a href="#Range"><code>Range</code></a> from one number to another.</p>
+	<pre>
+		(4..7).toList  // [ 4, 5, 6, 7 ]
+	</pre>
+</section>
+
+<section data-tag="range dotdotdot">
+	<h2>num ... num</h2>
+	<p>Creates a non-inclusive <a href="#Range"><code>Range</code></a> from one number to another.</p>
+	<pre>
+		(4...7).toList  // [ 4, 5, 6 ]
+	</pre>
+</section>
+
+<!-- STRING -->
 
 <section>
 	<h2>String</h2>
@@ -1584,6 +2083,54 @@ sock = {
 
 		Game.print(result)
 	</script>
+</section>
+
+<!-- WINDOW -->
+
+<section data-tag="screen">
+	<h2>Window</h2>
+	<p>Used to control the game's window.</p>
+	<p>Accessed via <code><a href="#Platform">Platform</a>.Window</code>. It is only aviable on <a href="#Platform.name">desktop</a> builds.</p>
+	<h3>See also</h3>
+	<ul>
+		<li><a href="#Game.title">Game.title</a></li>
+		<li><a href="#Game.fullscreen">Game.fullscreen</a></li>
+	</ul>
+</section>
+
+<section>
+	<h2>Window.width: Num</h2>
+	<h2>Window.height: Num</h2>
+	<h2>Window.setSize(width: Num, height: Num)</h2>
+	<p>Controls the window's size in pixels.</p>
+	<p>Defaults to true.</p>
+	<pre>
+Window.height = 400
+Window.width = 500
+	</pre>
+</section>
+
+<section>
+	<h2>Window.left: Num</h2>
+	<h2>Window.top: Num</h2>
+	<h2>Window.setPosition(left: Num, top: Num)</h2>
+	<p>Controls the window's position relative to the top-left of the screen, in pixels.</p>
+	<pre>
+Window.top = 50
+Window.left = 50
+	</pre>
+</section>
+
+<section>
+	<h2>Window.center()</h2>
+	<p>Centers the window in the screen.</p>
+</section>
+
+<section>
+	<h2>Window.resizable: Bool</h2>
+	<p>Sets if the window can be resized.</p>
+	<p>Defaults to true.</p>
+	<pre>Window.resizable = false</pre>
 </section>
 
 <!-- TUTORIALS -->

@@ -245,7 +245,11 @@ class Example {
  * @param {string} rawCode
  */
 function normalizeCode(rawCode) {
-	let result = /^\s+/.exec(rawCode.slice(1));
+	while (rawCode[0] === "\n" || rawCode[0] === "\r") {
+		rawCode = rawCode.slice(1);
+	}
+
+	let result = /^\s+/.exec(rawCode);
 	
 	let code;
 	if (result) {
@@ -380,12 +384,79 @@ class ClassSignature extends Signature {
 	}
 }
 
+class PrefixOperatorSignature extends Signature {
+	/**
+	 * @param {string} className
+	 * @param {string} operator
+	 */
+	constructor(className, operator) {
+		super();
+
+		this.className = className;
+		this.operator = operator;
+		this.signature = operator + uncapitalize(className);
+		this.keywords = [ className.toLowerCase(), operator ];
+	}
+
+	/**
+	 * @param {string} title
+	 */
+	matchesTitle(title) {
+		return this.className === title || this.operator === title || super.matchesTitle(title);
+	}
+
+	/**
+	 * @param {ParentNode} parent 
+	 */
+	toHTML(parent) {
+		parent.append(
+			createAPILinkText(this.operator, this.signature, CLS_TYPE),
+			createAPILinkText(uncapitalize(this.className), this.className, CLS_CLASS),
+		);
+	}
+}
+
+class InfixOperatorSignature extends Signature {
+	/**
+	 * @param {string} cls1
+	 * @param {string} cls2
+	 * @param {string} operator
+	 */
+	constructor(cls1, cls2, operator) {
+		super();
+
+		this.className1 = cls1;
+		this.className2 = cls2;
+		this.operator = operator;
+		this.signature = uncapitalize(cls1) + operator + uncapitalize(cls1);
+		this.keywords = [ cls1.toLowerCase(), cls2.toLowerCase(), operator ];
+	}
+
+	/**
+	 * @param {string} title
+	 */
+	matchesTitle(title) {
+		return this.className1 === title || this.className2 === title || this.operator === title || super.matchesTitle(title);
+	}
+
+	/**
+	 * @param {ParentNode} parent 
+	 */
+	toHTML(parent) {
+		parent.append(
+			createAPILinkText(uncapitalize(this.className1), this.className1, CLS_CLASS),
+			createAPILinkText(" " + this.operator + " ", this.signature, CLS_TYPE),
+			createAPILinkText(uncapitalize(this.className2), this.className2, CLS_CLASS),
+		);
+	}
+}
+
 /**
  * @param {string} className
  * @param {boolean} isStatic 
  */
 function correctClassCase(className, isStatic) {
-	return isStatic ? className : (className[0].toLowerCase() + className.slice(1));
+	return isStatic ? className : uncapitalize(className);
 }
 
 /**
@@ -526,13 +597,30 @@ function compileSignature(s) {
 		return new ClassSignature(s);
 	}
 
+	let execOperator = /^([^ a-zA-Z0-9]+) ?([a-zA-Z0-9]+)$/.exec(s);
+	if (execOperator) {
+		let operator = execOperator[1];
+		let cls = capitalize(execOperator[2]);
+
+		return new PrefixOperatorSignature(cls, operator);
+	}
+	
+	execOperator = /^([a-zA-Z0-9]+) (\S+) ([a-zA-Z0-9]+)$/.exec(s);
+	if (execOperator) {
+		let cls1 = capitalize(execOperator[1]);
+		let operator = execOperator[2];
+		let cls2 = capitalize(execOperator[3]);
+
+		return new InfixOperatorSignature(cls1, cls2, operator);
+	}
+
 	let dot = s.indexOf(".");
 
 	if (dot > 0) {
 		let className = s.slice(0, dot);
 		let isStatic = /^[A-Z]/.test(s);
 
-		className = className[0].toUpperCase() + className.slice(1);
+		className = capitalize(className);
 
 		let rest = s.slice(dot + 1);
 
@@ -570,6 +658,20 @@ function compileSignature(s) {
 	throw Error("invalid signature: " + s);
 }
 
+/**
+ * @param {string} s
+ */
+function capitalize(s) {
+	return s[0].toUpperCase() + s.slice(1);
+}
+
+/**
+ * @param {string} s
+ */
+function uncapitalize(s) {
+	return s[0].toLowerCase() + s.slice(1);
+}
+
 
 /** @type {Section[]} */
 export let sections = [];
@@ -582,8 +684,6 @@ export let sectionsPromise = loadDocs();
  */
 export function searchSeactions(search) {
 	search = search.trim().toLowerCase();
-
-	if (search.length <= 1) return [];
 
 	/** @type {{ score: number, section: Section }[]} */
 	let matches = [];
@@ -608,7 +708,7 @@ export function searchSeactions(search) {
  */
 function instantiateVirtualNodes(parentNode, nodes) {
 	for (let node of nodes) {
-		if (node instanceof HTMLElement) {
+		if (node instanceof Element) {
 			parentNode.append(node);
 		} else if (Array.isArray(node)) {
 			instantiateVirtualNodes(parentNode, nodes);
