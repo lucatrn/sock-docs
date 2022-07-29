@@ -34,12 +34,13 @@ class Section {
 		this.signatures = Array.from(h2s).map((h2) => {
 			let title = h2.textContent;
 			let type = h2.dataset.type;
+			let superClass = h2.dataset.super;
 			h2.remove();
 
 			if (type) {
 				return new InfoSignature(title, type);
 			} else {
-				return compileSignature(title);
+				return compileSignature(title, superClass);
 			}
 		});
 		
@@ -273,7 +274,11 @@ class Signature {
 	/**
 	 * @param {ParentNode} parent 
 	 */
-	toHTML(parent) { throw Error("not implemented") }
+	toHTML(parent) {
+		parent.append(
+			createElement("a", { href: "#" + this.signature, class: "permalink" }, "#"),
+		);
+	}
 
 	/**
 	 * @param {string} title
@@ -313,6 +318,10 @@ function compoundTypeToHTML(type) {
  * @param {string} [className]
  */
 function createAPILinkText(text, title, className) {
+	if (title === "this") {
+		return createElement("span", { class: CLS_TYPE }, text);
+	}
+
 	let fullClass = "no-underline";
 	if (className) {
 		fullClass += " " + className;
@@ -365,11 +374,13 @@ class InfoSignature extends Signature {
 class ClassSignature extends Signature {
 	/**
 	 * @param {string} className
+	 * @param {string|null} superClass
 	 */
-	constructor(className) {
+	constructor(className, superClass) {
 		super();
 
 		this.name = className;
+		this.superClass = superClass;
 		this.signature = className;
 		this.keywords = [ className.toLowerCase() ];
 	}
@@ -381,6 +392,15 @@ class ClassSignature extends Signature {
 		parent.append(
 			createAPILinkText(this.name, this.name, CLS_CLASS)
 		);
+
+		if (this.superClass) {
+			parent.append(
+				createElement("span", { style: "opacity: 0.6; margin-left: 0.2em;" }, [
+					" is ",
+					createAPILinkText(this.superClass, this.superClass, CLS_CLASS)
+				])
+			);
+		}
 	}
 }
 
@@ -388,12 +408,14 @@ class PrefixOperatorSignature extends Signature {
 	/**
 	 * @param {string} className
 	 * @param {string} operator
+	 * @param {string|null} type
 	 */
-	constructor(className, operator) {
+	constructor(className, operator, type) {
 		super();
 
 		this.className = className;
 		this.operator = operator;
+		this.type = type;
 		this.signature = operator + uncapitalize(className);
 		this.keywords = [ className.toLowerCase(), operator ];
 	}
@@ -413,6 +435,15 @@ class PrefixOperatorSignature extends Signature {
 			createAPILinkText(this.operator, this.signature, CLS_TYPE),
 			createAPILinkText(uncapitalize(this.className), this.className, CLS_CLASS),
 		);
+
+		if (this.type) {
+			parent.append(
+				": ",
+				compoundTypeToHTML(this.type),
+			);
+		}
+
+		super.toHTML(parent);
 	}
 }
 
@@ -420,15 +451,17 @@ class InfixOperatorSignature extends Signature {
 	/**
 	 * @param {string} cls1
 	 * @param {string} cls2
+	 * @param {string} returnType
 	 * @param {string} operator
 	 */
-	constructor(cls1, cls2, operator) {
+	constructor(cls1, cls2, returnType, operator) {
 		super();
 
 		this.className1 = cls1;
 		this.className2 = cls2;
+		this.returnType = returnType;
 		this.operator = operator;
-		this.signature = uncapitalize(cls1) + operator + uncapitalize(cls1);
+		this.signature = uncapitalize(cls1) + operator + uncapitalize(cls2);
 		this.keywords = [ cls1.toLowerCase(), cls2.toLowerCase(), operator ];
 	}
 
@@ -445,9 +478,18 @@ class InfixOperatorSignature extends Signature {
 	toHTML(parent) {
 		parent.append(
 			createAPILinkText(uncapitalize(this.className1), this.className1, CLS_CLASS),
-			createAPILinkText(" " + this.operator + " ", this.signature, CLS_TYPE),
+			" " + this.operator + " ",
 			createAPILinkText(uncapitalize(this.className2), this.className2, CLS_CLASS),
 		);
+
+		if (this.returnType) {
+			parent.append(
+				" ⇒ ",
+				compoundTypeToHTML(this.returnType),
+			);
+		}
+
+		super.toHTML(parent);
 	}
 }
 
@@ -470,7 +512,7 @@ function addClassAndMethodNameSignature(parent, className, isStatic, methodName,
 	parent.append(
 		createAPILinkText(correctClassCase(className, isStatic), className, CLS_CLASS),
 		".",
-		createAPILinkText(methodName, signature, CLS_PROPERTY),
+		methodName,
 	);
 }
 
@@ -518,6 +560,8 @@ class PropertySignature extends Signature {
 	toHTML(parent) {
 		addClassAndMethodNameSignature(parent, this.class, this.isStatic, this.property, this.signature);
 		addReturnType(parent, this.type);
+
+		super.toHTML(parent);
 	}
 }
 
@@ -537,7 +581,7 @@ class MethodSignature extends Signature {
 		this.method = methodName;
 		this.parameters = parameters;
 		this.returnType = returnType;
-		this.signature = correctClassCase(className, isStatic) + "." + methodName + "(" + parameters.map(() => "_").join(",") + ")";
+		this.signature = correctClassCase(className, isStatic) + "." + methodName + "(" + parameters.filter(p => !p.name.endsWith("...")).map(() => "_").join(",") + ")";
 		this.keywords = [ className.toLowerCase(), methodName.toLowerCase() ];
 		for (let param of parameters) {
 			this.keywords.push(param.name.toLowerCase());
@@ -566,14 +610,89 @@ class MethodSignature extends Signature {
 
 			parent.append(
 				createElement("span", { class: CLS_PARAMETER }, param.name),
-				": ",
-				compoundTypeToHTML(param.type),
 			);
+
+			if (param.type) {
+				parent.append(
+					": ",
+					compoundTypeToHTML(param.type),
+				);
+			}
 		});
 
 		parent.append(")");
 
 		addReturnType(parent, this.returnType);
+
+		super.toHTML(parent);
+	}
+}
+
+class SubscriptSignature extends Signature {
+	/**
+	 * @param {string} className
+	 * @param {boolean} isStatic
+	 * @param {boolean} isSetter
+	 * @param {Parameter[]} parameters
+	 * @param {string|null} type
+	 */
+	constructor(className, isStatic, isSetter, parameters, type) {
+		super();
+
+		this.class = className;
+		this.isStatic = isStatic;
+		this.isSetter = isSetter;
+		this.parameters = parameters;
+		this.type = type;
+		this.signature = correctClassCase(className, isStatic) + "[" + parameters.map(() => "_").join(",") + "]";
+		if (isSetter) {
+			this.signature += "=(_)";
+		}
+		this.keywords = [ className.toLowerCase() ];
+		for (let param of parameters) {
+			this.keywords.push(param.name.toLowerCase());
+		}
+	}
+
+	/**
+	 * @param {string} title
+	 */
+	matchesTitle(title) {
+		return this.class === title || super.matchesTitle(title);
+	}
+
+	/**
+	 * @param {ParentNode} parent 
+	 */
+	toHTML(parent) {
+		parent.append(
+			createAPILinkText(correctClassCase(this.class, this.isStatic), this.class, CLS_CLASS),
+		);
+
+		parent.append("[");
+
+		this.parameters.forEach((param, i) => {
+			if (i > 0) {
+				parent.append(", ");
+			}
+
+			parent.append(
+				createElement("span", { class: CLS_PARAMETER }, param.name),
+			);
+
+			if (param.type) {
+				parent.append(
+					": ",
+					compoundTypeToHTML(param.type),
+				);
+			}
+		});
+
+		parent.append(this.isSetter ? "] = " : "]: ");
+
+		parent.append(compoundTypeToHTML(this.type || "any"));
+
+		super.toHTML(parent);
 	}
 }
 
@@ -590,72 +709,107 @@ class Parameter {
 
 /**
  * @param {string} s
+ * @param {string|null} superClass
  * @returns {Signature}
  */
-function compileSignature(s) {
+function compileSignature(s, superClass) {
 	if (/^[a-zA-Z0-9]+$/.test(s)) {
-		return new ClassSignature(s);
+		return new ClassSignature(s, superClass);
 	}
 
-	let execOperator = /^([^ a-zA-Z0-9]+) ?([a-zA-Z0-9]+)$/.exec(s);
+	let execOperator = /^([^ a-zA-Z0-9]+) ?([a-zA-Z0-9]+)/.exec(s);
 	if (execOperator) {
 		let operator = execOperator[1];
 		let cls = capitalize(execOperator[2]);
 
-		return new PrefixOperatorSignature(cls, operator);
+		s = s.slice(execOperator[0].length);
+		let colon = s.indexOf(":");
+		let type = colon < 0 ? null : s.slice(colon + 1).trim();
+
+		return new PrefixOperatorSignature(cls, operator, type);
 	}
 	
-	execOperator = /^([a-zA-Z0-9]+) (\S+) ([a-zA-Z0-9]+)$/.exec(s);
+	execOperator = /^([a-zA-Z0-9]+) (\S+) ([a-zA-Z0-9]+)/.exec(s);
 	if (execOperator) {
 		let cls1 = capitalize(execOperator[1]);
 		let operator = execOperator[2];
 		let cls2 = capitalize(execOperator[3]);
 
-		return new InfixOperatorSignature(cls1, cls2, operator);
+		s = s.slice(execOperator[0].length);
+		let colon = s.indexOf(":");
+		let type = colon < 0 ? null : s.slice(colon + 1).trim();
+
+		return new InfixOperatorSignature(cls1, cls2, type, operator);
 	}
 
-	let dot = s.indexOf(".");
+	let b = compileMethodSignature(s, true, "(", ")");
+	if (b) return b;
 
-	if (dot > 0) {
-		let className = s.slice(0, dot);
-		let isStatic = /^[A-Z]/.test(s);
-
-		className = capitalize(className);
-
-		let rest = s.slice(dot + 1);
-
-		let openParen = rest.indexOf("(");
-		if (openParen > 0) {
-			let method = rest.slice(0, openParen);
-
-			let closeParen = rest.lastIndexOf(")");
-			if (closeParen < 0) throw Error("missing closing paren");
-
-			let params = [];
-			let paramParts = rest.slice(openParen + 1, closeParen).split(/,\s*/);
-			if (paramParts.length !== 1 || paramParts[0].length > 0) {
-				for (let part of paramParts) {
-					let colon = part.indexOf(":");
-					let name = colon < 0 ? part : part.slice(0, colon);
-					let type = colon < 0 ? null : part.slice(colon + 1).trim();
-					params.push(new Parameter(name, type));
-				}
-			}
-
-			let colon = rest.indexOf(":", closeParen);
-			let returnType = colon < 0 ? null : rest.slice(colon + 1).trim();
-
-			return new MethodSignature(className, isStatic, method, params, returnType);
-		}
-
-		let colon = rest.indexOf(":");
-		let property = colon < 0 ? rest : rest.slice(0, colon);
-		let type = colon < 0 ? null : rest.slice(colon + 1).trim();
-
-		return new PropertySignature(className, isStatic, property, type);
-	}
+	b = compileMethodSignature(s, false, "[", "]");
+	if (b) return b;
 
 	throw Error("invalid signature: " + s);
+}
+
+/**
+ * @param {string} s
+ * @param {boolean} hasName
+ * @param {string} openSymbol
+ * @param {string} closeSymbol
+ * @returns {Signature}
+ */
+function compileMethodSignature(s, hasName, openSymbol, closeSymbol) {
+	let nameEnd = s.indexOf(hasName ? "." : openSymbol);
+	if (nameEnd < 0) return null;
+
+	let className = s.slice(0, nameEnd);
+	s = s.slice(hasName ? nameEnd + 1 : nameEnd);
+
+	let isStatic = /^[A-Z]/.test(className);
+
+	className = capitalize(className);
+
+	let open = s.indexOf(openSymbol);
+	if (open >= 0) {
+		let method = s.slice(0, open);
+
+		let close = s.lastIndexOf(closeSymbol);
+		if (close < 0) throw Error("missing closing " + closeSymbol);
+
+		let params = [];
+		let paramParts = s.slice(open + 1, close).split(/,\s*/);
+		if (paramParts.length !== 1 || paramParts[0].length > 0) {
+			for (let part of paramParts) {
+				let colon = part.indexOf(":");
+				let name = colon < 0 ? part : part.slice(0, colon);
+				let type = colon < 0 ? null : part.slice(colon + 1).trim();
+				params.push(new Parameter(name, type));
+			}
+		}
+
+		if (method) {
+			let colon = s.indexOf(":", close);
+			let returnType = colon < 0 ? null : s.slice(colon + 1).trim();
+
+			return new MethodSignature(className, isStatic, method, params, returnType);
+		} else {
+			let isSetter = false;
+			let colon = s.indexOf(":", close);
+			if (colon < 0) {
+				colon = s.indexOf("=", close);
+				if (colon >= 0) isSetter = true;
+			}
+			let returnType = colon < 0 ? null : s.slice(colon + 1).trim();
+			
+			return new SubscriptSignature(className, isStatic, isSetter, params, returnType);
+		}
+	}
+
+	let colon = s.indexOf(":");
+	let property = colon < 0 ? s : s.slice(0, colon);
+	let type = colon < 0 ? null : s.slice(colon + 1).trim();
+
+	return new PropertySignature(className, isStatic, property, type);
 }
 
 /**

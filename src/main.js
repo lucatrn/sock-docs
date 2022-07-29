@@ -52,6 +52,8 @@ function navigateFromURL() {
 
 		if (title[0] === "~") {
 			search(title.slice(1));
+
+			document.title = "Sock | " + title + " (search)";
 		} else {
 			let matchingSections = sections.filter(section => section.matchesTitle(title));
 		
@@ -66,9 +68,13 @@ function navigateFromURL() {
 					createElement("p", {}, `Could not find information about "${title}".`)
 				);
 			}
+
+			document.title = "Sock | " + title;
 		}
 	} else {
 		showHome();
+
+		document.title = "Sock";
 	}
 }
 
