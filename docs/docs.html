@@ -23,6 +23,12 @@
 			</ul>
 		</div>
 		<div>
+			<h3>Sock Data Types</h3>
+			<ul class="flat">
+				<li><a href="#Vec">Vec</a></li>
+				<li><a href="#Transform">Transform</a></li>
+				<li><a href="#Color">Color</a></li>
+			</ul>
 			<h3>Sock Core</h3>
 			<ul class="flat">
 				<li><a href="#Game">Game</a></li>
@@ -34,9 +40,6 @@
 				<li><a href="#Quad">Quad</a></li>
 				<li><a href="#Screen">Screen</a></li>
 				<li><a href="#Camera">Camera</a></li>
-				<li><a href="#Vec">Vec</a></li>
-				<li><a href="#Transform">Transform</a></li>
-				<li><a href="#Color">Color</a></li>
 				<li><a href="#JSON">JSON</a></li>
 				<li><a href="#Buffer">Buffer</a></li>
 				<li><a href="#Promise">Promise</a></li>
@@ -330,7 +333,7 @@
 	<h2>num.smoothstep: Num</h2>
 	<p>Applies the <a href="https://en.wikipedia.org/wiki/Smoothstep">smoothstep function</a> to the given number.</p>
 	<p>Maps from the range 0 to 1 to the range 0 to 1 (clamped).</p>
-	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" viewBox="50 0 1550 1200" style="font-size:36.00pt;">
+	<svg xmlns="http://www.w3.org/2000/svg" width="500" viewBox="50 0 1550 1200" style="font-size:36.00pt;">
 		<!-- Adapted from CC0 Wikimedia Commons: https://commons.wikimedia.org/wiki/File:Smoothstep_and_Smootherstep.svg -->
 		<g fill="currentColor">
 			<g transform="translate(138.6,1105.5)" style="text-anchor:end"> <text><tspan> 0</tspan></text> </g>
@@ -376,6 +379,19 @@
 		<li>To convert turns to degrees, multiply by 360.</li>
 		<li>To convert turns to radians, multiply by <a href="#Num.tau"><code>Num.tau</code></a>.</li>
 	</ul>
+	<svg xmlns="http://www.w3.org/2000/svg" width="450" viewBox="0 0 460 400" style="font-size: 20px;">
+		<g fill="none" stroke="currentColor">
+			<circle cx="230" cy="200" r="125" />
+			<line x1="72.5" y1="200.5" x2="388.5" y2="200.5" />
+			<line x1="230.5" y1="40.5" x2="230.5" y2="360.5" />
+			<line x1="230.5" y1="200.5" x2="345.5" y2="85.5" />
+		</g>
+		<text x="397" y="201" alignment-baseline="middle">0</text>
+		<text x="350" y="74" alignment-baseline="middle">⅛ (0.125)</text>
+		<text x="230" y="30" text-anchor="middle">¼ (0.25)</text>
+		<text x="66" y="201" alignment-baseline="middle" text-anchor="end">½ (0.5)</text>
+		<text x="230" y="367" alignment-baseline="hanging" text-anchor="middle">¾ (0.75)</text>
+	</svg>
 </section>
 
 <section data-tag="trig periodic wave">
@@ -419,7 +435,7 @@
 	<p>A periodic function that generates a pulse/square wave.</p>
 	<p><code>pulse</code> uses the same general shape as <a href="#num.sin"><code>num.sin</code></a>.</p>
 	<figure>
-		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="preview" width="802" viewBox="0 10 802 280" xunitlength="183" yunitlength="88" xmin="-2" xmax="2" ymin="-1.3" ymax="1.3" ox="386" oy="134.4" font-size="20">
+		<svg xmlns="http://www.w3.org/2000/svg" id="preview" width="802" viewBox="0 10 802 280" xunitlength="183" yunitlength="88" xmin="-2" xmax="2" ymin="-1.3" ymax="1.3" ox="386" oy="134.4" font-size="20">
 			<path d="M8,252H20V76 H111V252H203V76 H295V252H385V76 H478V252H569V76 H661V252H752V76 H765" fill="none" stroke-width="3" stroke="var(--accent-color)" />
 			<path d="M11.036,164.4 760.964,164.4 M386,41.036 386,287.764 M386,170.9 386,157.9 M477.5,170.9 477.5,157.9 M569,170.9 569,157.9 M660.5,170.9 660.5,157.9 M752,170.9 752,157.9 M294.5,170.9 294.5,157.9 M203,170.9 203,157.9 M111.5,170.9 111.5,157.9 M20,170.9 20,157.9 M392.5,164.4 379.5,164.4 M392.5,252.4 379.5,252.4 M392.5,76.4 379.5,76.4" stroke-width="2" stroke="currentColor" fill="none"></path>
 			<text x="482" y="188" text-anchor="start">0.5</text>
@@ -449,7 +465,7 @@
 	<p>A periodic function that generates a triangle wave.</p>
 	<p><code>tri</code> uses the same general shape as <a href="#num.sin"><code>num.sin</code></a>.</p>
 	<figure>
-		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="preview" width="802" viewBox="0 10 802 280" xunitlength="183" yunitlength="88" xmin="-2" xmax="2" ymin="-1.3" ymax="1.3" ox="386" oy="134.4" font-size="20">
+		<svg xmlns="http://www.w3.org/2000/svg" id="preview" width="802" viewBox="0 10 802 280" xunitlength="183" yunitlength="88" xmin="-2" xmax="2" ymin="-1.3" ymax="1.3" ox="386" oy="134.4" font-size="20">
 			<path d="M20,164 L65,76 L157,252 L251,76 L338,252 L434,76 L521,252 L618,76 L704,252 L752,164" fill="none" stroke-width="3" stroke="var(--accent-color)" />
 			<path d="M11.036,164.4 760.964,164.4 M386,41.036 386,287.764 M386,170.9 386,157.9 M477.5,170.9 477.5,157.9 M569,170.9 569,157.9 M660.5,170.9 660.5,157.9 M752,170.9 752,157.9 M294.5,170.9 294.5,157.9 M203,170.9 203,157.9 M111.5,170.9 111.5,157.9 M20,170.9 20,157.9 M392.5,164.4 379.5,164.4 M392.5,252.4 379.5,252.4 M392.5,76.4 379.5,76.4" stroke-width="2" stroke="currentColor" fill="none"></path>
 			<text x="453" y="188" text-anchor="start">0.5</text>
@@ -801,6 +817,14 @@
 	<p>A step is specified by using <code>..</code> on a range:</p>
 	<pre>
 (4..8..2).toList   // [ 4, 6, 8 ]
+	</pre>
+</section>
+
+<section>
+	<h2>Range.new(from: Num, to: Num, step: Num, isInclusive: Bool): Range</h2>
+	<p>Dynamically create a new Range.</p>
+	<pre>
+		Range.new(3, 9, 2, false)  // 3...9..2
 	</pre>
 </section>
 
@@ -1865,6 +1889,175 @@
 	</table>
 </section>
 
+<!-- VEC -->
+
+<section>
+	<h2>Vec</h2>
+	<p>A 2D vector.</p>
+</section>
+
+<section>
+	<h2>Vec.new(x: Num, y: Num): Vec</h2>
+	<p>Returns a new (0, 0) vector.</p>
+</section>
+
+<section>
+	<h2>Vec.zero: Vec</h2>
+	<p>Returns a new (0, 0) vector.</p>
+</section>
+
+<section>
+	<h2>vec.x: Num</h2>
+	<h2>vec.y: Num</h2>
+	<p>Set/get the x, y values.</p>
+</section>
+
+<!-- VEC -->
+
+<section data-tag="mat matrix tf">
+	<h2>Transform</h2>
+	<p>A 2D spatial transformation, represented as a 3x2 matrix.</p>
+	<h3>Creating transforms</h3>
+	<p>The following static methods can be used to create common transformations:</p>
+	<ul>
+		<li><a href="#Transform.translate(_,_)"><code>Transform.translate(x, y)</code></a></li>
+		<li><a href="#Transform.rotate(_)"><code>Transform.rotate(angle)</code></a></li>
+		<li><a href="#Transform.scale(_,_)"><code>Transform.scale(x, y)</code></a></li>
+		<li><a href="#Transform.scale(_)"><code>Transform.scale(xy)</code></a></li>
+	</ul>
+	<p>Transforms can be created from matrix elements using <a href="#Transform.new(_,_,_,_,_,_)"><code>Transform.new(a,b,c,d,e,f)</code></a>.</p>
+	<h3>Combining transforms</h3>
+	<p>The <a href="#transform>>transform"><code>>></code></a> operator can be used to sequence transforms from left-to-right.</p>
+	<pre>
+		Transform.rotate(0.25) >> Transform.scale(1, 0.4) >> Transform.translate(80, 60)
+	</pre>
+	<p>To combine common transformations, the instance methods <a href="#transform.translate(_,_)"><code>translate()</code></a>, <a href="#transform.rotate(_)"><code>rotate()</code></a> and <a href="#transform.scale(_)"><code>scale()</code></a> can be used:</p>
+	<pre>
+		Transform.rotate(0.25).scale(1, 0.4).translate(80, 60)
+	</pre>
+</section>
+
+<section data-tag="mat matrix">
+	<h2>Transform.new(n0, n1, n2, n3, n4, n5: Num): Transform</h2>
+	<p>Create a new Transform from matrix elemnts. Elements are in <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">column-major order</a>:</p>
+	<table>
+		<tr>
+			<td>n0</td>
+			<td>n2</td>
+			<td>n4</td>
+		</tr>
+		<tr>
+			<td>n1</td>
+			<td>n3</td>
+			<td>n5</td>
+		</tr>
+	</table>
+	<pre>
+		// Scale Y by 2 and translate X by 4.
+		Transform.new(1, 0, 0, 2, 4, 0)
+	</pre>
+</section>
+
+<section>
+	<h2>Transform.identity: Transform</h2>
+	<p>Return a new transform that has no transformative effects.</p>
+</section>
+
+<section>
+	<h2>Transform.translate(x, y: Num): Transform</h2>
+	<h2>transform.translate(x, y: Num): Transform</h2>
+	<p>A translation.</p>
+	<p>The static method returns a new transform.</p>
+	<p>The instance method applies the translation in place, returning the original transform object.</p>
+</section>
+
+<section data-tag="rotation">
+	<h2>Transform.rotate(angle: Num): Transform</h2>
+	<h2>transform.rotate(angle: Num): Transform</h2>
+	<p>A rotation around the origin, using the given angle in <a href="#Turns">turns</a>.</p>
+	<p>The static method returns a new transform.</p>
+	<p>The instance method applies the rotation in place, returning the original transform object.</p>
+</section>
+
+<section>
+	<h2>Transform.scale(x, y: Num): Transform</h2>
+	<h2>transform.scale(x, y: Num): Transform</h2>
+	<h2>Transform.scale(xy: Num): Transform</h2>
+	<h2>transform.scale(xy: Num): Transform</h2>
+	<p>A scaling from the origin.</p>
+	<p>The static method returns a new transform.</p>
+	<p>The instance method applies the scaling in place, returning the original transform object.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">transform.toJSON: Num[]</h2>
+	<p>Returns matrix elements as a list, in <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">column-major order</a>.</p>
+	<pre>
+		Transform.new(1, 2, 3, 4, 5, 6).toJSON  // [ 1, 2, 3, 4, 5, 6 ]
+	</pre>
+</section>
+
+<section>
+	<h2 data-tag="readonly">transform.toString: String</h2>
+	<p>Displays the matrix elements as a list, in <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">column-major order</a>.</p>
+	<pre>
+		Transform.new(1, 2, 3, 4, 5, 6).toString  // "[1, 2, 3, 4, 5, 6]"
+	</pre>
+</section>
+
+<section>
+	<h2>transform[n: Num]: Num</h2>
+	<h2>transform[n: Num] = Num</h2>
+	<p>Get or set a matrix element, using an index from 0 to 5. Indices are in <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">column-major order</a>:</p>
+	<table>
+		<tr>
+			<td>0</td>
+			<td>2</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>3</td>
+			<td>5</td>
+		</tr>
+	</table>
+	<pre>
+		Transform.identity[0]  // 1
+	</pre>
+</section>
+
+<section>
+	<h2>transform >> transform: Transform</h2>
+	<p><code>left >> right</code> returns a new transform that is equivalent to <code>left</code> followed by <code>right</code>.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("echidna.jpg")
+		Game.begin {
+			Game.clear()
+
+			var scale = Transform.scale(1, 0.3)
+			var rotate = Transform.rotate(Time.time / 8)
+
+			Game.print("rotate then scale", 60, 4)
+			spr.transform = rotate >> scale
+			spr.draw(60, 30)
+
+			Game.print("scale then rotate", 400, 4)
+			spr.transform = scale >> rotate
+			spr.draw(400, 30)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>transform * transform: Transform</h2>
+	<p>Performs matrix multiplication, returning a new transform.</p>
+	<p><code>a * b</code> is equivalent to <a href="#transform>>transform"><code>b >> a</code></a> (<code>b</code> followed by <code>a</code>).</p>
+</section>
+
+<section>
+	<h2>transform * vec: Vec</h2>
+	<p>Applies the transformation to a vector, returning a new vector.</p>
+</section>
 
 <!-- GAME -->
 
@@ -2154,27 +2347,18 @@
 </section>
 
 <section>
-	<h2>Time.time</h2>
+	<h2>Time.time: Num</h2>
 	<p>The number of seconds since the game started.</p>
 	<p>This is evaluated at the start of the frame, and stays constant for the rest of the frame.</p>
-	<script type="application/wren">
-		Game.print((Time.time * 100).floor / 100)
-	</script>
 </section>
 
 <section>
-	<h2>Time.frame</h2>
+	<h2>Time.frame: Num</h2>
 	<p>The number of elapsed frames.</p>
-	<script type="application/wren">
-		Game.print(Time.frame)
-	</script>
-	<!-- <script type="application/wren">
-		if (Time.frame % 60 == 0) Game.beep()
-	</script> -->
 </section>
 
 <section>
-	<h2>Time.delta</h2>
+	<h2>Time.delta: Num</h2>
 	<p>The number of seconds since the last frame.</p>
 	<script type="application/wren">
 		// FPS independent movement speed.
@@ -2851,14 +3035,10 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<p>When a Sprite is created this is set to <a href="#Sprite.defaultScaleFilter"><code>Sprite.defaultScaleFilter</code></a>, which itself defaults to <code>"nearest"</code>.</p>
 	<script type="application/wren">
 		var spr = Sprite.load("buppy.png")
-		
 		Game.begin {
-			spr.scaleFilter = Input.held("MouseLeft") ? "linear" : "nearest"
-
-			Game.clear()
-			Game.print("hold mouse button to change filter")
-			Game.print(spr.scaleFilter)
+			spr.scaleFilter = Time.time.repeat(2) < 1 ? "linear" : "nearest"
 			spr.draw(6, 36, 200, 200)
+			Game.print(spr.scaleFilter)
 		}
 	</script>
 </section>
@@ -2869,7 +3049,6 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<p>Defaults to white.</p>
 	<script type="application/wren">
 		var spr = Sprite.load("toys.jpg")
-		
 		Game.begin {
 			spr.color = Color.hsl(Time.time / 10, 1, 0.5)
 			spr.draw(32, 32)
@@ -2880,44 +3059,293 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 <section>
 	<h2>sprite.transform: Transform</h2>
 	<p>Applies a transformation to the sprite when drawn.</p>
+	<p>When using this setter, the transformation's origin is set to the center of the rectangle where the sprite is drawn.</p>
 	<script type="application/wren">
-		var spr = Sprite.load("cat.jpg")
-		
+		var spr = Sprite.load("echidna.jpg")
 		Game.begin {
-			spr.transform = Transform.scale(Time.time.sin.sign, 1)
-			spr.draw(64, 64)
+			Game.clear()
+			spr.transform = Transform.rotate(Time.time / 6)
+			spr.draw(70, 70)
 		}
 	</script>
 </section>
 
 
 <section>
-	<h2>sprite.transformOrigin: Vec</h2>
-	<h2>sprite.setTransformOrigin(x: Num, y: Num)</h2>
-	<p>The origin used by <a href="#sprite.transform"><code>sprite.transform</code></a>.</p>
-	<p>Defaults to the center of the sprite.</p>
+	<h2>sprite.setTransform(originX, originY: Num, t: Transform)</h2>
+	<p>Applies a transformation to the sprite when drawn, using the given transformation origin.</p>
+	<p>The origin is relative to the top-left of the rectangle where the sprite is drawn.</p>
 	<script type="application/wren">
-		var spr = Sprite.load("sword.png")
-		
+		var spr = Sprite.load("echidna.jpg")
 		Game.begin {
-			Game.clear(#444)
-			spr.setTransformOrigin(49, 206)
-			spr.transform = Transform.rotate(Time.time.sin / 10)
-			spr.draw(200, 80)
+			Game.clear()
+			spr.setTransform(0, 0, Transform.rotate(Time.time / 6))
+			spr.draw(200, 200, 128, 128)
 		}
 	</script>
 </section>
 
+<section>
+	<h2>sprite.draw(x, y: Num)</h2>
+	<h2>sprite.draw(x, y, width, height: Num)</h2>
+	<p>Draws the sprite at the given point/rectangle in pixels.</p>
+	<p><code>width</code> and <code>height</code> default to the sprite's resolution.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("echidna.jpg")
+		Game.begin {
+			spr.draw(0, 0)
+			spr.draw(256, 0, 128, 128)
+			spr.draw(256, 128, 64, 64)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>sprite.draw(x, y, srcX, srcY, srcWidth, srcHeight: Num)</h2>
+	<h2>sprite.draw(x, y, width, height, srcX, srcY, srcWidth, srcHeight: Num)</h2>
+	<p>Draws the rectangular region of the sprite (denoted by the <code>src</code> paramters) at the given point/rectangle.</p>
+	<p>All coordinates use pixels.</p>
+	<p><code>width</code> and <code>height</code> default to <code>srcWidth</code> and <code>srcHeight</code>.</p>
+	<script type="application/wren" data-tag="once">
+		var spr = Sprite.load("placeholder.png")  // 256x256 texture
+		Game.begin {
+			// Draw original sprite for refrence.
+			spr.draw(0, 0)
+			
+			// Draw a 64x64 region whose top-left corner is at (128, 196).
+			spr.draw(272, 0, 128, 196, 64, 64)
+
+			// Draw the same region as before, but scaled up to 256x256.
+			spr.draw(352, 0, 256, 256, 128, 196, 64, 64)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>sprite.beginBatch()</h2>
+	<h2>sprite.endBatch()</h2>
+	<p>Used to draw one sprite multiple times in a single draw call.</p>
+	<script type="application/wren" data-tag="once">
+		var spr = Sprite.load("dust.png")
+		spr.scaleFilter = "linear"
+		Game.begin {
+			Game.clear(#444)
+
+			var w = Game.width + 200
+			var h = Game.height + 200
+			var n = 0
+			spr.beginBatch()
+			for (i in 1..128) {
+				var t = i*i/16384
+				var s = 50 + t * 140
+				spr.color = Color.gray(1, t)
+				spr.draw((n + Time.time * 500 * (0.1 + t)).repeat(-200, w), n.repeat(-200, h), s, s)
+				n = n + i * 377
+			}
+			spr.endBatch()
+		}
+	</script>
+</section>
+
+<!-- SCREEN -->
+
+<section>
+	<h2>Screen</h2>
+	<p>Provides information about the current display device.</p>
+</section>
+
+<section data-tag="resolution size">
+	<h2>Screen.width: Num</h2>
+	<h2>Screen.height: Num</h2>
+	<p>The size of the current display in pixels.</p>
+	<script type="application/wren">
+		Game.print("screen size: %(Screen.width)x%(Screen.height)")
+	</script>
+</section>
+
+<section data-tag="resolution size">
+	<h2>Screen.availableWidth: Num</h2>
+	<h2>Screen.availableHeight: Num</h2>
+	<p>The size of the display area that is usable by the application in windowed mode (e.g. due to OS taskbars/menus).</p>
+	<script type="application/wren">
+		Game.print("actual size:    %(Screen.width)x%(Screen.height)")
+		Game.print("available size: %(Screen.availableWidth)x%(Screen.availableHeight)")
+	</script>
+</section>
+
+<section data-tag="resolution size">
+	<h2>Screen.refreshRate: Num</h2>
+	<p>The current display's refresh rate in Hz.</p>
+	<details>
+		<summary>Platform notes</summary>
+		<p>On the web this is only an estimation as no JavaScript API exposes this information yet.</p>
+		<p>In multi-display setups this may report the highest refresh rate, rather than that of the current monitor.</p>
+	</details>
+	<script type="application/wren">
+		Game.print("refresh rate: %(Screen.refreshRate)")
+	</script>
+</section>
+
+<!-- SCREEN -->
+
+<section>
+	<h2>JSON</h2>
+	<p>Enables converting Wren values to and from JSON.</p>
+	<p>The following types are supported:</p>
+	<ul>
+		<li><a href="#Num"><code>Num</code></a></li>
+		<li><a href="#Bool"><code>Bool</code></a></li>
+		<li><a href="#String"><code>String</code></a></li>
+		<li><a href="#Range"><code>Range</code></a></li>
+		<li><a href="#Null"><code>Null</code></a></li>
+		<li><a href="#List"><code>List</code></a></li>
+		<li><a href="#Map"><code>Map</code></a></li>
+		<li><a href="#Vec"><code>Vec</code></a></li>
+		<li><a href="#Buffer"><code>Buffer</code></a></li>
+		<li>Partial support for other <a href="#Sequence">sequences</a> (encoded/decoded as <a href="#List">lists</a>).</li>
+	</ul>
+	<p>User defined classes can be supported by user <a href="#JSON.register(_)"><code>JSON.register()</code></a>.</p>
+</section>
+
+<section>
+	<h2>JSON.toString(value): String</h2>
+	<p>Converts the given Wren values to JSON.</p>
+	<pre>
+		// Most basic values can be converted naturally.
+		JSON.toString({ "x": [ 576, true, false, "fish" ] })  // "{"x":[576,true,false,"fish"]}"
+
+		// To convert other values the convention ["»Type",&lt;encoded-value&gt;] is used.
+		JSON.toString(Num.nan)                   // "["»Num","nan"]"
+		JSON.toString(Num.infinity)              // "["»Num","infinity"]"
+		JSON.toString({ false: 0, true: 1 })     // "["»Map",[false,0,true,1]]"
+		JSON.toString(Vec.new(3, 7))             // "["»Vec",[3,7]]"
+		JSON.toString(Buffer.fromString("cat"))  // "["»Buffer","Y2F0"]"
+	</pre>
+</section>
+
+<section>
+	<h2>JSON.fromString(s: String): any</h2>
+	<h2>JSON.fromString(s: null): null</h2>
+	<p>Parse JSON as Wren values.</p>
+	<pre>
+		JSON.fromString("[5,7,6]")  // [ 5, 7, 6 ]
+	</pre>
+</section>
+
+<section>
+	<h2>JSON.register(class: Class)</h2>
+	<p>Enables <code>JSON</code> to encode and decode instances of the given class as JSON.</p>
+	<p>The class must implement two methods:</p>
+	<ol>
+		<li>The static method <code>fromJSON(value: any): any</code>.</li>
+		<li>The instance method <code>toJSON: any</code>.</li>
+	</ol>
+	<pre>
+		class Fish {
+			construct new(name) {
+				_name = name
+			}
+
+			name { _name }
+
+			toJSON { _name }
+
+			static fromJSON(value) { value is String ? Fish.new(value) : null }
+		}
+
+		JSON.register(Fish)
+
+		var fish = Fish.new("Shark")
+		var json = JSON.toString(fish)  // "["»Fish","Shark"]"
+		JSON.fromString(json).name      // "Shark"
+	</pre>
+</section>
+
+<section>
+	<h2>JSON.load(path: String): any</h2>
+	<p>Loads JSON from an asset.</p>
+</section>
 
 <!-- COLOR -->
+
+<section>
+	<h2>Color</h2>
+	<p>Colors in Sock are represented as <a href="#Num">numbers</a>.</p>
+	<p>Colors can be created using the <code>#</code> syntax, or through <code>Color</code> static methods.</p>
+	<pre>
+		// The following color literals are supported:
+		#rgb
+		#rgba
+		#rrggbb
+		#rrggbbaa
+	</pre>
+	<p>See also:</p>
+	<ul>
+		<li><a href="#num.red"><code>num.red</code></a>, <a href="#num.green"><code>num.green</code></a>, <a href="#num.blue"><code>num.blue</code></a>, <a href="#num.alpha"><code>num.alpha</code></a></li>
+		<li><a href="#random.color()"><code>random.color()</code></a></li>
+	</ul>
+</section>
+
+<section>
+	<h2>Color.rgb(red: Num, green: Num, blue: Num): Num</h2>
+	<h2>Color.rgb(red: Num, green: Num, blue: Num, alpha: Num): Num</h2>
+	<p>Create a color from individual red/green/blue/alpha values.</p>
+	<p>Each value is clamped on the range 0 to 1.</p>
+	<script type="application/wren">
+		var rgb = [ 1, 1, 1 ]
+
+		Game.begin {
+			Game.clear()
+			Quad.draw(10, 10, 50, 50, Color.rgb(rgb[0], rgb[1], rgb[2]))
+
+			for (i in 0..2) {
+				var x = 100 + i * 70
+				var w = 40
+				if (Input.held("MouseLeft") && Input.mouse.x >= x && Input.mouse.x < x + w) {
+					rgb[i] = Input.mouse.y.map(45, 300, 1, 0).clamp(0, 1)
+				}
+				var h = rgb[i] * 255 
+				Game.print("rgb"[i], x, 10)
+				Game.print((rgb[i] * 100).floor / 100, x + 12, 10)
+				Quad.draw(x, 300 - h, w, h, #fff)
+			}
+		}
+	</script>
+</section>
+
+<section>
+	<h2>Color.gray(value: Num): Num</h2>
+	<h2>Color.gray(value: Num, alpha: Num): Num</h2>
+	<p>Create a grayscale color from a color intensity <code>value</code>.</p>
+	<p><code>value</code> and <code>alpha</code> are clamped on the range 0 to 1.</p>
+	<pre>
+		Color.gray(0)    // black
+		Color.gray(1)    // white
+		Color.gray(0.7)  // 70% gray
+	</pre>
+	<script type="application/wren">
+		Game.clear(Color.gray(Time.time.pingpong(1)))
+	</script>
+</section>
 
 <section>
 	<h2>Color.hsl(hue: Num, saturation: Num, lightness: Num): Num</h2>
 	<h2>Color.hsl(hue: Num, saturation: Num, lightness: Num, alpha: Num): Num</h2>
 	<p>Create a color from hue-saturation-lightness (HSL) coordinates.</p>
-	<p>Each value has an expected range of 0..1, with <code>hue</code> being expressed in <a href="#Turns">turns</a>.</p>
+	<p>Each value has an expected range of 0..1, with <code>hue</code> being expressed in <a href="#Turns">turns</a>. <code>hue</code> repeats around 0 to 1 (e.g. a hue of 3.7 is equivalent to 0.7).</p>
 	<script type="application/wren">
 		Game.clear(Color.hsl(Time.time / 7, 1, 0.5))
+	</script>
+</section>
+
+<section>
+	<h2>Color.toHexString(color: Num): String</h2>
+	<p>...</p>
+	<script type="application/wren">
+		Game.fps = 1
+		var color = Random.int(0xffffff) | 0xff000000
+		Game.printColor = color
+		Game.print(Color.toHexString(color))
 	</script>
 </section>
 

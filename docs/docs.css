@@ -153,7 +153,6 @@ h2 .permalink {
 	padding: 0 0.2em;
 	text-decoration: none !important;
 	opacity: 0;
-	transition: opacity 0.05s linear;
 	user-select: none;
 }
 h2:hover .permalink {
@@ -171,7 +170,7 @@ h3 {
     display: inline-block;
 }
 
-p {
+p, ul {
 	margin: 0.6em 0 0.3em;
 }
 

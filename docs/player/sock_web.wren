@@ -140,79 +140,33 @@ if(x is Num&&y is Num)return new(x,y)
 return zero
 }
 }
-class Transform{
-construct new(){
-_0=1
-_1=0
-_2=0
-_3=1
-_4=0
-_5=0
-}
-construct new(n0,n1,n2,n3){
-_0=n0
-_1=n1
-_2=n2
-_3=n3
-_4=0
-_5=0
-}
-construct new(n0,n1,n2,n3,n4,n5){
-_0=n0
-_1=n1
-_2=n2
-_3=n3
-_4=n4
-_5=n5
-}
-[n]{n<3 ?(n<1 ? _0 :(n<2 ? _1 : _2)):(n<4 ? _3 :(n<5 ? _4 : _5))}
-*(a){a is Vec ? Vec.new(_0*v.x+_2*v.y+_4,_1*v.x+_3*v.y+_5): Transform.mul_(this,a)}
-then(a){Transform.mul_(a,this)}
-static mul_(a,b){
-var a0=a[0]
-var a1=a[1]
-var a2=a[2]
-var a3=a[3]
-var a4=a[4]
-var a5=a[5]
-var b0=b[0]
-var b1=b[1]
-var b2=b[2]
-var b3=b[3]
-var b4=b[4]
-var b5=b[5]
-return new(a0*b0+a2*b1,a1*b0+a3*b1,a0*b2+a2*b3,a1*b2+a3*b3,a0*b4+a2*b5+a4,a1*b3+a3*b5+a5)
-}
+foreign class Transform{
+foreign static new(a,b,c,d,e,f)
+static identity{new(1,0,0,1,0,0)}
+foreign[n]
+foreign[n]=(a)
+*(a){a is Vec ? Vec.new(this[0]*a.x+this[2]*a.y+this[4],this[1]*a.x+this[3]*a.y+this[5]): mul_(a)}
+>>(a){a.mul_(this)}
+foreign mul_(a)
+foreign toJSON
 toString{toJSON.toString}
-toJSON{[_0,_1,_2,_3,_4,_5]}
 static fromJSON(a){(a is List&&a.count==6)? new(a[0],a[1],a[2],a[3],a[4],a[5]): null}
-static translate(x,y){new(1,0,0,1,x,y)}
+foreign translate(a,b)
+foreign static translate(a,b)
+foreign rotate(a)
+foreign static rotate(a)
+foreign scale(a,b)
+foreign static scale(a,b)
+scale(a){scale(a,a)}
 static scale(a){scale(a,a)}
-static scale(x,y){new(x,0,0,y)}
-static rotate(a){
-var c=a.cos
-var s=a.sin
-return new(c,s,-s,c)
-}
 }
 class Color{
 static rgb(r,g,b){rgb(r,g,b,1)}
 foreign static rgb(a,b,c,d)
 static hsl(h,s,l){hsl(h,s,l,1)}
 foreign static hsl(a,b,c,d)
-static black{#000}
-static black(a){gray(0,a)}
-static white{#fff}
-static white(a){gray(1,a)}
-static gray{#808080}
 static gray(n){rgb(n,n,n,1)}
 static gray(n,a){rgb(n,n,n,a)}
-static red{#f00}
-static green{#0f0}
-static blue{#00f}
-static yellow{#ff0}
-static cyan{#0ff}
-static magenta{#f0f}
 foreign static toHexString(a)
 static luma(c){(c.red*0.2126+c.green*0.7152+c.blue*0.0722)/255}
 }
@@ -306,7 +260,7 @@ __km=Num.infinity
 __szf=false
 __pp=false
 __drawX=__drawY=4
-__drawC=Color.white
+__drawC=#fff
 }
 static update_(w,h){
 __wm=w
@@ -339,14 +293,11 @@ Fiber.suspend()
 foreign static quit()
 }
 class Screen{
-static size{Vec.of(sz_)}
-static width{sz_[0]}
-static height{sz_[1]}
-static maxWindowSize{Vec.of(sza_)}
-static maxWindowWidth{sza_[0]}
-static maxWindowHeight{sza_[1]}
-foreign static sz_
-foreign static sza_
+foreign static width
+foreign static height
+foreign static availableWidth
+foreign static availableHeight
+foreign static refreshRate
 }
 class Input{
 static holdCutoff{__hc}
@@ -612,6 +563,7 @@ Camera
 foreign class Sprite{
 static load(p){load_(p,Promise.new()).await}
 foreign static load_(a,b)
+foreign toString
 foreign width
 foreign height
 foreign scaleFilter
@@ -620,46 +572,19 @@ foreign wrapMode
 foreign wrapMode=(a)
 foreign color
 foreign color=(a)
+foreign transform
+foreign transform=(a)
+foreign setTransform(a,b,c)
 foreign beginBatch()
 foreign endBatch()
-transform{
-var t=transform_
-return t&&Transform.new(t[0],t[1],t[2],t[3],t[4],t[5])
-}
-transform=(t){
-if(t){
-setTransform_(t[0],t[1],t[2],t[3],t[4],t[5])
-}else{
-setTransform_(Num.nan,0,0,0,0,0)
-}
-}
-rotation=(a){transform=Transform.rotate(a)}
-foreign transform_
-foreign setTransform_(a,b,c,d,e,f)
-transformOrigin{
-var o=transformOrigin_
-return o&&Vec.new(o[0],o[1])
-}
-transformOrigin=(o){
-if(o){
-setTransformOrigin(o.x,o.y)
-}else{
-setTransformOrigin(Num.nan,0)
-}
-}
-foreign setTransformOrigin(a,b)
-foreign transformOrigin_
-draw(x,y){draw(x,y,0,width,height)}
-draw(x,y,z){draw(x,y,z,width,height)}
-draw(x,y,w,h){draw(x,y,0,w,h)}
-draw(x,y,w,h,u,v,uw,vh){draw(x,y,0,w,h,u,v,uw,vh)}
-foreign draw(a,b,c,d,e)
-foreign draw(a,b,c,d,e,f,g,h,i)
+draw(x,y){draw(x,y,width,height)}
+foreign draw(a,b,c,d)
+draw(x,y,u,v,uw,uh){draw(x,y,uw,uh,u,v,uw,uh)}
+foreign draw(a,b,c,d,e,f,g,h)
 foreign static defaultScaleFilter
 foreign static defaultScaleFilter=(a)
 foreign static defaultWrapMode
 foreign static defaultWrapMode=(a)
-foreign toString
 }
 class Quad{
 foreign static beginBatch()
@@ -898,6 +823,10 @@ k=k[1..-1]
 var v=l[1]
 if(k=="Num"){
 if(v is String)return Num.fromString(v)
+}else if(k=="Range"){
+if(v is List&&v.count==4&&v[0]is Num&&v[1]is Num&&v[2]is Num&&v[2]>0&&v[3]is Bool){
+return Range.new(v[0],v[1],v[2],v[3])
+}
 }else if(k=="Map"){
 if(v is List){
 var m={}
@@ -1094,6 +1023,16 @@ sb.add(x)
 sb.add(x)
 }else if(x is String){
 addString_(sb,x)
+}else if(x is Range){
+sb.add("[\"»Range\",[")
+sb.add(x.from)
+sb.addByte(44)
+sb.add(x.to)
+sb.addByte(44)
+sb.add(x.step)
+sb.addByte(44)
+sb.add(x.isInclusive)
+sb.add("]]")
 }else if(x is List){
 addList_(sb,x)
 }else if(x is Map){
@@ -1132,7 +1071,7 @@ sb.add("\",")
 toString_(sb,x.toJSON)
 sb.addByte(93)
 }else if(x is Sequence){
-addList_(sb,x.toList)
+addList_(sb,x)
 }else{
 addString_(sb,x)
 }

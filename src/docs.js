@@ -123,15 +123,11 @@ class Section {
 	 */
 	searchScore(search) {
 		for (let signature of this.signatures) {
-			if (signature.keywords.includes(search)) return 6;
-
 			for (let keyword of signature.keywords) {
-				if (keyword.includes(search)) {
-					return 5;
-				}
+				if (keyword.includes(search)) return 5;
 			}
 
-			if (signature.signature.includes(search)) return 4;
+			if (signature.signature.toLowerCase().includes(search)) return 4;
 		}
 
 		for (let tag of this.tags) {
