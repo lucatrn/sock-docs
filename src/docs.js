@@ -1,5 +1,5 @@
 import { createElement } from "./html.js";
-import { waitForMessage } from "./messaging.js";
+import { clearWaitingMessages, waitForMessage } from "./messaging.js";
 
 async function loadDocs() {
 	let response = await fetch("docs.html");
@@ -123,11 +123,15 @@ class Section {
 	 */
 	searchScore(search) {
 		for (let signature of this.signatures) {
-			for (let keyword of signature.keywords) {
-				if (keyword.includes(search)) return 5;
-			}
+			let title = signature.signature.toLowerCase();
 
-			if (signature.signature.toLowerCase().includes(search)) return 4;
+			if (title === search) return 7;
+			if (title.startsWith(search)) return 6;
+			if (title.includes(search)) return 5;
+
+			for (let keyword of signature.keywords) {
+				if (keyword.includes(search)) return 4;
+			}
 		}
 
 		for (let tag of this.tags) {
@@ -171,10 +175,12 @@ class Example {
 	/**
 	 * @param {string} code
 	 * @param {string} script
+	 * @param {ExampleMode} mode
 	 */
-	constructor(code, script) {
+	constructor(code, script, mode) {
 		this.code = code;
 		this.script = script;
+		this.mode = mode;
 	}
 
 	/**
@@ -193,13 +199,49 @@ class Example {
 		runButton.onclick = () => {
 			let iframe = createElement("iframe", { src: "player", width: "100%", height: "100%" });
 			
-			let closeButton = createElement("button", { class: "player-stop hidden" });
-			closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="player-stop-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+			
+			let closeButton;
+			if (this.mode === "nogui") {
+				closeButton = createElement("button", { class: "accent-button" });
+				closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accent-button-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Stop Example';
+			} else {
+				closeButton = createElement("button", { class: "player-stop hidden" });
+				closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="player-stop-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+			}
 
-			let player = createElement("div", { class: "player"}, [
-				iframe,
-				closeButton,
-			]);
+			let player = createElement("div", { class: "player"});
+
+			player.append(iframe);
+
+			if (this.mode === "gui") {
+				player.style.height = "400px";
+			} else {
+				iframe.style.display = "none";
+
+				if (this.mode === "console") {
+					player.style.height = "200px";
+					
+					let output = createElement("div", { class: "console" });
+					player.append(output);
+
+					// To receive the "print" messages, we add a separate listener to each event.
+					// This is a lazy implementation, but it works fine in practice...
+					async function logLoop() {
+						let line = await waitForMessage("print", iframe);
+
+						if (line) {
+							output.append(createElement("div", {}, line));
+							output.scrollTop = 9999;
+							
+							logLoop();
+						}
+					}
+
+					logLoop();
+				}
+			}
+
+			player.append(closeButton);
 
 			runButton.replaceWith(player);
 
@@ -211,10 +253,19 @@ class Example {
 				closeButton.classList.remove("hidden");
 				closeButton.onclick = () => {
 					iframe.src = "about:blank";
-					iframe = null;
 					player.replaceWith(runButton);
 				};
 			});
+
+			// Wait for iframe to be removed.
+			// We need to remove an event listeners to prevent memory leak!
+			let interval = setInterval(() => {
+				if (!document.contains(iframe)) {
+					clearInterval(interval);
+					clearWaitingMessages(iframe);
+					iframe = null;
+				}
+			}, 1000);
 		}
 	}
 
@@ -225,16 +276,23 @@ class Example {
 		let code = normalizeCode(e.text);
 		let tags = e.dataset.tag?.split(/\s+/) ?? [];
 
+		/** @type {ExampleMode} */
+		let mode = "gui";
+		if (tags.includes("nogui")) mode = "nogui";
+		if (tags.includes("console")) mode = "console";
+
 		let script = code;
-		if (!code.includes("Game.begin") && !tags.includes("noloop")) {
+		if (tags.includes("loopafter")) {
+			script += "\nGame.begin {}";
+		} else if (!code.includes("Game.begin") && !tags.includes("noloop")) {
 			script = "Game.begin {\n";
-			if (!tags.includes("noclear")) script += "Game.clear()\n";
+			if (mode === "gui" && !tags.includes("noclear")) script += "Game.clear()\n";
 			script += code + "\n";
 			if (tags.includes("once")) script += "Game.quit()\n";
 			script += "}";
 		}
 
-		return new Example(code, script);
+		return new Example(code, script, mode);
 	}
 }
 
@@ -293,12 +351,12 @@ Signature.prototype.keywords = [];
  * @param {string} type
  */
 function compoundTypeToHTML(type) {
-	let r = type.split(/([a-zA-Z]+)/);
+	let r = type.split(/((?:"[^"]+")|[a-zA-Z]+)/);
 
 	let parent = createElement("span", { class: CLS_TYPE });
 
 	r.forEach((part, i) => {
-		if (i % 2 === 0) {
+		if (i % 2 === 0 || part[0] === '"') {
 			parent.append(part);
 		} else {
 			parent.append(createAPILinkText(part, part));
@@ -878,4 +936,7 @@ function instantiateVirtualNodes(parentNode, nodes) {
  */
 /**
  * @typedef {VirtualNode[]} VirtualNodes
+ */
+/**
+ * @typedef {"gui"|"nogui"|"console"} ExampleMode
  */

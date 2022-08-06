@@ -10,6 +10,8 @@
 | sword.png | [Lexatchison](https://opengameart.org/content/medieval-sword) | CC0 |
 | kick.wav | [Hard3eat @ freesound](https://freesound.org/s/339825/) | CC0 |
 | rim.wav | [ianhall @ freesound](https://freesound.org/s/13252/) | CC0 |
+| chord.wav | [SamplingSamTheMarylandMan @ freesound](https://freesound.org/s/466296/) | CC0 |
+| storm.mp3 | [vspiegel @ freesound](https://freesound.org/s/266027/) | CC0 |
 | demo.mp3 | Luca | CC0 |
 | house_loop.mp3 | Luca | CC0 |
 | piano_loop.mp3 | Luca | CC0 |

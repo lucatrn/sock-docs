@@ -11,18 +11,18 @@ static current{Meta.module(1)}
 static resolve(p){resolve(Meta.module(1),p)}
 foreign static resolve(a,b)
 }
-foreign class Buffer is Sequence{
+foreign class Buffer{
 construct new(n){}
 static fromString(s){
 var b=Buffer.new(s.byteCount)
 b.setFromString(s)
 return b
 }
-static fromUint8(a){
+static fromBytes(a){
 var b=new(a.count)
 var i=0
 for(c in a){
-b.setUint8(i,c)
+b.setByteAt(i,c)
 i=i+1
 }
 return b
@@ -30,20 +30,17 @@ return b
 static load(p){load_(p,Promise.new()).await}
 foreign static load_(a,b)
 foreign static fromBase64(a)
-foreign count
-foreign resize(a)
-foreign getUint8(a)
-foreign setUint8(a,b)
-foreign fillUint8(a)
+foreign byteCount
+foreign setFromString(a)
 foreign toString
 foreign asString
 foreign toBase64
-foreign setFromString(a)
-iterate(i){
-i=i ? i+1 : 0
-return i<count ? i : false
-}
-iteratorValue(i){getUint8(i)}
+foreign resize(a)
+foreign byteAt(a)
+foreign setByteAt(a,b)
+foreign fillBytes(a)
+foreign iterateByte_(a)
+bytes{ByteSequence.new(this)}
 toJSON{toBase64}
 static fromJSON(a){a is String ? fromBase64(a): null}
 }
@@ -185,7 +182,68 @@ static pupdate_(){
 __f=__f+1
 }
 }
+class Timer{
+construct new(t,s,f){
+if(!(f is Fn)||f.arity>1)Fiber.abort("callback must be a Fn with 0 or 1 arity")
+_s=s
+_f=f
+time=t
+}
+static frames(t,f){new(t,false,f)}
+static seconds(t,f){new(t,true,f)}
+isDone{_t==0}
+time{_t}
+time=(t){
+if(!(t is Num))Fiber.abort("time must be a Num")
+if(t<=0)Fiber.abort("time must be a positive")
+if(!_t||!__t.contains(this))__t.add(this)
+_t=t
+}
+cancel(){
+_t=0
+__t.remove(this)
+}
+pause(){
+__t.remove(this)
+}
+resume(){
+if(_t>0&&!__t.contains(this))__t.add(this)
+}
+update_(){
+_t=(_t-(_s ? Time.delta : 1)).max(0)
+return _t==0
+}
+run_(){
+__t.remove(this)
+if(_f.arity==1){
+_f.call(this)
+}else{
+_f.call()
+}
+}
+static init_(){
+__t=[]
+}
+static update_(){
+var a
+for(t in __t){
+if(t.update_()){
+if(a){
+a.add(t)
+}else{
+a=[t]
+}
+}
+}
+if(a){
+for(t in a){
+t.run_()
+}
+}
+}
+}
 Time.init_()
+Timer.init_()
 class Game{
 foreign static title
 foreign static title=(a)
@@ -280,6 +338,7 @@ ready_()
 static update_(){
 if(Input.held("F4"))quit()
 __drawX=__drawY=4
+Timer.update_()
 if(__fn)__fn.call()
 Input.pupdate_()
 Time.pupdate_()
@@ -720,6 +779,8 @@ static volume=(v){fadeVolume(v,0)}
 foreign static fadeVolume(a,b)
 }
 foreign class Voice is AudioControls{
+foreign time
+foreign time=(a)
 foreign play()
 foreign pause()
 foreign stop()

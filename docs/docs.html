@@ -28,11 +28,16 @@
 				<li><a href="#Vec">Vec</a></li>
 				<li><a href="#Transform">Transform</a></li>
 				<li><a href="#Color">Color</a></li>
+				<li><a href="#Buffer">Buffer</a></li>
+				<li><a href="#StringBuilder">StringBuilder</a></li>
+				<li><a href="#Promise">Promise</a></li>
+				<li><a href="#JSON">JSON</a></li>
 			</ul>
 			<h3>Sock Core</h3>
 			<ul class="flat">
 				<li><a href="#Game">Game</a></li>
 				<li><a href="#Time">Time</a></li>
+				<li><a href="#Timer">Timer</a></li>
 				<li><a href="#Input">Input</a></li>
 				<li><a href="#Asset">Asset</a></li>
 				<li><a href="#Path">Path</a></li>
@@ -40,17 +45,14 @@
 				<li><a href="#Quad">Quad</a></li>
 				<li><a href="#Screen">Screen</a></li>
 				<li><a href="#Camera">Camera</a></li>
-				<li><a href="#JSON">JSON</a></li>
-				<li><a href="#Buffer">Buffer</a></li>
-				<li><a href="#Promise">Promise</a></li>
+				<li><a href="#Storage">Storage</a></li>
 			</ul>
 		</div>
 		<div>
 			<h3>Sock Audio</h3>
 			<ul class="flat">
-				<li><a href="#Audio Concepts">Audio Concepts</a></li>
 				<li><a href="#Audio">Audio</a></li>
-				<li><a href="#AudioControls">AudioControls</a></li>
+				<li><a href="#AudioSource">AudioSource</a></li>
 				<li><a href="#Voice">Voice</a></li>
 				<li><a href="#AudioBus">AudioBus</a></li>
 				<li><a href="#FilterEffect">FilterEffect</a></li>
@@ -69,6 +71,7 @@
 		<div>
 			<h3>Tutorials</h3>
 			<ul class="flat">
+				<li><a href="#Audio Concepts">Audio Concepts</a></li>
 				<li><a href="#Input Remapping">Input Remapping</a></li>
 			</ul>
 		</div>
@@ -2084,7 +2087,7 @@
 		</tr>
 	</table>
 	<pre>
-		Game.title = "Duck Wizard"
+		Game.title = "Shark Wizard"
 	</pre>
 </section>
 
@@ -2379,6 +2382,65 @@
 	</script>
 </section>
 
+<!-- TIMER -->
+
+<section data-tag="timeout alarm setTimeout interval wait delay after">
+	<h2>Timer</h2>
+	<p>Executes a function after some period of time.</p>
+	<p>The period of time can be specified in frames or seconds:</p>
+	<ul>
+		<li>Frames: the number of elapsed frames (tied to <a class="highlight" href="#Game.fps">the game's framerate</a>).</li>
+		<li>Seconds: the amount of elapsed time (independent of the game's framerate).</li>
+	</ul>
+	<p>Timers are updated and called immediately before the game's update function.</p>
+</section>
+
+<section>
+	<h2>Timer.frames(frames: Num, fn: Fn): Timer</h2>
+	<h2>Timer.seconds(seconds: Num, fn: Fn): Timer</h2>
+	<p>Creates a new timer that runs for the given period of time.</p>
+	<p>The callback function must be 0 or 1 arity (in which case it is passed the timer instance).</p>
+	<script type="application/wren" data-tag="loopafter console">
+		Timer.frames(30) {
+			System.print("30 frames later...")
+		}
+		Timer.seconds(1) {|timer|
+			System.print(timer.isDone)
+		}
+	</script>
+</section>
+
+<section>
+	<h2 data-tag="readonly">timer.isDone: Bool</h2>
+	<p>If the timer completed or was <a href="#timer.cancel()">cancelled</a>.</p>
+</section>
+
+<section>
+	<h2>timer.time: Num</h2>
+	<p>Returns the remaining amount of time, either in frames or seconds depending on the timer's type.</p>
+	<p>If the timer has completed then this returns 0.</p>
+	<p>Setting this can be used adjust or restart the timer. It must be set to a positive value (not including 0).</p>
+	<script type="application/wren" data-tag="loopafter console">
+		var i = 0
+		Timer.seconds(1) {|timer|
+			System.print(i = i + 1)
+			timer.time = 1
+		}
+	</script>
+</section>
+
+<section>
+	<h2>timer.cancel()</h2>
+	<p>Cancels the timer. Has no effect if the timer has already completed.</p>
+	<p>A cancelled timer may be restarted using the <a href="#timer.time"><code>time</code></a> setter.</p>
+</section>
+
+<section>
+	<h2>timer.pause()</h2>
+	<h2>timer.resume()</h2>
+	<p>These two methods allow the timer to be temporarily paused and resumed at a later point.</p>
+	<p>These have no effect if the timer completed or was <a href="#timer.cancel()">cancelled</a></p>
+</section>
 
 <!-- INPUT -->
 
@@ -2401,12 +2463,14 @@
 		<li><code>MouseLeft</code></li>
 		<li><code>MouseMiddle</code></li>
 		<li><code>MouseRight</code></li>
+		<li><code>Mouse4</code></li>
+		<li><code>Mouse5</code></li>
 		<li><code>MouseWheelUp</code></li>
 		<li><code>MouseWheelDown</code></li>
 	</ul>
 	<h3>Keyboard</h3>
 	<p>Keyboard IDs map to the physical location on an American QWERTY keyboard, rather than the key printed on them.</p>
-	<p>For example if a AZERTY user pressed their "A" key, the input "Q" will be emitted. The actual key can be found using <a href="#Input.localize(_)"><code>Input.localize()</code></a>.</p>
+	<p>For example if an AZERTY user pressed their "A" key, the input "Q" will be emitted. The actual key can be found using <a href="#Input.localize(_)"><code>Input.localize()</code></a>.</p>
 	<figure>
 		<div class="overflow" style="width: 925px; display: inline-block;">
 			<div class="key-row" style="margin-bottom: 20px;">
@@ -2512,7 +2576,7 @@
 		<figcaption class="hidden">Input IDs for each keyboard key.</figcaption>
 	</figure>
 	<h3>Gamepad</h3>
-	<p>Currently multiple gamepads are not supported.</p>
+	<p>Multiple gamepads are not yet supported.</p>
 	<figure>
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="70 20 760 400" width="760" height="380" fill="none" stroke="currentColor">
 			<path d="M 350,300 c -30,0 -70,90 -100,100 c -30,0 -50,-40 -50,-70 q 0,-60 70,-225 q 40,-35 110,-35 h 128 q 70,0 110,35 q 70,165 70,225 c 0,30 -20,70 -50,70 c -30,-10 -70,-100 -100,-100 z" />
@@ -2984,7 +3048,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<p>A hardware accelerated 2D texture.</p>
 </section>
 
-<section>
+<section data-tag="asset">
 	<h2>Sprite.load(path: String): Sprite</h2>
 	<p>Load a sprite from an asset.</p>
 </section>
@@ -3147,6 +3211,46 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	</script>
 </section>
 
+<!-- QUAD -->
+
+<section data-tag="primitive draw">
+	<h2>Quad</h2>
+	<p>Used to draw untextured quadrilaterals.</p>
+</section>
+
+<section>
+	<h2>Quad.draw(x, y, width, height, color: Num)</h2>
+	<p>Draws a solid rectangle with the given color.</p>
+	<script type="application/wren" data-tag="once">
+		Quad.draw(40, 10, 100, 200, #08f)
+	</script>
+</section>
+
+<section>
+	<h2>Quad.draw(x1, y1, x2, y2, x3, y3, x4, y4, color: Num)</h2>
+	<p>Draws a solid quadrilateral with the given color, using the given corners.</p>
+	<p><b>The corners should be provided in the order they appear around the perimeter</b>. Clockwise/counter-clockwise order does not matter.</p>
+	<script type="application/wren" data-tag="once">
+		Quad.draw(
+			200, 100,
+			300, 200,
+			200, 300,
+			100, 200,
+			#08f
+		)
+		Game.print(1, 200, 100)
+		Game.print(2, 300, 200)
+		Game.print(3, 200, 300)
+		Game.print(4, 100, 200)
+	</script>
+</section>
+
+<section>
+	<h2>Quad.beginBatch()</h2>
+	<h2>Quad.endBatch()</h2>
+	<p>Used to draw multiple quads in a single draw call.</p>
+</section>
+
 <!-- SCREEN -->
 
 <section>
@@ -3186,12 +3290,81 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	</script>
 </section>
 
-<!-- SCREEN -->
+<!-- STORAGE -->
+
+<section data-tag="file persistence save load data">
+	<h2>Storage</h2>
+	<p>Provides persistent storage in a simplified and cross-platform manner.</p>
+	<p><code>Storage</code> can save and load any Wren value, as long as it supports <a href="#JSON">JSON conversion</a> (which includes most Sock types).</p>
+	<pre>
+		Storage.save("config", {
+			"fullscreen": true,
+			"items": [ 7, 3 ]
+		})
+	</pre>
+	<h3>Usage</h3>
+	<p>You must <a href="#Storage.id">first assign a storage ID</a> to your game, which is used to identify your game from other Sock games.</p>
+	<pre>
+		Storage.id = "shark_wizard"
+		System.print(Storage.load("config"))
+	</pre>
+	<h3>Implementation notes</h3>
+	<p>All values are stored as JSON strings.</p>
+	<table>
+		<tr>
+			<th>Platform/OS</th>
+			<th>Notes</th>
+		</tr>
+		<tr>
+			<td>Web</td>
+			<td>Saved in <code>localStorage</code> using the key <code>&lt;storage-id&gt;/&lt;key&gt;</code>.</td>
+		</tr>
+		<tr>
+			<td>Desktop: Windows</td>
+			<td>Saved to the file <code>%appdata%/&lt;storage-id&gt;/&lt;key&gt;.dat</code>.</td>
+		</tr>
+	</table>
+</section>
+
+<section>
+	<h2>Storage.id: String</h2>
+	<p>Get or set the game's storage ID. This must be set before using any of the other <code>Storage</code> methods.</p>
+	<p>The ID may only contain ASCII letters, digits, underscores (_) and dashes (-). This restriction ensures the ID can be used as a folder name.</p>
+	<pre>
+		Storage.id = "shark_wizard"
+	</pre>
+</section>
+
+<section>
+	<h2>Storage.save(value)</h2>
+	<h2>Storage.save(key: String, value): any</h2>
+	<p>Save a value using the given key. The key defaults to <code>"storage"</code>.</p>
+</section>
+
+<section>
+	<h2>Storage.load(): any</h2>
+	<h2>Storage.load(key: String): any</h2>
+	<p>Load a value using the given key. The key defaults to <code>"storage"</code>.</p>
+	<p>Returns <code>null</code> if the value does not exist.</p>
+</section>
+
+<section>
+	<h2>Storage.delete()</h2>
+	<h2>Storage.delete(key: String)</h2>
+	<p>Deletes the value at the given key, if there is any. The key defaults to <code>"storage"</code>.</p>
+</section>
+
+<section>
+	<h2>Storage.contains(key: String): Bool</h2>
+	<p>Check if a value is saved for the given key.</p>
+</section>
+
+<!-- JSON -->
 
 <section>
 	<h2>JSON</h2>
-	<p>Enables converting Wren values to and from JSON.</p>
-	<p>The following types are supported:</p>
+	<p>Enables converting Wren values to and from JSON, and reading JSON assets.</p>
+	<p>The following Wren types are supported:</p>
 	<ul>
 		<li><a href="#Num"><code>Num</code></a></li>
 		<li><a href="#Bool"><code>Bool</code></a></li>
@@ -3201,10 +3374,16 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 		<li><a href="#List"><code>List</code></a></li>
 		<li><a href="#Map"><code>Map</code></a></li>
 		<li><a href="#Vec"><code>Vec</code></a></li>
+		<li><a href="#Transform"><code>Transform</code></a></li>
 		<li><a href="#Buffer"><code>Buffer</code></a></li>
 		<li>Partial support for other <a href="#Sequence">sequences</a> (encoded/decoded as <a href="#List">lists</a>).</li>
 	</ul>
-	<p>User defined classes can be supported by user <a href="#JSON.register(_)"><code>JSON.register()</code></a>.</p>
+	<p>User defined classes can be supported by using <a href="#JSON.register(_)"><code>JSON.register()</code></a>.</p>
+</section>
+
+<section data-tag="asset">
+	<h2>JSON.load(path: String): any</h2>
+	<p>Loads JSON from an asset.</p>
 </section>
 
 <section>
@@ -3240,30 +3419,183 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 		<li>The static method <code>fromJSON(value: any): any</code>.</li>
 		<li>The instance method <code>toJSON: any</code>.</li>
 	</ol>
+	<p>The <code>toJSON</code> method should return a Wren value that can easily be converted to JSON.</p>
+	<p>The <code>fromJSON</code> method should implement the reverse transformantion, returning an instance of the class.</p>
 	<pre>
 		class Fish {
-			construct new(name) {
+			construct new(name, age) {
 				_name = name
+				_age = age
 			}
 
 			name { _name }
+			age { _age }
 
-			toJSON { _name }
+			toJSON { { "name": _name, "age": _age } }
 
-			static fromJSON(value) { value is String ? Fish.new(value) : null }
+			static fromJSON(value) { Fish.new(value["name"], value["age"]) }
 		}
 
 		JSON.register(Fish)
 
-		var fish = Fish.new("Shark")
-		var json = JSON.toString(fish)  // "["»Fish","Shark"]"
-		JSON.fromString(json).name      // "Shark"
+		var fish = Fish.new("Shark", 37)
+		var json = JSON.toString(fish)   // "["»Fish",{"name":"Shark","age":37}]"
+		JSON.fromString(json).name       // "Shark"
+		JSON.fromString(json).age        // 37
+	</pre>
+</section>
+
+<!-- STRINGBUILDER -->
+
+<section data-tag="string">
+	<h2>StringBuilder</h2>
+	<p>Used to efficient build up a string from multiple smaller strings.</p>
+	<p>This class can be a big performance boost over simple concatenation (<code>s = s + "next"</code>), as Wren creates a new string for every concatenation, whereas a StringBuilder uses a single dynamically resizing buffer.</p>
+	<pre>
+		var sb = StringBuilder.new()
+		for (i in 0..9) {
+			if (i > 0) sb.add(", ")
+			sb.add(i)
+		}
+		sb.toString  // "0, 1, 2, 3, 4, 5, 6, 7, 8, 9"
 	</pre>
 </section>
 
 <section>
-	<h2>JSON.load(path: String): any</h2>
-	<p>Loads JSON from an asset.</p>
+	<h2>StringBuilder.new(): StringBuilder</h2>
+	<p>Create a new empty string-builder.</p>
+</section>
+
+<section>
+	<h2>stringBuilder.toString: String</h2>
+	<p>Get a new string containg the contents of the buffer.</p>
+</section>
+
+<section>
+	<h2>stringBuilder.add(value): StringBuilder</h2>
+	<p>Append a value to the buffer after converting it to a string. Returns the called StringBuilder.</p>
+	<pre>
+		var sb = StringBuilder.new()
+		sb.add("score: ").add(576)
+		sb.toString  // "score: 576"
+	</pre>
+</section>
+
+<section>
+	<h2>stringBuilder.addByte(byte: Num): StringBuilder</h2>
+	<p>Append a UTF-8 byte to the buffer. Returns the called StringBuilder.</p>
+	<pre>
+		var sb = StringBuilder.new()
+		sb.addByte(227).addByte(129).addByte(130)
+		sb.toString  // "あ"
+	</pre>
+</section>
+
+<section>
+	<h2>stringBuilder.clear(): StringBuilder</h2>
+	<p>Clear the contents of the buffer. Returns the called StringBuilder.</p>
+	<p>This is actually a constant time operation: the buffer's size/contents are unchanged, but the internal "size" counter is set to 0.</p>
+	<p>Hence it can be more efficient to re-use and clear existing string builders, rather than allocate new ones.</p>
+</section>
+
+<section>
+	<h2>Buffer</h2>
+	<p>A read/write binary buffer. Supports resizing, and loading from assets.</p>
+</section>
+
+<section>
+	<h2>Buffer.new(byteCount: Num): Buffer</h2>
+	<p>Returns a new Buffer with the given size. The buffer's bytes are initialized to 0.</p>
+</section>
+
+<section>
+	<h2>Buffer.fromString(s: String): Buffer</h2>
+	<p>Returns a new buffer filled with the bytes in the given string.</p>
+</section>
+
+<section>
+	<h2>Buffer.fromBytes(bytes: Sequence): Buffer</h2>
+	<p>Returns a new buffer filled with the given sequence of bytes.</p>
+	<pre>
+		Buffer.fromBytes([ 65, 33 ]).asString  // "A!"
+	</pre>
+</section>
+
+<section>
+	<h2>Buffer.fromBase64(base64: String): Buffer</h2>
+	<p>Decodes a base64 string and returns the resulting bytes in a new buffer.</p>
+	<pre>
+		Buffer.fromBase64("c29jaw==").asString  // "sock"
+	</pre>
+</section>
+
+<section data-tag="asset">
+	<h2>Buffer.load(path: String): Buffer</h2>
+	<p>Loads a buffer from an asset's binary data.</p>
+</section>
+
+<section data-tag="length size">
+	<h2 data-tag="readonly">buffer.byteCount: Num</h2>
+	<p>The size of the buffer in bytes.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">buffer.bytes: Sequence</h2>
+	<p>Returns a new sequence that iterates the buffer's bytes.</p>
+	<pre>
+		Buffer.fromString("abc").bytes.toList  // [ 97, 98, 99 ]
+	</pre>
+</section>
+
+<section>
+	<h2 data-tag="readonly">buffer.toString: String</h2>
+	<p>Displays the buffer as a sequence of hexadecimal bytes.</p>
+	<pre>
+		Buffer.fromString("abc").toString  // "0x616263"
+	</pre>
+</section>
+
+<section>
+	<h2 data-tag="readonly">buffer.asString: String</h2>
+	<p>Returns a new string that contains a copy of the buffer's bytes.</p>
+	<pre>
+		Buffer.fromString("abc").asString  // "abc"
+	</pre>
+</section>
+
+<section>
+	<h2 data-tag="readonly">buffer.toBase64: String</h2>
+	<p>Converts the buffer's bytes to base64 and returns the result as a new string.</p>
+	<pre>
+		Buffer.fromString("abc").toBase64  // "YWJj"
+	</pre>
+</section>
+
+<section data-tag="length size">
+	<h2>buffer.byteAt(byte: Num): Num</h2>
+	<h2>buffer.setByteAt(byte: Num, value: Num)</h2>
+	<p>Get or set a byte at the given index.</p>
+</section>
+
+<section data-tag="length size">
+	<h2>buffer.fillBytes(value: Num)</h2>
+	<p>Set all bytes to the given value.</p>
+	<pre>
+		var b = Buffer.new(4)
+		b.fillBytes(7)
+		b.bytes.toList  // [ 7, 7, 7, 7 ]
+	</pre>
+</section>
+
+<section data-tag="length size">
+	<h2>buffer.resize(byteCount: Num)</h2>
+	<p>Resize the buffer to the given size.</p>
+	<p>Existing bytes will remain unchanged. Any new bytes will be initialized to 0.</p>
+	<pre>
+		var b = Buffer.fromBytes([ 5, 7 ])
+		b.resize(4)
+		b.bytes.toList  // [5, 7, 0, 0]
+	</pre>
 </section>
 
 <!-- COLOR -->
@@ -3292,24 +3624,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<p>Create a color from individual red/green/blue/alpha values.</p>
 	<p>Each value is clamped on the range 0 to 1.</p>
 	<script type="application/wren">
-		var rgb = [ 1, 1, 1 ]
-
-		Game.begin {
-			Game.clear()
-			Quad.draw(10, 10, 50, 50, Color.rgb(rgb[0], rgb[1], rgb[2]))
-
-			for (i in 0..2) {
-				var x = 100 + i * 70
-				var w = 40
-				if (Input.held("MouseLeft") && Input.mouse.x >= x && Input.mouse.x < x + w) {
-					rgb[i] = Input.mouse.y.map(45, 300, 1, 0).clamp(0, 1)
-				}
-				var h = rgb[i] * 255 
-				Game.print("rgb"[i], x, 10)
-				Game.print((rgb[i] * 100).floor / 100, x + 12, 10)
-				Quad.draw(x, 300 - h, w, h, #fff)
-			}
-		}
+		Game.clear(Color.rgb(0, 0.4, 1))
 	</script>
 </section>
 
@@ -3387,12 +3702,12 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 			<div class="audio-arrow">played as</div>
 			<a class="audio-box" href="#Voice">Voice</a>
 			<span class="audio-box next">0-4 effects</span>
-			<a class="audio-box next" href="#voice.volume">volume</a>
+			<a class="audio-box next" href="#audioSource.volume">volume</a>
 			<div class="audio-box-list" style="margin-bottom: 4em;">
 				<div class="audio-arrow">optional bus</div>
 				<a class="audio-box" href="#AudioBus">AudioBus</a>
 				<span class="audio-box next">0-4 effects</span>
-				<a class="audio-box next" href="#audioBus.volume">volume</a>
+				<a class="audio-box next" href="#audioSource.volume">volume</a>
 			</div>
 			<div class="audio-arrow">master bus</div>
 			<a class="audio-box next" href="#Audio.volume">volume</a>
@@ -3420,14 +3735,14 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 		</div>
 		<figcaption>Reverb played into a lowpass filter.</figcaption>
 	</figure>
-	<p>Effects are managed using <a href="#AudioControls"><code>AudioControls</code></a> instance methods, which <code>Voice</code> and <code>Bus</code> both extend.</p>
+	<p>Effects are managed using <a href="#AudioSource"><code>AudioSource</code></a> instance methods, which <a href="#Voice"><code>Voice</code></a> and <a href="#AudioBus"><code>AudioBus</code></a> both extend.</p>
 	<p>Effects are added using the following methods:</p>
 	<ul>
-		<li><a href="#audioControls.addLowpass(_,_)"><code>audioControls.addLowpass(slot, frequency)</code></a></li>
-		<li><a href="#audioControls.addHighpass(_,_)"><code>audioControls.addHighpass(slot, frequency)</code></a></li>
-		<li><a href="#audioControls.addBandpass(_,_)"><code>audioControls.addBandpass(slot, frequency)</code></a></li>
-		<li><a href="#audioControls.addEcho(_,_,_)"><code>audioControls.addEcho(slot, delay, decay)</code></a></li>
-		<li><a href="#audioControls.addReverb(_)"><code>audioControls.addReverb(slot)</code></a></li>
+		<li><a href="#audioSource.addLowpass(_,_)"><code>audioSource.addLowpass(slot, frequency)</code></a></li>
+		<li><a href="#audioSource.addHighpass(_,_)"><code>audioSource.addHighpass(slot, frequency)</code></a></li>
+		<li><a href="#audioSource.addBandpass(_,_)"><code>audioSource.addBandpass(slot, frequency)</code></a></li>
+		<li><a href="#audioSource.addEcho(_,_,_)"><code>audioSource.addEcho(slot, delay, decay)</code></a></li>
+		<li><a href="#audioSource.addReverb(_)"><code>audioSource.addReverb(slot)</code></a></li>
 	</ul>
 	<p></p>
 </section>
@@ -3435,14 +3750,14 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 <section data-tag="sound">
 	<h2>Audio</h2>
 	<p>Manages loading audio and controlling general audio paramters (e.g. <a href="#Audio.volume">master volume</a>).</p>
-	<p>An instance of Audio represents the da</p>
+	<p>An instance of Audio represents waveform sound data.</p>
 </section>
 
-<section data-tag="ogg vorbis mp3 wav stream clip sound decode">
+<section data-tag="asset ogg vorbis mp3 wav stream clip sound decode">
 	<h2>Audio.load(path: String): Audio</h2>
 	<p>Load audio into memory from an asset.</p>
 	<p>Support <code>.wav</code>, <code>.ogg</code> and <code>.mp3</code>.</p>
-	<script type="application/wren" data-tag="noloop">
+	<script type="application/wren" data-tag="noloop nogui">
 		Audio.load("demo.mp3").play()
 	</script>
 </section>
@@ -3450,26 +3765,21 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 <section data-tag="master mix mixer">
 	<h2>Audio.volume: Num</h2>
 	<h2>Audio.fadeVolume(volume: Num, seconds: Num)</h2>
-	<p>Set the master volume.</p>
+	<p>Get or set the master volume.</p>
 	<p>Defaults to 1 (normal volume). Clamped between 0 and infinity when set.</p>
-	<script type="application/wren">
-		// A example of a volume slider.
+	<script type="application/wren" data-tag="nogui">
 		Audio.load("demo.mp3").play()
-
 		Game.begin {
-			var x = 100
-			var y = 100
-			var w = 50
-			var h = 200
-
-			if (Input.held("MouseLeft")) Audio.volume = Input.mouse.y.map(y, y + h, 1, 0).clamp(0, 1)
-
-			Game.clear()
-			Quad.draw(x, y, w, h, #444)
-			Quad.draw(x, y + h * (1 - Audio.volume), w, h * Audio.volume, #fff)
-			Game.print(Audio.volume, x + w + 4, y)
+			Audio.volume = 0.6 + Time.time.sin * 0.4
 		}
 	</script>
+</section>
+
+<section>
+	<h2>audio.voice(): Voice</h2>
+	<h2>audio.voice(bus: AudioBus): Voice</h2>
+	<p>Creates a new voice for the audio, which is initially paused.</p>
+	<p>If a bus is specified, the voice will play in that bus.</p>
 </section>
 
 <section>
@@ -3477,7 +3787,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<h2>audio.play(bus: AudioBus): Voice</h2>
 	<p>Creates a new voice for the audio and starts playing it.</p>
 	<p>If a bus is specified, the voice is played in that bus.</p>
-	<script type="application/wren" data-tag="noloop">
+	<script type="application/wren" data-tag="noloop nogui">
 		Audio.load("demo.mp3").play()
 	</script>
 </section>
@@ -3485,9 +3795,9 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 <section>
 	<h2>audio.playAtVolume(volume: Num): Voice</h2>
 	<h2>audio.playAtVolume(bus: AudioBus, volume: Num): Voice</h2>
-	<p>Creates a new voice for the audio and starts playing it at the specified <a href="Audio.volume">volume</a>.</p>
+	<p>Creates a new voice for the audio and starts playing it at the specified volume.</p>
 	<p>If a bus is specified, the voice is played in that bus.</p>
-	<script type="application/wren" data-tag="noloop">
+	<script type="application/wren" data-tag="noloop nogui">
 		// This will be very quiet!
 		Audio.load("demo.mp3").playAtVolume(0.05)
 	</script>
@@ -3496,42 +3806,80 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 <section>
 	<h2 data-tag="readonly">audio.duration: Num</h2>
 	<p>The duration of the audio in seconds.</p>
-	<script type="application/wren" data-tag="once">
-		Game.print(Audio.load("kick.wav").duration)
+</section>
+
+<!-- AUDIOSOURCE -->
+
+<section data-tag="filters effects">
+	<h2>AudioSource</h2>
+	<p>The abstract base class of <a href="#Voice">Voice</a> and <a href="#AudioBus">AudioBus</a>. Allows for controlling volume and audio effects.</p>
+</section>
+
+<section data-tag="master mix mixer">
+	<h2>audioSource.volume: Num</h2>
+	<h2>audioSource.fadeVolume(volume, seconds: Num)</h2>
+	<p>Get or set the sound's volume.</p>
+	<p>Defaults to 1 (normal volume). Clamped between 0 and infinity when set.</p>
+	<script type="application/wren" data-tag="nogui">
+		var voice = Audio.load("demo.mp3").play()
+		Game.begin {
+			voice.volume = 0.6 + Time.time.sin * 0.4
+		}
 	</script>
 </section>
 
 <section data-tag="lp filter effect">
-	<h2>audioControls.addLowpass(slot: Num, frequency: Num): FilterEffect</h2>
-	<h2>audioControls.addLowpass(slot: Num, frequency: Num, resonance: Num): FilterEffect</h2>
-	<p>Adds a lowpass filter to an audio source.</p>
+	<h2>audioSource.effect(slot: Num): FilterEffect | EchoEffect | ReverbEffect | null</h2>
+	<p>Returns the effect in the given slot, or <code>null</code> if there is none.</p>
+</section>
+
+<section data-tag="lp filter effect">
+	<h2>audioSource.removeEffect(slot: Num)</h2>
+	<p>Removes the effect in the given slot. If there was no effect in the slot, there is no effect.</p>
+</section>
+
+<section data-tag="lp filter effect">
+	<h2>audioSource.removeEffects()</h2>
+	<p>Removes all audio effects.</p>
+</section>
+
+<section data-tag="lp filter effect">
+	<h2>audioSource.addLowpass(slot, frequency: Num): FilterEffect</h2>
+	<h2>audioSource.addLowpass(slot, frequency, resonance: Num): FilterEffect</h2>
+	<p>Adds a <a href="#FilterEffect">lowpass filter</a>.</p>
+	<p>Resonance defaults to 1.</p>
 	<script type="application/wren" data-tag="noloop">
 		Audio.load("demo.mp3").play().addLowpass(0, 500)
 	</script>
 </section>
 
 <section data-tag="hp filter effect">
-	<h2>audioControls.addHighpass(slot: Num, frequency: Num): FilterEffect</h2>
-	<h2>audioControls.addHighpass(slot: Num, frequency: Num, resonance: Num): FilterEffect</h2>
-	<p>Adds a highpass filter to an audio source.</p>
+	<h2>audioSource.addHighpass(slot, frequency: Num): FilterEffect</h2>
+	<h2>audioSource.addHighpass(slot, frequency, resonance: Num): FilterEffect</h2>
+	<p>Adds a <a href="#FilterEffect">highpass filter</a>.</p>
+	<p>Resonance defaults to 1.</p>
 	<script type="application/wren" data-tag="noloop">
 		Audio.load("demo.mp3").play().addHighpass(0, 1000)
 	</script>
 </section>
 
 <section data-tag="bp filter effect">
-	<h2>audioControls.addBandpass(slot: Num, frequency: Num): FilterEffect</h2>
-	<h2>audioControls.addBandpass(slot: Num, frequency: Num, resonance: Num): FilterEffect</h2>
-	<p>Adds a bandpass filter to an audio source.</p>
+	<h2>audioSource.addBandpass(slot, frequency: Num): FilterEffect</h2>
+	<h2>audioSource.addBandpass(slot, frequency, resonance: Num): FilterEffect</h2>
+	<p>Adds a <a href="#FilterEffect">bandpass filter</a>.</p>
+	<p>Resonance defaults to 1.</p>
 	<script type="application/wren" data-tag="noloop">
 		Audio.load("demo.mp3").play().addBandpass(0, 2000)
 	</script>
 </section>
 
 <section data-tag="delay reverb effect">
-	<h2>audioControls.addEcho(slot: Num, delay: Num): EchoEffect</h2>
-	<h2>audioControls.addEcho(slot: Num, delay: Num, decay: Num): EchoEffect</h2>
-	<p>Adds an echo effect to an audio source.</p>
+	<h2>audioSource.addEcho(slot, delay, decay: Num): EchoEffect</h2>
+	<h2>audioSource.addEcho(slot, delay, decay, mix: Num): EchoEffect</h2>
+	<p>Adds an <a href="#EchoEffect">echo/delay effect</a>.</p>
+	<p><code>delay</code> is in seconds.</p>
+	<p><code>decay</code> is between 0 and 1.</p>
+	<p><code>mix</code> is between 0 and 1, and defaults to the <code>decay</code> value.</p>
 	<script type="application/wren" data-tag="noloop">
 		var voice = Audio.load("piano_loop.mp3").play()
 		voice.loop = true
@@ -3540,13 +3888,228 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 </section>
 
 <section data-tag="room effect">
-	<h2>audioControls.addReverb(slot: Num): ReverbEffect</h2>
-	<p>Adds an reverb effect to an audio source.</p>
+	<h2>audioSource.addReverb(slot: Num): ReverbEffect</h2>
+	<p>Adds a <a href="#ReverbEffect">reverb effect</a>.</p>
+	<p>More parameters are intended to be added in future. This limitation is in place to ensure compability between various platforms.</p>
 	<script type="application/wren" data-tag="noloop">
 		var voice = Audio.load("piano_loop.mp3").play()
 		voice.loop = true
 		voice.addReverb(0)
 	</script>
+</section>
+
+<!-- VOICE -->
+
+<section>
+	<h2 data-super="AudioSource">Voice</h2>
+	<p>Represents live audio playing from <a href="#Audio">sound data</a>.</p>
+</section>
+
+<section data-tag="position playhead seek">
+	<h2>voice.time: Num</h2>
+	<p>The current playhead position, in seconds.</p>
+	<p>This can be set to seek to the given point.</p>
+	<script type="application/wren">
+		var voice = Audio.load("demo.mp3").play()
+		Game.begin {
+			if (Input.anyPressed) voice.time = 6.8
+			Game.clear()
+			Game.print(voice.time)
+		}
+	</script>
+</section>
+
+<section data-tag="speed pitch playback">
+	<h2>voice.rate: Num</h2>
+	<h2>voice.fadeRate(rate, seconds: Num)</h2>
+	<p>The voice's playback rate.</p>
+	<p>A rate of 1 is normal playback, where as 0.5 for example is 50% speed.</p>
+	<p>Note that higher playback rates may be more demanding on the audio engine.</p>
+	<script type="application/wren" data-tag="loopafter nogui">
+		var voice = Audio.load("demo.mp3").play()
+		voice.rate = 0.5
+	</script>
+</section>
+
+<section data-tag="speed pitch playback">
+	<h2>voice.pitch: Num</h2>
+	<h2>voice.fadePitch(pitch, seconds: Num)</h2>
+	<p>Sets the voice's <a href="#voice.rate">rate</a> using given number of semitones.</p>
+	<p>For example <code>pitch = 12</code> wil pitch up by 12 semitones (equivalent to <code>rate = 2</code>). <code>pitch = -12</code> will pitch down by 12 semitones.</p>
+	<p>Note there may be loss of numeric precision when writing and then reading from this value, due to the conversion between pitch and rate.</p>
+	<script type="application/wren" data-tag="loopafter nogui">
+		var chord = Audio.load("chord.wav")
+		Timer.seconds(1) { chord.play().pitch = 0 }
+		Timer.seconds(2) { chord.play().pitch = 3 }
+		Timer.seconds(3) { chord.play().pitch = 5 }
+	</script>
+</section>
+
+<section>
+	<h2>voice.loop: Bool</h2>
+	<p>Sets if the voice should loop. Defaults to false.</p>
+	<p>The loop will occur between <a href="#voice.loopStart"><code>loopStart</code></a> and the end.</p>
+	<script type="application/wren" data-tag="loopafter nogui">
+		var voice = Audio.load("chord.wav").play()
+		voice.loop = true
+	</script>
+</section>
+
+<section>
+	<h2>voice.loopStart: Num</h2>
+	<p>The point in the audio where the loop should start from, in seconds. Only has an effect if <a href="#voice.loop"><code>loop</code></a> is set to true.</p>
+	<script type="application/wren" data-tag="loopafter nogui">
+		var voice = Audio.load("chord.wav").play()
+		voice.loop = true
+		voice.loopStart = 0.2
+	</script>
+</section>
+
+<section>
+	<h2>voice.isPaused: Bool</h2>
+	<p>If the voice is currently paused, or <a href="#voice.stop()">stopped</a>.</p>
+	<pre>
+		Audio.load("demo.mp3").voice().isPaused  // true
+	</pre>
+</section>
+
+<section>
+	<h2>voice.play()</h2>
+	<h2>voice.pause()</h2>
+	<p>Play a paused voice, or pause a playing voice. Calling <code>pause()</code> has no effect while paused.</p>
+	<script type="application/wren" data-tag="loopafter nogui">
+		var voice = Audio.load("demo.mp3").play()
+		Timer.seconds(1) { voice.pause() }
+		Timer.seconds(2) { voice.play() }
+	</script>
+</section>
+
+<section>
+	<h2>voice.togglePaused()</h2>
+	<p>Pause the voice if it is playing, or play it if it is paused.</p>
+	<script type="application/wren" data-tag="loopafter nogui">
+		var voice = Audio.load("demo.mp3").play()
+		Timer.seconds(1) { voice.togglePaused() }
+		Timer.seconds(2) { voice.togglePaused() }
+	</script>
+</section>
+
+<section>
+	<h2>voice.stop()</h2>
+	<p>Stops playing the voice. Once stopped, it cannot be played again.</p>
+	<script type="application/wren" data-tag="loopafter nogui">
+		var voice = Audio.load("demo.mp3").play()
+		Timer.seconds(2) { voice.stop() }
+	</script>
+</section>
+
+<!-- AUDIOBUS -->
+
+<section>
+	<h2 data-super="AudioSource">AudioBus</h2>
+	<p>A mixing bus. Any number of voices can be <a href="#audio.play(_)">played through</a> one bus.</p>
+	<script type="application/wren" data-tag="loopafter nogui">
+		var bus = AudioBus.new()
+		bus.addHighpass(0, 700)
+
+		Audio.load("storm.mp3").play(bus).loop = true
+		Audio.load("piano_loop.mp3").play(bus)
+	</script>
+</section>
+
+<section>
+	<h2>AudioBus.new(): AudioBus</h2>
+	<p>Creates a new bus.</p>
+</section>
+
+<!-- FILTEREFFECT -->
+
+<section>
+	<h2>FilterEffect</h2>
+	<p>An audio filter (e.g. lowpass) added to some <a href="#AudioSource">audio source</a> by calling one of <a href="#audioSource.addLowpass(_,_)"><code>addLowpass()</code></a>, <a href="#audioSource.addHighpass(_,_)"><code>addHighpass()</code></a> or <a href="#audioSource.addBandpass(_,_)"><code>addBandpass()</code></a>.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">filterEffect.slot: Num</h2>
+	<p>This effect's slot index.</p>
+</section>
+
+<section>
+	<h2>filterEffect.type: "low" | "high" | "band"</h2>
+	<p>Get or set which type of filter this is (lowpass, highpass, or bandpass).</p>
+</section>
+
+<section>
+	<h2>filterEffect.frequency: Num</h2>
+	<h2>filterEffect.fadeFrequency(frequency, seconds: Num)</h2>
+	<p>Get or set the filter's frequency (in Hz).</p>
+</section>
+
+<section>
+	<h2>filterEffect.resonance: Num</h2>
+	<h2>filterEffect.fadeResonance(resonance, seconds: Num)</h2>
+	<p>Get or set the filter's resonance. A resonance of 1 is 'normal'.</p>
+</section>
+
+<section>
+	<h2>filterEffect.remove()</h2>
+	<p>Remove this effect from the audio source.</p>
+</section>
+
+<!-- ECHOEFFECT -->
+
+<section data-tag="delay">
+	<h2>EchoEffect</h2>
+	<p>An echo/delay effect added to some <a href="#AudioSource">audio source</a> by calling <a href="#audioSource.addEcho(_,_,_)"><code>addEcho()</code></a>.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">echoEffect.slot: Num</h2>
+	<p>This effect's slot index.</p>
+</section>
+
+<section>
+	<h2>echoEffect.delay: Num</h2>
+	<p>Get or set the echo's delay (in seconds).</p>
+</section>
+
+<section>
+	<h2>echoEffect.decay: Num</h2>
+	<p>Get or set the echo's decay, between 0 and 1.</p>
+</section>
+
+<section data-tag="mix wet">
+	<h2>echoEffect.volume: Num</h2>
+	<h2>echoEffect.fadeVolume(volume, seconds: Num)</h2>
+	<p>Get or set the echo's 'wet' volume. A volume of 1 is normal volume.</p>
+</section>
+
+<section>
+	<h2>echoEffect.remove()</h2>
+	<p>Remove this effect from the audio source.</p>
+</section>
+
+<!-- REVERBEFFECT -->
+
+<section data-tag="delay">
+	<h2>ReverbEffect</h2>
+	<p>A reverb effect added to some <a href="#AudioSource">audio source</a> by calling <a href="#audioSource.addReverb(_)"><code>addReverb()</code></a>.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">reverbEffect.slot: Num</h2>
+	<p>This effect's slot index.</p>
+</section>
+
+<section data-tag="mix wet">
+	<h2>reverbEffect.volume: Num</h2>
+	<h2>reverbEffect.fadeVolume(volume, seconds: Num)</h2>
+	<p>Get or set the echo's 'wet' volume. A volume of 1 is normal volume.</p>
+</section>
+
+<section>
+	<h2>reverbEffect.remove()</h2>
+	<p>Remove this effect from the audio source.</p>
 </section>
 
 <!-- PLATFORM -->

@@ -35,9 +35,20 @@ addEventListener("message", (event) => {
  * @returns {Promise<any>}
  */
 export function waitForMessage(type, iframe) {
-	return new Promise(/** @param {((arg: any) => void) & { type: string, iframe: HTMLIFrameElement }} resolve */(resolve) => {
+	return new Promise(/** @param {((arg: any) => void) & { type: string, iframe: HTMLIFrameElement }} resolve */(resolve, reject) => {
 		resolve.type = type;
 		resolve.iframe = iframe;
 		waitingMessages.push(resolve);
 	});
+}
+
+/**
+ * @param {HTMLIFrameElement} [iframe] 
+ */
+export function clearWaitingMessages(iframe) {
+	if (iframe) {
+		waitingMessages = waitingMessages.filter(msg => msg.iframe !== iframe);
+	} else {
+		waitingMessages.length = 0;
+	}
 }
