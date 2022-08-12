@@ -171,6 +171,9 @@ class VirtualElement {
 	}
 }
 
+const PLAY_ICON = '<span class="hidden">Play example</span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+const STOP_ICON = '<span class="hidden">Stop example</span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+
 class Example {
 	/**
 	 * @param {string} code
@@ -187,31 +190,24 @@ class Example {
 	 * @param {ParentNode} parent 
 	 */
 	toHTML(parent) {
-		parent.append(
-			createElement("pre", {}, this.code)
-		);
+		let runButton = createElement("button", { class: "play-button" });
+		runButton.innerHTML = PLAY_ICON;
 
-		let runButton = createElement("button", { class: "accent-button" });
-		runButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accent-button-icon"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>Run Example';
+		let codePlayer = createElement("div", { class: "code-player" }, [
+			createElement("pre", {}, this.code),
+			runButton,
+		]);
 
-		parent.append(runButton);
+		parent.append(codePlayer);
 
-		runButton.onclick = () => {
+		let onPlay = () => {
+			runButton.innerHTML = STOP_ICON;
+			runButton.onclick = null;
+			
 			let iframe = createElement("iframe", { src: "player", width: "100%", height: "100%" });
-			
-			
-			let closeButton;
-			if (this.mode === "nogui") {
-				closeButton = createElement("button", { class: "accent-button" });
-				closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accent-button-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Stop Example';
-			} else {
-				closeButton = createElement("button", { class: "player-stop hidden" });
-				closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="player-stop-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
-			}
-
-			let player = createElement("div", { class: "player"});
-
-			player.append(iframe);
+			let player = createElement("div", { class: "player"}, 
+				iframe
+			);
 
 			if (this.mode === "gui") {
 				player.style.height = "400px";
@@ -241,19 +237,19 @@ class Example {
 				}
 			}
 
-			player.append(closeButton);
-
-			runButton.replaceWith(player);
+			parent.insertBefore(player, codePlayer.nextSibling);
 
 			// Send script once the iframe is ready.
 			waitForMessage("ready", iframe).then(() => {
 				iframe.contentWindow.postMessage({ type: "script", data: this.script });
 
 				// Handle stopping.
-				closeButton.classList.remove("hidden");
-				closeButton.onclick = () => {
+				runButton.onclick = () => {
 					iframe.src = "about:blank";
-					player.replaceWith(runButton);
+					player.remove();
+
+					runButton.onclick = onPlay;
+					runButton.innerHTML = PLAY_ICON;
 				};
 			});
 
@@ -266,7 +262,9 @@ class Example {
 					iframe = null;
 				}
 			}, 1000);
-		}
+		};
+
+		runButton.onclick = onPlay;
 	}
 
 	/**

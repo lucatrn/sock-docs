@@ -1,5 +1,4 @@
 import "meta" for Meta
-import "random" for Random
 class Asset{
 static exists(p){exists_(p,Promise.new()).await}
 foreign static exists_(a,b)
@@ -168,6 +167,7 @@ foreign static toHexString(a)
 static luma(c){(c.red*0.2126+c.green*0.7152+c.blue*0.0722)/255}
 }
 class Time{
+foreign static epoch
 static frame{__f}
 static time{__t}
 static delta{__d}
@@ -338,6 +338,7 @@ ready_()
 static update_(){
 if(Input.held("F4"))quit()
 __drawX=__drawY=4
+Camera.reset()
 Timer.update_()
 if(__fn)__fn.call()
 Input.pupdate_()
@@ -587,38 +588,12 @@ return _v
 }
 }
 class Camera{
-static center{Vec}
-static center=(v){
-__c.x=v.x
-__c.y=v.y
-update_()
+static setOrigin(x,y){setOrigin(x,y,null)}
+foreign static setOrigin(a,b,c)
+static lookAt(x,y){lookAt(x,y,null)}
+foreign static lookAt(a,b,c)
+foreign static reset()
 }
-static scale{__s}
-static scale=(s){
-__s=s
-update_()
-}
-static topLeft{
-return Vec.new(
-__c.x-size.x/2,
-__c.y-size.y/2
-)
-}
-static setTopLeft(x,y){
-__c.x=x+Game.width/2
-__c.y=y+Game.height/2
-update_()
-}
-static topLeft=(v){setTopLeft(v.x,v.y)}
-static init_(){
-__c=Vec.new(0,0)
-__s=1
-}
-static update_(){update_(__c.x,__c.y,__s)}
-foreign static update_(a,b,c)
-}
-Camera.init_()
-Camera
 foreign class Sprite{
 static load(p){load_(p,Promise.new()).await}
 foreign static load_(a,b)
@@ -676,6 +651,7 @@ effect(i){
 var t=getEffect_(i)
 if(t==1)return FilterEffect.new(this,i)
 if(t==2)return EchoEffect.new(this,i)
+if(t==3)return ReverbEffect.new(this,i)
 return null
 }
 addLowpass(i,f){addLowpass(i,f,1)}
@@ -703,7 +679,7 @@ construct new(o,i){
 _o=o
 _i=i
 }
-index{_i}
+slot{_i}
 remove(){_o.removeEffect(_i)}
 type{
 var v=_o.getParam_(_i,1,0)
@@ -725,7 +701,7 @@ construct new(o,i){
 _o=o
 _i=i
 }
-index{_i}
+slot{_i}
 remove(){_o.removeEffect(_i)}
 volume{_o.getParam_(_i,2,2)}
 volume=(v){fadeVolume(v,0)}
@@ -740,7 +716,7 @@ construct new(o,i){
 _o=o
 _i=i
 }
-index{_i}
+slot{_i}
 remove(){_o.removeEffect(_i)}
 volume{_o.getParam_(_i,3,0)}
 volume=(v){fadeVolume(v,0)}
@@ -1194,6 +1170,90 @@ JSON.init_()
 JSON.register(Buffer)
 JSON.register(Vec)
 JSON.register(Transform)
+foreign class Random{
+construct new(){
+seed(Time.epoch)
+}
+construct new(s){
+seed(s)
+}
+foreign seed(a)
+foreign float()
+float(a){float()*a}
+float(a,b){a.lerp(b,float())}
+foreign integer()
+integer(a){(float()*a).floor}
+integer(a,b){float(a,b).floor}
+bool(){integer()<2147483648}
+bool(a){float()<a}
+color(){0xff000000+integer(0x1000000)}
+onCircle(x,y,r){
+var a=float()
+return Vec.new(x+a.cos*r,y+a.sin*r)
+}
+inCircle(x,y,r){onCircle(x,y,r*float().sqrt)}
+pick(a){
+return(a is List||a is String)?(a.isEmpty ? null : a[integer(a.count)]): pick_(a)
+}
+pick_(a){
+var r
+var i=1
+for(b in a){
+if(i==1||float(i)<=1)r=b
+i=i+1
+}
+return r
+}
+sample(a,n){
+var m=a.count
+if(n>m)Fiber.abort("Not enough elements to sample")
+var r=[]
+if(n*4<m){
+var b={}
+for(i in m-n...m){
+var j=integer(i+1)
+if(b.containsKey(j))j=i
+b[j]=true
+r.add(a[j])
+}
+}else{
+var b=List.filled(m,false)
+for(i in m-n...m){
+var j=integer(i+1)
+if(b[j])j=i
+b[j]=true
+r.add(a[j])
+}
+}
+return r
+}
+shuffle(a){
+if(!a.isEmpty){
+for(i in 0...a.count-1)a.swap(i,integer(i,a.count))
+}
+return a
+}
+static default{__d}
+static seed(a){__d.seed(a)}
+static float(){__d.float()}
+static float(a){__d.float(a)}
+static float(a,b){__d.float(a,b)}
+static integer(){__d.integer()}
+static integer(a){__d.integer(a)}
+static integer(a,b){__d.integer(a,b)}
+static bool(){__d.bool()}
+static bool(a){__d.bool(a)}
+static color(){__d.color()}
+static onCircle(x,y,r){__d.onCircle(x,y,r)}
+static inCircle(x,y,r){__d.inCircle(x,y,r)}
+static pick(a){__d.pick(a)}
+static sample(a,b){__d.sample(a,b)}
+static shuffle(a){__d.shuffle(a)}
+static init_(){
+__d=Random.new()
+}
+}
+Random.init_()
 class Storage{
 static load(){load("storage")}
 static save(a){save("storage",a)}

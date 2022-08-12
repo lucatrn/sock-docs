@@ -54,7 +54,7 @@ header {
 
 @media (max-width: 599px) {
 	header {
-		padding: 0 0 0.4em;
+		padding: 0.4em 0;
 	}
 }
 
@@ -140,7 +140,7 @@ main > *:first-child {
 }
 
 section {
-	margin: 1.8em 0 0;
+	margin: 1.9em 0 0;
 }
 
 h2 {
@@ -183,6 +183,12 @@ pre {
 	border-radius: 0.4em;
 	line-height: 1.3;
 	white-space: pre-wrap;
+	word-break: break-all;
+}
+@media (max-width: 599px) {
+	pre {
+		font-size: 80%;
+	}
 }
 
 code {
@@ -203,25 +209,6 @@ blockquote {
 	border-left: 3px solid var(--accent-color);
 }
 
-.accent-button {
-	font: inherit;
-    background: var(--accent-color);
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    padding: 0.4em 0.5em;
-    cursor: pointer;
-}
-.accent-button:hover {
-	background: var(--accent-color2);
-}
-
-.accent-button-icon {
-    margin-right: 0.2em;
-}
-
 a {
 	color: inherit;
 	text-decoration: none;
@@ -231,6 +218,10 @@ a:hover, .underline {
 }
 p > a, a.highlight {
 	color: #0077ff;
+}
+
+i[title] {
+	cursor: help;
 }
 
 img {
@@ -340,29 +331,37 @@ kbd.wbr {
 
 /* == PLAYER == */
 
+.code-player {
+	display: flex;
+	align-items: flex-end;
+	gap: 6px;
+	margin: 0.6em 0 0.3em;
+}
+.code-player pre {
+	margin: 0;
+	min-width: 0;
+	flex-grow: 1;
+}
+
+.play-button {
+	font: inherit;
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    padding: 9px;
+    cursor: pointer;
+}
+.play-button:hover {
+	background: var(--accent-color2);
+}
+
 .player {
 	position: relative;
     width: 100%;
-    margin: 0 auto 10px;
-}
-
-.player-stop {
-	position: absolute;
-	border: none;
-    border-bottom-left-radius: 4px;
-    background: none;
-    padding: 4px;
-    top: 0;
-	right: 0;
-    cursor: pointer;
-	background: var(--bg);
-}
-.player-stop:hover {
-	color: var(--accent-color)
-}
-
-.player-stop-icon {
-	display: block;
+    margin: 0 auto;
 }
 
 iframe {

@@ -3,6 +3,7 @@ import { persistence, updatePersistence } from "./persistence.js";
 
 let iconLight = getElement("theme-toggle-icon-light");
 let iconDark = getElement("theme-toggle-icon-dark");
+let buttonLabel = getElement("theme-toggle-state");
 
 let isLightTheme = false;
 
@@ -23,6 +24,8 @@ function setIsLightTheme(isLight) {
 	
 	setElementClass(document.documentElement, "light", isLight);
 	setElementClass(document.documentElement, "dark", !isLight);
+
+	buttonLabel.textContent = isLight ? "Light" : "Dark";
 }
 
 setIsLightTheme(persistence.isLight ?? document.documentElement.classList.contains("light"));

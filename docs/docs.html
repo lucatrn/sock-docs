@@ -23,16 +23,6 @@
 			</ul>
 		</div>
 		<div>
-			<h3>Sock Data Types</h3>
-			<ul class="flat">
-				<li><a href="#Vec">Vec</a></li>
-				<li><a href="#Transform">Transform</a></li>
-				<li><a href="#Color">Color</a></li>
-				<li><a href="#Buffer">Buffer</a></li>
-				<li><a href="#StringBuilder">StringBuilder</a></li>
-				<li><a href="#Promise">Promise</a></li>
-				<li><a href="#JSON">JSON</a></li>
-			</ul>
 			<h3>Sock Core</h3>
 			<ul class="flat">
 				<li><a href="#Game">Game</a></li>
@@ -46,9 +36,20 @@
 				<li><a href="#Screen">Screen</a></li>
 				<li><a href="#Camera">Camera</a></li>
 				<li><a href="#Storage">Storage</a></li>
+				<li><a href="#Random">Random</a></li>
+				<li><a href="#JSON">JSON</a></li>
+				<li><a href="#StringBuilder">StringBuilder</a></li>
 			</ul>
 		</div>
 		<div>
+			<h3>Sock Value Types</h3>
+			<ul class="flat">
+				<li><a href="#Vec">Vec</a></li>
+				<li><a href="#Transform">Transform</a></li>
+				<li><a href="#Color">Color</a></li>
+				<li><a href="#Buffer">Buffer</a></li>
+				<!-- <li><a href="#Promise">Promise</a></li> -->
+			</ul>
 			<h3>Sock Audio</h3>
 			<ul class="flat">
 				<li><a href="#Audio">Audio</a></li>
@@ -1980,6 +1981,7 @@
 	<p>A rotation around the origin, using the given angle in <a href="#Turns">turns</a>.</p>
 	<p>The static method returns a new transform.</p>
 	<p>The instance method applies the rotation in place, returning the original transform object.</p>
+	<p>This rotates in the counter-clockwise direction. However <b>in screen-space</b> this appears as a <b>clockwise rotation</b>, since screen space is Y-down.</p>
 </section>
 
 <section>
@@ -2100,7 +2102,7 @@
 </section>
 
 <section data-tag="resolution">
-	<h2>Game.setSize(width: Num, height: Num)</h2>
+	<h2>Game.setSize(width, height: Num)</h2>
 	<p>Sets the viewport resolution to a fixed size (whereas by default, the viewport is sized to fill the window).</p>
 	<p>In this mode, the viewport will be upscaled to fill the window, which can be controlled using the following options:</p>
 	<ul>
@@ -2241,7 +2243,7 @@
 
 <section data-tag="debug text font">
 	<h2>Game.print(s: String)</h2>
-	<h2>Game.print(s: String, x: Num, y: Num)</h2>
+	<h2>Game.print(s: String, x, y: Num)</h2>
 	<p>Draws debug text to the screen.</p>
 	<p>It uses an embeded bitmap of ASCII characters from the <a href="https://github.com/slavfox/Cozette">Cozette font</a>.</p>
 	<img src="media/cozette_ascii.gif" class="pixel" style="width: 192px; padding: 6px; background: #000;">
@@ -2350,18 +2352,18 @@
 </section>
 
 <section>
-	<h2>Time.time: Num</h2>
+	<h2 data-tag="readonly">Time.time: Num</h2>
 	<p>The number of seconds since the game started.</p>
 	<p>This is evaluated at the start of the frame, and stays constant for the rest of the frame.</p>
 </section>
 
 <section>
-	<h2>Time.frame: Num</h2>
+	<h2 data-tag="readonly">Time.frame: Num</h2>
 	<p>The number of elapsed frames.</p>
 </section>
 
 <section>
-	<h2>Time.delta: Num</h2>
+	<h2 data-tag="readonly">Time.delta: Num</h2>
 	<p>The number of seconds since the last frame.</p>
 	<script type="application/wren">
 		// FPS independent movement speed.
@@ -2379,6 +2381,14 @@
 			Game.print("press 1, 2 and 3 to change FPS")
 			Game.print("#", x, 20)
 		}
+	</script>
+</section>
+
+<section data-tag="unix now">
+	<h2 data-tag="readonly">Time.epoch: Num</h2>
+	<p>Returns the number of seconds since 1 January 1970.</p>
+	<script type="application/wren">
+		Game.print(Time.epoch)
 	</script>
 </section>
 
@@ -3290,6 +3300,50 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	</script>
 </section>
 
+<!-- CAMERA -->
+
+<section data-summary="Controls how drawing operations are transformed into screen space.">
+	<h2>Camera</h2>
+	<p>Sock uses a one-to-one mapping from <i title="The coordinates used when drawing">world space</i> to <i title="The coordinates of pixels in the viewport">screen space</i>. The Camera class can be used to control this transformation.</p>
+	<p>The top-left of the viewport represents pixel (0, 0), increasing in the positive direction downward and to the right.</p>
+	<p>Socks <a href="#Camera.reset()">resets the camera</a> before the start of every frame.</p>
+</section>
+
+<section>
+	<h2>Camera.reset()</h2>
+	<p>Resets the camera. Equivalent to <code>Camera.<a href="#Camera.setOrigin(_,_)">setOrigin</a>(0, 0)</code>.</p>
+</section>
+
+<section>
+	<h2>Camera.setOrigin(x, y: Num)</h2>
+	<h2>Camera.setOrigin(x, y: Num, t: Transform)</h2>
+	<p>Sets a screen pixel to become the origin of draw operations.</p>
+	<p>A camera transformation can also be supplied, which operates in screen space using the given origin.</p>
+	<script type="application/wren">
+		Camera.setOrigin(300, 200)
+		Game.print("hello world")
+	</script>
+	<script type="application/wren">
+		Camera.setOrigin(300, 200, Transform.rotate(Time.time / 8).scale(4))
+		Game.print("hello world")
+	</script>
+</section>
+
+<section>
+	<h2>Camera.lookAt(x, y: Num)</h2>
+	<h2>Camera.lookAt(x, y: Num, t: Transform)</h2>
+	<p>Sets the camera such that the given pixel (<code>x, y</code>) is centered in the screen.</p>
+	<p>A camera transformation can also be supplied, which operates in screen space using (<code>x, y</code>) as the origin.</p>
+	<script type="application/wren">
+		Camera.lookAt(32, 7)
+		Game.print("hello world")
+	</script>
+	<script type="application/wren">
+		Camera.lookAt(32, 7, Transform.rotate(Time.time / 8).scale(6, 3))
+		Game.print("hello world")
+	</script>
+</section>
+
 <!-- STORAGE -->
 
 <section data-tag="file persistence save load data">
@@ -3357,6 +3411,168 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 <section>
 	<h2>Storage.contains(key: String): Bool</h2>
 	<p>Check if a value is saved for the given key.</p>
+</section>
+
+<!-- RANDOM -->
+
+<section data-tag="rng prng rnd">
+	<h2>Random</h2>
+	<p>A pseudo-random number generator, implemented using <a href="http://burtleburtle.net/bob/rand/smallprng.html">Bob Jenkins's JSF</a> algorithm.</p>
+	<h3>Usage</h3>
+	<p>The random class has two modes of usage:</p>
+	<ul>
+		<li>Instances of <code>Random</code> act as individual random generators, each with their own state/seed.</li>
+		<li>Each instance method has an equivalent static method, which uses the <a href="#Random.default"><code>Random.default</code></a> instance.</li>
+	</ul>
+	<p>For brevity only the static methods are documented.</p>
+</section>
+
+<section>
+	<h2>Random.new(): Random</h2>
+	<h2>Random.new(seed: Num): Random</h2>
+	<p>Creates a new random generator, seeded with the given value. The seed defaults to the <a href="#Time.epoch">current time</a>.</p>
+	<script type="application/wren" data-tag="console noloop">
+		var rnd = Random.new()
+		System.print(rnd.integer())
+	</script>
+</section>
+
+<section>
+	<h2 data-tag="readonly">Random.default: Random</h2>
+	<p>Returns the Random instance used for Random's static methods.</p>
+</section>
+
+<section>
+	<h2>Random.seed(seed: Num)</h2>
+	<p>Seeds the random generator with the given value.</p>
+	<script type="application/wren" data-tag="console noloop">
+		Random.seed(0)
+		System.print(Random.integer())  // Always 446393351
+	</script>
+</section>
+
+<section>
+	<h2>Random.float(): Num</h2>
+	<p>Generates a decimal number between 0 and 1, excluding 1.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.float())
+	</script>
+</section>
+
+<section>
+	<h2>Random.float(max: Num): Num</h2>
+	<p>Generates a decimal number between 0 and <code>max</code>, excluding <code>max</code>.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.float(10))
+	</script>
+</section>
+
+<section data-tag="range">
+	<h2>Random.float(min, max: Num): Num</h2>
+	<p>Generates a decimal number between <code>min</code> and <code>max</code>, excluding <code>max</code>.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.float(5, 10))
+	</script>
+</section>
+
+<section>
+	<h2>Random.integer(): Num</h2>
+	<p>Generates an integer between 0 and 4294967295 (0xffffffff), including both 0 and 4294967295.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.integer())
+	</script>
+</section>
+
+<section>
+	<h2>Random.integer(max: Num): Num</h2>
+	<p>Generates an integer between 0 and <code>max</code>, excluding <code>max</code>.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.integer(4))
+	</script>
+</section>
+
+<section>
+	<h2>Random.integer(min, max: Num): Num</h2>
+	<p>Generates an integer between <code>min</code> and <code>max</code>, excluding <code>max</code>.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.integer(4, 8))
+	</script>
+</section>
+
+<section>
+	<h2>Random.bool(): Bool</h2>
+	<p>Generates either true or false, uniformly.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.bool())
+	</script>
+</section>
+
+<section>
+	<h2>Random.bool(trueRatio: Num): Bool</h2>
+	<p>Generates either true or false. <code>trueRatio</code> controls the proportion of calls that should return true (e.g. 0.75 means 75% of the time).</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.bool(0.75))
+	</script>
+</section>
+
+<section>
+	<h2>Random.color(): Num</h2>
+	<p>Returns a random opaque color (alpha is always 255).</p>
+	<script type="application/wren" data-tag="once">
+		for (i in 0..24) {
+			var color = Random.color()
+			Game.printColor = color
+			Game.print(Color.toHexString(color))
+		}
+	</script>
+</section>
+
+<section>
+	<h2>Random.onCircle(cx, cy, radius: Num): Num</h2>
+	<p>Returns a random point on the circumference of the given circle.</p>
+	<script type="application/wren" data-tag="once">
+		for (i in 0..99) {
+			var v = Random.onCircle(200, 200, 150)
+			Game.print("x", v.x, v.y)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>Random.inCircle(cx, cy, radius: Num): Num</h2>
+	<p>Returns a random point inside the given circle.</p>
+	<script type="application/wren" data-tag="once">
+		for (i in 0..999) {
+			var v = Random.inCircle(200, 200, 150)
+			Game.print("x", v.x, v.y)
+		}
+	</script>
+</section>
+
+<section data-tag="randomize randomise">
+	<h2>Random.shuffle(list: List): List</h2>
+	<p>Shuffles a list in place, returning the passed list.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.shuffle([ 1, 2, 3, 4, 5 ]))
+	</script>
+</section>
+
+<section data-tag="sample choose">
+	<h2>Random.pick(seq: Iterable&lt;T&gt;): T | null</h2>
+	<p>Picks a random item from a sequence. Returns <code>null</code> if the sequence is empty.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.pick("abcdefghijklmnopqrstuvwxyz"))
+	</script>
+</section>
+
+<section data-tag="pick">
+	<h2>Random.sample(seq: T[], count: Num): T[]</h2>
+	<h2>Random.sample(seq: String, count: Num): String[]</h2>
+	<p>Picks a selection of item from a list, without repeats.</p>
+	<p>An error is thrown if <code>count</code> is larger than <code>seq</code>.</p>
+	<script type="application/wren" data-tag="console noloop">
+		for (i in 0..7) System.print(Random.sample("abcdef", 4))
+	</script>
 </section>
 
 <!-- JSON -->
@@ -3614,7 +3830,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<p>See also:</p>
 	<ul>
 		<li><a href="#num.red"><code>num.red</code></a>, <a href="#num.green"><code>num.green</code></a>, <a href="#num.blue"><code>num.blue</code></a>, <a href="#num.alpha"><code>num.alpha</code></a></li>
-		<li><a href="#random.color()"><code>random.color()</code></a></li>
+		<li><a href="#Random.color()"><code>Random.color()</code></a></li>
 	</ul>
 </section>
 
@@ -3658,7 +3874,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<p>...</p>
 	<script type="application/wren">
 		Game.fps = 1
-		var color = Random.int(0xffffff) | 0xff000000
+		var color = Random.integer(0xffffff) | 0xff000000
 		Game.printColor = color
 		Game.print(Color.toHexString(color))
 	</script>
@@ -3848,7 +4064,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<h2>audioSource.addLowpass(slot, frequency, resonance: Num): FilterEffect</h2>
 	<p>Adds a <a href="#FilterEffect">lowpass filter</a>.</p>
 	<p>Resonance defaults to 1.</p>
-	<script type="application/wren" data-tag="noloop">
+	<script type="application/wren" data-tag="noloop nogui">
 		Audio.load("demo.mp3").play().addLowpass(0, 500)
 	</script>
 </section>
@@ -3858,7 +4074,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<h2>audioSource.addHighpass(slot, frequency, resonance: Num): FilterEffect</h2>
 	<p>Adds a <a href="#FilterEffect">highpass filter</a>.</p>
 	<p>Resonance defaults to 1.</p>
-	<script type="application/wren" data-tag="noloop">
+	<script type="application/wren" data-tag="noloop nogui">
 		Audio.load("demo.mp3").play().addHighpass(0, 1000)
 	</script>
 </section>
@@ -3868,7 +4084,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<h2>audioSource.addBandpass(slot, frequency, resonance: Num): FilterEffect</h2>
 	<p>Adds a <a href="#FilterEffect">bandpass filter</a>.</p>
 	<p>Resonance defaults to 1.</p>
-	<script type="application/wren" data-tag="noloop">
+	<script type="application/wren" data-tag="noloop nogui">
 		Audio.load("demo.mp3").play().addBandpass(0, 2000)
 	</script>
 </section>
@@ -3880,7 +4096,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<p><code>delay</code> is in seconds.</p>
 	<p><code>decay</code> is between 0 and 1.</p>
 	<p><code>mix</code> is between 0 and 1, and defaults to the <code>decay</code> value.</p>
-	<script type="application/wren" data-tag="noloop">
+	<script type="application/wren" data-tag="noloop nogui">
 		var voice = Audio.load("piano_loop.mp3").play()
 		voice.loop = true
 		voice.addEcho(0, 0.79, 0.3)
@@ -3891,7 +4107,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<h2>audioSource.addReverb(slot: Num): ReverbEffect</h2>
 	<p>Adds a <a href="#ReverbEffect">reverb effect</a>.</p>
 	<p>More parameters are intended to be added in future. This limitation is in place to ensure compability between various platforms.</p>
-	<script type="application/wren" data-tag="noloop">
+	<script type="application/wren" data-tag="noloop nogui">
 		var voice = Audio.load("piano_loop.mp3").play()
 		voice.loop = true
 		voice.addReverb(0)
@@ -4301,7 +4517,7 @@ sock = {
 <section>
 	<h2>Window.width: Num</h2>
 	<h2>Window.height: Num</h2>
-	<h2>Window.setSize(width: Num, height: Num)</h2>
+	<h2>Window.setSize(width, height: Num)</h2>
 	<p>Controls the window's size in pixels.</p>
 	<p>Defaults to true.</p>
 	<pre>
@@ -4313,7 +4529,7 @@ Window.width = 500
 <section>
 	<h2>Window.left: Num</h2>
 	<h2>Window.top: Num</h2>
-	<h2>Window.setPosition(left: Num, top: Num)</h2>
+	<h2>Window.setPosition(left, top: Num)</h2>
 	<p>Controls the window's position relative to the top-left of the screen, in pixels.</p>
 	<pre>
 Window.top = 50
