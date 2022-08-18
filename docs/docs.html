@@ -2006,7 +2006,7 @@
 	<script type="application/wren">
 		var v = Vec.new(100, 100)
 		Game.begin {
-			v = v.step(Input.mouse, 2)
+			v = v.moveToward(Input.mouse, 2)
 
 			Game.clear()
 			Game.print("x", v.x, v.y)
