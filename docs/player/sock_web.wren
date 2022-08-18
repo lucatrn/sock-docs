@@ -1,9 +1,11 @@
 import "meta" for Meta
 class Asset{
-static exists(p){exists_(p,Promise.new()).await}
+static exists(p){Promise.await(exists_(p,Promise.new()))}
 foreign static exists_(a,b)
-static loadString(p){loadString_(p,Promise.new()).await}
+static loadString(p){Promise.await(loadString_(p,Promise.new()))}
 foreign static loadString_(a,b)
+static loadBundle(p){Promise.await(loadBundle_(p,Promise.new()))}
+foreign static loadBundle_(a,b)
 }
 class Path{
 static current{Meta.module(1)}
@@ -26,7 +28,7 @@ i=i+1
 }
 return b
 }
-static load(p){load_(p,Promise.new()).await}
+static load(p){Promise.await(load_(p,Promise.new()))}
 foreign static load_(a,b)
 foreign static fromBase64(a)
 foreign byteCount
@@ -69,7 +71,7 @@ x{_x}
 y{_y}
 x=(x){_x=x}
 y=(y){_y=y}
-rotation{_y.atan(_x)}
+rotation{_x.atan(_y)}
 rotation=(a){
 var n=length
 _x=a.cos*n
@@ -106,7 +108,7 @@ return Vec.new(_x*len,_y*len)
 -{Vec.new(-_x,-_y)}
 +(v){Vec.new(_x+v.x,_y+v.y)}
 -(v){Vec.new(_x-v.x,_y-v.y)}
-*(a){a is Num ? Vec.new(_x*a,_y*a): dot(a)}
+*(k){Vec.new(_x*k,_y*k)}
 /(k){Vec.new(_x/k,_y/k)}
 ==(v){v is Vec&&_x==v.x&&_y==v.y}
 dot(v){_x*v.x+_y*v.y}
@@ -116,13 +118,13 @@ var y=_y-v.y
 return(x*x+y*y).sqrt
 }
 lerp(v,t){Vec.new(_x+(v.x-_x)*t,_y+(v.y-_y)*t)}
-step(v,d){
+moveToward(v,d){
 var x=v.x-_x
 var y=v.y-_y
 var n=(x*x+y*y).sqrt
 if(n<=d||n==0)return Vec.new(v.x,v.y)
 d=d/n
-return Vec.new(x*d,y*d)
+return Vec.new(_x+x*d,_y+y*d)
 }
 project(v){v*(dot(v)/v.dot(v))}
 toString{"(%(_x), %(_y))"}
@@ -171,12 +173,12 @@ foreign static epoch
 static frame{__f}
 static time{__t}
 static delta{__d}
+static init_(){
+__f=__t=__d=0
+}
 static update_(t,d){
 __t=t
 __d=d
-}
-static init_(){
-__f=0
 }
 static pupdate_(){
 __f=__f+1
@@ -245,6 +247,7 @@ t.run_()
 Time.init_()
 Timer.init_()
 class Game{
+foreign static arguments
 foreign static title
 foreign static title=(a)
 static width{__w}
@@ -336,7 +339,6 @@ __fn=fn
 ready_()
 }
 static update_(){
-if(Input.held("F4"))quit()
 __drawX=__drawY=4
 Camera.reset()
 Timer.update_()
@@ -551,6 +553,7 @@ _v=v
 _s=1
 _f=[]
 }
+static await(a){a is Promise ? a.await : a}
 isResolved{_s!=0}
 isError{_s==2}
 value{_s==1 ? _v : null}
@@ -733,7 +736,7 @@ foreign getParam_(a,b,c)
 foreign setParam_(a,b,c,d,e)
 }
 foreign class Audio{
-static load(p){load_(p,Promise.new()).await}
+static load(p){Promise.await(load_(p,Promise.new()))}
 foreign static load_(a,b)
 foreign duration
 foreign voice()
@@ -1272,17 +1275,16 @@ foreign static save_(a,b)
 foreign static contains(a)
 foreign static delete(a)
 }
-class JavaScript_{
+class JavaScript{
 static eval(s){eval(null,null,s)}
 static eval(av,an,s){JSON.fromString(eval_(null,av&&JSON.toString(av),an&&JSON.toString(an),s))}
 static evalAsync(s){evalAsync(null,null,s)}
 static evalAsync(av,an,s){eval_(Promise.new(),av&&JSON.toString(av),an&&JSON.toString(an),s).then{|v|JSON.fromString(v)}}
 foreign static eval_(a,b,c,d)
 }
+var Window=null
 class Platform{
 foreign static os
 static name{"web"}
 foreign static browser
-static JavaScript{JavaScript_}
-static Window{null}
 }

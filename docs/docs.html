@@ -423,7 +423,7 @@
 <section data-tag="inverse trig atan2">
 	<h2>num.atan(y: Num): Num</h2>
 	<p><code>x.atan(y)</code> returns the minimum angle formed between the positive x-axis and the line from (0, 0) to (<code>x</code>, <code>y</code>).</p>
-	<p>The returned angle is measured in <a href="#Turns">turns</a>, between -0.5 and 0.5.</p>
+	<p>The returned angle is measured in <a href="#Turns">turns</a>, between -0.5 and 0.5, including only 0.5 (when y=0 and x is negative).</p>
 	<img src="media/atan2.png">
 	<script type="application/wren">
 		var x = Input.mouse.x - Game.width/2
@@ -721,7 +721,7 @@
 </section>
 
 <section>
-	<h2>string.replace(old: String, new: String): String</h2>
+	<h2>string.replace(old, new: String): String</h2>
 	<p>Returns a new string replacing all occurances of <code>old</code> with <code>new</code>.</p>
 	<pre>
 		"amazing".replace("a", "aaa")  // aaamaaazing
@@ -733,7 +733,7 @@
 	<p>Returns a new list containing the strings separated by <code>separator</code>.</p>
 	<p>It is an error if <code>separator</code> is an empty string.</p>
 	<pre>
-		"".split(" ")              // [ "" ]
+		"".split(" ")            // [ "" ]
 		"a big dog".split(" ")   // [ "a", "big", "dog" ]
 		"a big dog ".split(" ")  // [ "a", "big", "dog", "" ]
 	</pre>
@@ -1901,8 +1901,8 @@
 </section>
 
 <section>
-	<h2>Vec.new(x: Num, y: Num): Vec</h2>
-	<p>Returns a new (0, 0) vector.</p>
+	<h2>Vec.new(x, y: Num): Vec</h2>
+	<p>Creates a new vector.</p>
 </section>
 
 <section>
@@ -1913,10 +1913,139 @@
 <section>
 	<h2>vec.x: Num</h2>
 	<h2>vec.y: Num</h2>
-	<p>Set/get the x, y values.</p>
+	<p>Set or get the <code>x</code> and <code>y</code> values</p>
 </section>
 
-<!-- VEC -->
+<section>
+	<h2 data-tag="readonly">vec.toString: String</h2>
+	<p>Presents the <code>x</code> and <code>y</code> values in a string.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">vec.isZero: Bool</h2>
+	<p>Check if both <code>x</code> and <code>y</code> are zero.</p>
+</section>
+
+<section>
+	<h2>vec.length: Num</h2>
+	<p>Returns the length of the vector.</p>
+	<p>Setting this scales the vector to the given length. Has no effect if vector has no length.</p>
+	<pre>
+		var v = Vec.new(3, 4)
+		v.length  // 5
+		v.length = 1
+		v.x  // 0.6
+		v.y  // 0.8
+	</pre>
+</section>
+
+<section>
+	<h2>vec.rotation: Num</h2>
+	<p>Returns the rotation of the vector relative to the positive x-axis. See <a href="#num.atan(_)"><code>num.atan()</code></a> for details.</p>
+	<p>Settings this rotates the vector to the given rotation. Has no effect if vector has no length.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">vec.normalize: Vec</h2>
+	<p>Normalize this vector (scale its length to 1), and return the result as a new vector.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">vec.round: Vec</h2>
+	<p><a href="#num.round">Rounds</a> both <code>x</code> and <code>y</code> components.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">vec.floor: Vec</h2>
+	<p><a href="#num.floor">Rounds down</a> both <code>x</code> and <code>y</code> components.</p>
+</section>
+
+<section>
+	<h2 data-tag="readonly">vec.ceil: Vec</h2>
+	<p><a href="#num.ceil">Rounds up</a> both <code>x</code> and <code>y</code> components.</p>
+</section>
+
+<section>
+	<h2>vec.normalize(min, max: Num): Vec</h2>
+	<p>Returns a new vector pointing in the same direction, whose length is between 0 and 1.</p>
+	<p>The returned length is calculated by linearlly interporlating the original length between <code>min</code> and <code>max</code></p>
+	<pre>
+		Vec.new(0, 7).normalize(5, 10)  // (0, 0.4)
+	</pre>
+</section>
+
+<section>
+	<h2>vec.rotate(deltaAngle: Num): Vec</h2>
+	<p>Returns a new vector, containing the result of rotating the vector by the given angle.</p>
+</section>
+
+<section>
+	<h2>vec.distance(v: Vec): Num</h2>
+	<p>Returns the distance between two vectors.</p>
+</section>
+
+<section>
+	<h2>vec.dot(v: Vec): Num</h2>
+	<p>Returns the dot product of two vectors.</p>
+</section>
+
+<section>
+	<h2>vec.project(v: Vec): Vec</h2>
+	<p>Project this vector onto the vector <code>v</code>.</p>
+</section>
+
+<section>
+	<h2>vec.lerp(v: Vec, t: Num): Vec</h2>
+	<p><code>a.lerp(b, t)</code> linearlly interporlate between <code>a</code> and <code>b</code> using <code>t</code>.</p>
+	<p>Values of <code>t</code> from 0 to 1 map from <code>a</code> to <code>b</code>, though values outside 0 to 1 are valid.</p>
+</section>
+
+<section>
+	<h2>vec.moveToward(v: Vec, distance: Num): Vec</h2>
+	<p>Moves the is vector toward <code>v</code> by the given maximum <code>distance</code>.</p>
+	<script type="application/wren">
+		var v = Vec.new(100, 100)
+		Game.begin {
+			v = v.step(Input.mouse, 2)
+
+			Game.clear()
+			Game.print("x", v.x, v.y)
+		}
+	</script>
+</section>
+
+<section>
+	<h2>-vec: Vec</h2>
+	<p>Negates a vector, returned as a new vector.</p>
+</section>
+
+<section>
+	<h2>vec + vec: Vec</h2>
+	<p>Add two vectors.</p>
+</section>
+
+<section>
+	<h2>vec - vec: Vec</h2>
+	<p>Subtract one vector from another.</p>
+</section>
+
+<section>
+	<h2>vec * num: Vec</h2>
+	<p>Multiply a vector by a scalar, returned as a new vector.</p>
+</section>
+
+<section>
+	<h2>vec / num: Vec</h2>
+	<p>Divide a vector by a scalar, returned as a new vector.</p>
+</section>
+
+<section>
+	<h2>vec == vec: Bool</h2>
+	<p>Check if two vectors have the same <code>x</code> and <code>y</code> values.</p>
+</section>
+
+
+<!-- TRANSFORM -->
 
 <section data-tag="mat matrix tf">
 	<h2>Transform</h2>
@@ -2064,6 +2193,43 @@
 	<p>Applies the transformation to a vector, returning a new vector.</p>
 </section>
 
+<!-- PROMISE -->
+
+<section>
+	<h2>Promise</h2>
+	<p>Holds a value that is resolved asyncronusly (e.g. via a HTTP request).</p>
+	<p>A promise resolves to either a value or an error.</p>
+</section>
+
+<section>
+	<h2>promise.isResolved: Bool</h2>
+	<h2>promise.isError: Bool</h2>
+</section>
+
+<section>
+	<h2>promise.value: any</h2>
+	<p>The resolved value if any, otherwise <code>null</code> is returned.</p>
+</section>
+
+<section>
+	<h2>promise.value: any</h2>
+	<p>The resolved error if any, otherwise <code>null</code> is returned.</p>
+</section>
+
+<section>
+	<h2>promise.await: any</h2>
+	<p>Blocks script execution until the promise resolves, and returns the resolved value.</p>
+</section>
+
+<section>
+	<h2>promise.then(f: Fn): Promise</h2>
+	<p>Calls the function when the value is resolved. The returned promise contains the value returned by the callback.</p>
+	<pre>
+		p.then {|value| System.print(value) }
+	</pre>
+</section>
+
+
 <!-- GAME -->
 
 <section>
@@ -2181,7 +2347,7 @@
 		<p>To avoid this, you can bind a <a href="#JavaScript">JavaScript</a> event listener to toggle fullscreen using the global <code>sock.toggleFullscreen()</code>.</p>
 		<script type="application/wren" data-tag="noloop">
 			// Press the F key to toggle fullscreen.
-			Platform.JavaScript.eval("""
+			JavaScript.eval("""
 				onkeydown = (ev) => {
 					if (ev.code === 'KeyF') sock.toggleFullscreen()
 				}
@@ -2273,6 +2439,20 @@
 	</script>
 </section>
 
+<section data-tag="args paramters options commandline">
+	<h2 data-tag="readonly">Game.arguments: Map&lt;String, String&gt;</h2>
+	<p>Contains arguments passed to the game at runtime, in a platform dependent manner.</p>
+	<h3>Desktop</h3>
+	<p><code>arguments</code> is populated with the program's command-line arguments.</p>
+	<p>Arguments are expected in the format <code>name</code> or <code>name=value</code>.</p>
+	<p>For example the command <code>mygame.exe nointro speed=4</code> becomes the map:</p>
+	<pre>{ "nointro": "", "speed": "4" }</pre>
+	<h3>Web</h3>
+	<p><code>arguments</code> is populated with the page's URL search parameters.</p>
+	<p>For example the URL <code>/mygame?nointro&speed=4</code> becomes the map:</p>
+	<pre>{ "nointro": "", "speed": "4" }</pre>
+</section>
+
 <section data-tag="url link web">
 	<h2>Game.openURL(url: String)</h2>
 	<p>Navigate to the given URL is a platform dependent manner.</p>
@@ -2329,20 +2509,6 @@
 		}
 	</script>
 </section>
-
-
-<!-- VEC -->
-
-<!-- <section>
-	<h2>vec + vec -> vec</h2>
-	<p>A 2D vector.</p>
-</section>
-
-<section>
-	<h2>-vec -> vec</h2>
-	<p>A 2D vector.</p>
-</section> -->
-
 
 <!-- TIME -->
 
@@ -4332,25 +4498,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 
 <section>
 	<h2>Platform</h2>
-	<p>Provides access to platform specific APIs, and information about the current platform.</p>
-	<p>Provides the following classes. If a class is not available on the current platform, its getter returns <code>null</code>.</p>
-	<table>
-		<tr>
-			<th>Class</th>
-			<th>Desktop</th>
-			<th>Web</th>
-		</tr>
-		<tr>
-			<td><a href="#Window"><code>Platform.Window</code></a></td>
-			<td>✅</td>
-			<td>❌</td>
-		</tr>
-		<tr>
-			<td><a href="#JavaScript"><code>Platform.JavaScript</code></a></td>
-			<td>❌</td>
-			<td>✅</td>
-		</tr>
-	</table>
+	<p>Provides information about the current platform.</p>
 </section>
 
 <section data-tag="os">
@@ -4444,8 +4592,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 
 <section data-tag="js browser web">
 	<h2>JavaScript</h2>
-	<p>Provides JavaScript script execution in the browser.</p>
-	<p>Accessed via <code><a href="#Platform">Platform</a>.JavaScript</code>.</p>
+	<p>Provides JavaScript script execution in the browser. If not in a browser then <code>JavaScript</code> is <code>null</code>.</p>
 	<h3>JavaScript globals</h3>
 	<p>Sock exposes the following object via the JavaScript global <code>sock</code>:</p>
 	<pre data-lang="typescript">
@@ -4455,6 +4602,7 @@ sock = {
 	audio: AudioContext;
 	toggleFullscreen(): void;
 	togglePointerLock(): void;
+	quit(): void;
 }
 </pre>
 </section>
@@ -4463,13 +4611,11 @@ sock = {
 	<h2>JavaScript.eval(script: String): any</h2>
 	<p>Evaluates JavaScript code inside of a function.</p>
 	<p>If the function returns a value, it is returned from the method as an equivalent Wren value.</p>
-	<script type="application/wren" data-tag="once">
-		Platform.JavaScript.eval("alert('hello from JS')")
+	<script type="application/wren" data-tag="once nogui">
+		JavaScript.eval("alert('hello from JS')")
 	</script>
-	<script type="application/wren" data-tag="once">
-		var agent = Platform.JavaScript.eval("return navigator.userAgent")
-
-		Game.print(agent)
+	<script type="application/wren" data-tag="once console">
+		System.print(JavaScript.eval("return navigator.userAgent"))
 	</script>
 </section>
 
@@ -4477,10 +4623,8 @@ sock = {
 	<h2>JavaScript.eval(argValues: any[], argNames: String[], script: String): any</h2>
 	<p>Evaluates JavaScript code inside of a function, passing in the provided Wren arguments (as equivalent JavaScript values).</p>
 	<p>If the function returns a value, it is returned from the method as an equivalent Wren value.</p>
-	<script type="application/wren" data-tag="once">
-		var result = Platform.JavaScript.eval([ 3, 4 ], [ "x", "y" ], "return Math.hypot(x, y)")
-
-		Game.print(result)
+	<script type="application/wren" data-tag="once console">
+		System.print(JavaScript.eval([ 3, 4 ], [ "x", "y" ], "return Math.hypot(x, y)"))
 	</script>
 </section>
 
@@ -4489,15 +4633,15 @@ sock = {
 	<h2>JavaScript.evalAsync(argValues: any[], argNames: String[], script: String): Promise&lt;any&gt;</h2>
 	<p>Evaluates JavaScript code inside of an async function.</p>
 	<p>These methods are equivalent to <a href="#JavaScript.eval(_)"><code>JavaScript.eval(s)</code></a> and <a href="#JavaScript.eval(_,_,_)"><code>JavaScript.eval(values, names, s)</code></a>, except that these return a wren <a href="#Promise"><code>Promise</code></a> that contain the function's returned value.</p>
-	<script type="application/wren" data-tag="once">
-		var promise = Platform.JavaScript.evalAsync([ "/media/example.txt" ], [ "url" ], """
+	<script type="application/wren" data-tag="once console">
+		var promise = JavaScript.evalAsync([ "/media/example.txt" ], [ "url" ], """
 			let response = await fetch(url);
 			let text = await response.text();
 			return text;
 		""")
 		var result = promise.await
 
-		Game.print(result)
+		System.print(result)
 	</script>
 </section>
 
@@ -4506,7 +4650,7 @@ sock = {
 <section data-tag="screen">
 	<h2>Window</h2>
 	<p>Used to control the game's window.</p>
-	<p>Accessed via <code><a href="#Platform">Platform</a>.Window</code>. It is only aviable on <a href="#Platform.name">desktop</a> builds.</p>
+	<p>Only supported on desktop. If not supported then <code>Window</code> is <code>null</code>.</p>
 	<h3>See also</h3>
 	<ul>
 		<li><a href="#Game.title">Game.title</a></li>
@@ -4519,7 +4663,6 @@ sock = {
 	<h2>Window.height: Num</h2>
 	<h2>Window.setSize(width, height: Num)</h2>
 	<p>Controls the window's size in pixels.</p>
-	<p>Defaults to true.</p>
 	<pre>
 Window.height = 400
 Window.width = 500
@@ -4544,8 +4687,7 @@ Window.left = 50
 
 <section>
 	<h2>Window.resizable: Bool</h2>
-	<p>Sets if the window can be resized.</p>
-	<p>Defaults to true.</p>
+	<p>Sets if the window can be resized. Defaults to true.</p>
 	<pre>Window.resizable = false</pre>
 </section>
 
