@@ -1893,6 +1893,104 @@
 	</table>
 </section>
 
+<section data-summary='A blend mode equation: "add" | "subtract" | "reverse_subtract" | "min" | "max"'>
+	<h2 data-type="type">BlendEquation</h2>
+	<p>Controls the equation used for blending. See <a href="#Game.setBlendMode(_,_,_)"><code>Game.setBlendMode()</code></a>.</p>
+	<table>
+		<tr>
+			<th>Value</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>"add"</code></td>
+			<td>source + destination</td>
+		</tr>
+		<tr>
+			<td><code>"subtract"</code></td>
+			<td>source - destination</td>
+		</tr>
+		<tr>
+			<td><code>"reverse_subtract"</code></td>
+			<td>destination - source</td>
+		</tr>
+		<tr>
+			<td><code>"min"</code></td>
+			<td>Minimum of source and destination</td>
+		</tr>
+		<tr>
+			<td><code>"max"</code></td>
+			<td>Maximum of source and destination</td>
+		</tr>
+	</table>
+</section>
+
+<section data-summary='A blend mode equation: "add" | "subtract" | "reverse_subtract" | "min" | "max"'>
+	<h2 data-type="type">BlendParameter</h2>
+	<p>Controls a blend mode parameter. See <a href="#Game.setBlendMode(_,_,_)"><code>Game.setBlendMode()</code></a>.</p>
+	<table>
+		<tr>
+			<th>Value</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td><code>"zero"</code></td>
+			<td>The constant 0</td>
+		</tr>
+		<tr>
+			<td><code>"one"</code></td>
+			<td>The constant 1</td>
+		</tr>
+		<tr>
+			<td><code>"src_color"</code></td>
+			<td>The source color</td>
+		</tr>
+		<tr>
+			<td><code>"src_alpha"</code></td>
+			<td>The source color's alpha value</td>
+		</tr>
+		<tr>
+			<td><code>"dst_color"</code></td>
+			<td>The destination color</td>
+		</tr>
+		<tr>
+			<td><code>"dst_alpha"</code></td>
+			<td>The destination color's alpha value</td>
+		</tr>
+		<tr>
+			<td><code>"constant_color"</code></td>
+			<td>The color set by <a href="#Game.blendColor"><code>Game.blendColor</code></a></td>
+		</tr>
+		<tr>
+			<td><code>"constant_alpha"</code></td>
+			<td>The alpha of the color set by <a href="#Game.blendColor"><code>Game.blendColor</code></a></td>
+		</tr>
+		<tr>
+			<td><code>"one_minus_src_color"</code></td>
+			<td>1 minus the source color</td>
+		</tr>
+		<tr>
+			<td><code>"one_minus_src_alpha"</code></td>
+			<td>1 minus the source color's alpha value</td>
+		</tr>
+		<tr>
+			<td><code>"one_minus_dst_color"</code></td>
+			<td>1 minus the destination color</td>
+		</tr>
+		<tr>
+			<td><code>"one_minus_dst_alpha"</code></td>
+			<td>1 minus the destination color's alpha value</td>
+		</tr>
+		<tr>
+			<td><code>"one_minus_constant_color"</code></td>
+			<td>1 minus the color set by <a href="#Game.blendColor"><code>Game.blendColor</code></a></td>
+		</tr>
+		<tr>
+			<td><code>"one_minus_constant_alpha"</code></td>
+			<td>1 minus the alpha of the color set by <a href="#Game.blendColor"><code>Game.blendColor</code></a></td>
+		</tr>
+	</table>
+</section>
+
 <!-- VEC -->
 
 <section>
@@ -2405,6 +2503,63 @@
 		Game.print("press any button to clear", Input.mouse.x + 10, Input.mouse.y)
 		if (Input.anyPressed) Game.clear()
 	</script>
+</section>
+
+<section data-tag="blending alpha blendfunc">
+	<h2>Game.setBlendMode(equationRGBA: BlendEquation, srcRGBA, dstRGBA: BlendParameter)</h2>
+	<h2>Game.setBlendMode(equationRGBA: BlendEquation, srcRGB, srcA, dstRGB, dstA: BlendParameter)</h2>
+	<h2>Game.setBlendMode(equationRGB, equationA: BlendEquation, srcRGB, srcA, dstRGB, dstA: BlendParameter)</h2>
+	<p>Controls how blending occurs between the <i title="'Source' refers to pixels being drawn to the screen.">source</i> and <i title="'Destination' refers to the pixels already on the screen.">destination</i> pixels.</p>
+	<p>The <code>src</code> and <code>dst</code> options control parameters in the equation:</p>
+	<ul>
+		<li>resultRGB = sourceRGB * <code>srcRGB</code> + destinationRGB * <code>dstRGB</code></li>
+		<li>resultA = sourceA * <code>srcA</code> + destinationA * <code>dstA</code></li>
+	</ul>
+	<p>The <code>equation</code> options control how the parameters are combined. For example using "subtract" changes the above equations to:</p>
+	<ul>
+		<li>resultRGB = sourceRGB * <code>srcRGB</code> - destinationRGB * <code>dstRGB</code></li>
+		<li>resultA = sourceA * <code>srcA</code> - destinationA * <code>dstA</code></li>
+	</ul>
+	<p>This method is overloaded to simplify calls where <code>RGB</code> and <code>A</code> are treated same.</p>
+	<p>The blend mode is <a href="#Game.resetBlendMode()">reset</a> at the end of each frame.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("toys.jpg")
+
+		Game.begin {
+			Game.clear(#fff)
+			spr.draw(50, 50)
+
+			Game.setBlendMode("add", "one_minus_dst_color", "one", "zero", "zero")
+			Quad.draw(20, 100, 320, 140, #fff)
+
+			// rgb = src_rgb   * (1 - dst_rgb) + dst_rgb   * 0
+			// a   = src_alpha * 1             + dst_alpha * 0
+		}
+	</script>
+</section>
+
+<section data-tag="blending alpha">
+	<h2>Game.blendColor: Num</h2>
+	<p>Controls the color used by <a href="#Game.setBlendMode(_,_,_)"><code>Game.setBlendMode()</code></a> for the <a href="#BlendParameter"><code>constant</code></a> parameters.</p>
+	<script type="application/wren">
+		var spr = Sprite.load("toys.jpg")
+
+		Game.begin {
+			Game.clear()
+			Game.blendColor = #f00
+			Game.setBlendMode("add", "constant_color", "zero")
+			spr.draw(50, 50)
+		}
+	</script>
+</section>
+
+<section data-tag="blending alpha">
+	<h2>Game.resetBlendMode()</h2>
+	<p>Resets the blend mode to the default state (simple alpha blending):</p>
+	<pre>
+		Game.setBlendMode("add", "src_alpha", "one", "one_minus_src_alpha", "one_minus_src_alpha")
+	</pre>
+	<p>Called automatically at the end of each frame.</p>
 </section>
 
 <section data-tag="debug text font">
@@ -3694,7 +3849,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 </section>
 
 <section>
-	<h2>Random.onCircle(cx, cy, radius: Num): Num</h2>
+	<h2>Random.onCircle(cx, cy, radius: Num): Vec</h2>
 	<p>Returns a random point on the circumference of the given circle.</p>
 	<script type="application/wren" data-tag="once">
 		for (i in 0..99) {
@@ -3705,7 +3860,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 </section>
 
 <section>
-	<h2>Random.inCircle(cx, cy, radius: Num): Num</h2>
+	<h2>Random.inCircle(cx, cy, radius: Num): Vec</h2>
 	<p>Returns a random point inside the given circle.</p>
 	<script type="application/wren" data-tag="once">
 		for (i in 0..999) {

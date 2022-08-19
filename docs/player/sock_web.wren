@@ -313,6 +313,13 @@ foreign static setPrintColor_(a)
 static clear(){clear_(0,0,0)}
 static clear(c){clear_(c.red/255,c.green/255,c.blue/255)}
 foreign static clear_(a,b,c)
+foreign static blendColor
+static blendColor=(c){setBlendingColor(c.red/255,c.green/255,c.blue/255,c.alpha/255)}
+foreign static setBlendingColor(a,b,c,d)
+static setBlendMode(func,src,dst){setBlendMode(func,func,src,src,dst,dst)}
+static setBlendMode(func,srcRGB,srcA,dstRGB,dstA){setBlendMode(func,func,srcRGB,srcA,dstRGB,dstA)}
+foreign static setBlendMode(a,b,c,d,e,f)
+foreign static resetBlendMode()
 foreign static openURL(a)
 static init_(w,h){
 __w=__wm=w
