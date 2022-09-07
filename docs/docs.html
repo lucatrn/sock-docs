@@ -881,7 +881,7 @@
 	<p>Iteration is defined via the <a href="#Iterable">iterator protocol</a>.</p>
 </section>
 
-<section>
+<section data-tag="iterator iterate">
 	<h2 data-type="type">Iterable</h2>
 	<p>An protocol that allows objects to be iterated over using standard Wren features.</p>
 	<p>Implementers must provide two methods:</p>
@@ -1076,10 +1076,11 @@
 
 <section data-tag="foreach">
 	<h2>sequence.each(fn: Fn)</h2>
-	<p>Calls the function with each item.</p>
-	<pre>
-		[ 1, 2, 3 ].each {|n| System.print(n) }
-	</pre>
+	<p>Calls the function with each item and the item's index.</p>
+	<script type="application/wren" data-tag="once console">
+		"abc".each {|c| System.print(c) }
+		"abc".each {|c, i| System.print("%(i): %(c)") }
+	</script>
 </section>
 
 <section data-tag="includes">
@@ -2004,6 +2005,12 @@
 </section>
 
 <section>
+	<h2>Vec.polar(angle, length: Num): Vec</h2>
+	<p>Creates a new vector from polar coordinates.</p>
+	<p>The <code>angle</code> is in <a href="#Turns">turns</a>, which represents the counter-clockwise rotation from the positive x-axis.</p>
+</section>
+
+<section>
 	<h2>Vec.zero: Vec</h2>
 	<p>Returns a new (0, 0) vector.</p>
 </section>
@@ -2503,6 +2510,23 @@
 		Game.print("press any button to clear", Input.mouse.x + 10, Input.mouse.y)
 		if (Input.anyPressed) Game.clear()
 	</script>
+</section>
+
+<section data-tag="scissor mask">
+	<h2>Game.setClip(x, y, width, height: Num)</h2>
+	<p>Sets a clipping rectangle that is applied to subsequent drawing operations.</p>
+	<p>The clipping rectangle is automatically <a href="#Game.clearClip()">cleared</a> at the end of each frame.</p>
+	<script type="application/wren" data-tag="once">
+		Game.setClip(20, 8, 90, 30)
+		Game.clear(#333)
+		Game.print("Lorem ipsum quia dolor sit.\nCongue dui rhoncus dictum.\nUt vitae eu placerat odio.")
+	</script>
+</section>
+
+<section data-tag="scissor mask">
+	<h2>Game.clearClip()</h2>
+	<p>Removes the previously set <a href="#Game.setClip(_,_,_,_)">clipping rectangle</a>, if any.</p>
+	<p>Called automatically at the end of each frame.</p>
 </section>
 
 <section data-tag="blending alpha blendfunc">
@@ -3576,6 +3600,16 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	</script>
 </section>
 
+<section data-tag="line">
+	<h2>Quad.drawLine(x1, y1, x2, y2, width, color: Num)</h2>
+	<p>Draws a thick line between the two points, with the given width and color.</p>
+	<p>The line is drawn as a quad. The 'butts' of the line extend past the end-points by <code>width</code>/2 pixels.</p>
+	<script type="application/wren" data-tag="once">
+		Quad.drawLine(100, 100, 300, 200, 20, #fff)
+		Quad.drawLine(100, 100, 300, 200, 1, #f00)
+	</script>
+</section>
+
 <section>
 	<h2>Quad.beginBatch()</h2>
 	<h2>Quad.endBatch()</h2>
@@ -4290,7 +4324,7 @@ Quad.draw(4 + Input.textSelection.to * 6, 18, 2, 14, #bbb)</pre>
 	<p>An instance of Audio represents waveform sound data.</p>
 </section>
 
-<section data-tag="asset ogg vorbis mp3 wav stream clip sound decode">
+<section data-tag="asset ogg vorbis mp3 wav stream sound decode">
 	<h2>Audio.load(path: String): Audio</h2>
 	<p>Load audio into memory from an asset.</p>
 	<p>Support <code>.wav</code>, <code>.ogg</code> and <code>.mp3</code>.</p>

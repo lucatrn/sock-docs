@@ -66,6 +66,10 @@ _y=a[1]
 _x=_y=0
 }
 }
+construct polar(a,n){
+_x=a.cos*n
+_y=a.sin*n
+}
 static zero{new(0,0)}
 x{_x}
 y{_y}
@@ -303,13 +307,15 @@ static print(s,x,y){
 __drawX=x
 __drawY=16+print_(s.toString,x,y)
 }
+foreign static print_(a,b,c)
 static printColor{__drawC}
 static printColor=(c){
 setPrintColor_(c)
 __drawC=c
 }
-foreign static print_(a,b,c)
 foreign static setPrintColor_(a)
+foreign static setClip(a,b,c,d)
+foreign static clearClip()
 static clear(){clear_(0,0,0)}
 static clear(c){clear_(c.red/255,c.green/255,c.blue/255)}
 foreign static clear_(a,b,c)
@@ -644,7 +650,7 @@ draw(x1-w/2,y1-w/2,w,w,c)
 }else{
 x=(x/n)*w*0.5
 y=(y/n)*w*0.5
-draw(x1+y-x,y1-x-y,x1-y-x,y1+x-y,x2+y+x,y2-x+y,x2-y+x,y2+x+y,c)
+draw(x1+y-x,y1-x-y,x1-y-x,y1+x-y,x2-y+x,y2+x+y,x2+y+x,y2-x+y,c)
 }
 }
 }
