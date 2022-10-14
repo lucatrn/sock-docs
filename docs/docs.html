@@ -4889,6 +4889,145 @@ Window.left = 50
 	<p>This approach helps simplifiy implementing input remapping. It also encourages making input remapping more accessible by letting users map any input to any action.</p>
 	<p>See <a href="#InputID">InputID</a> reference to see all available inputs.</p>
 	<script type="application/wren" data-tag="once">
-		// TODO
+		// A simple program that:
+		// * allows all actions to be controlled with any input.
+		// * allows all actions to be remapped
+
+		// Gameplay binds.
+		var bindLeft = [ "A", "ArrowLeft", "DPadLeft", "LeftStickLeft" ]
+		var bindRight = [ "D", "ArrowRight", "DPadRight", "LeftStickRight" ]
+		var bindJump = [ "W", "Space", "Z", "FaceDown" ]
+
+		// Menu binds.
+		var bindPause = [ "Escape", "Start" ]
+		var bindMenuUp = [ "W", "ArrowUp", "DPadUp", "LeftStickUp" ]
+		var bindMenuDown = [ "S", "ArrowDown", "DPadDown", "LeftStickDown" ]
+		var bindMenuAccept = [ "Space", "Z", "Enter", "FaceDown" ]
+
+		// Map a name to each bind.
+		var binds = [
+			[ "Left", bindLeft ],
+			[ "Right", bindRight ],
+			[ "Jump", bindJump ],
+			[ "Pause", bindPause ],
+			[ "Menu Up", bindMenuUp ],
+			[ "Menu Down", bindMenuDown ],
+			[ "Menu Accept", bindMenuAccept ],
+		]
+
+		// Gameplay state.
+		var position = Vec.new(100, 200)
+		var velocity = Vec.zero
+		var paused = false
+
+		// Menu state
+		var menuIndex = 0
+		var menuBinding = false
+		var menuBindingWarning = null
+		
+		// Game loop.
+		Game.begin {
+			// game logic.
+			if (paused) {
+				// Pause menu.
+				if (menuBinding) {
+					// Get whatever input the user pressed.
+					var id = Input.whichPressed
+					if (id) {
+						// Add the bind to the list of binds.
+						var binds = binds[menuIndex][1]
+
+						if (binds.contains(id)) {
+							menuBindingWarning = "'%(id)' is already bounds to this action"
+						} else {
+							binds.add(id)
+							menuBinding = false
+						}
+					}
+				} else {
+					// Navigate bind list.
+					menuIndex = menuIndex + Input.valuePressed(bindMenuUp, bindMenuDown)
+					menuIndex = menuIndex.repeat(binds.count)
+
+					if (Input.pressed(bindMenuAccept)) {
+						menuBinding = true
+						menuBindingWarning = null
+					} else if (Input.pressed(bindPause)) {
+						paused = false
+					}
+				}
+			} else {
+				// Gameplay.
+				if (Input.pressed(bindPause)) {
+					paused = true
+				} else {
+					velocity.x = Input.value(bindLeft, bindRight) * 2
+
+					if (Input.pressed(bindJump) && position.y == 300) {
+						velocity.y = -5
+					}
+
+					position = position + velocity
+					velocity.y = velocity.y + 0.2
+
+					if (position.y >= 300) {
+						position.y = 300
+						velocity.y = 0
+					}
+				}
+			}
+
+			// Draw background.
+			Game.clear(#fff)
+			Quad.draw(0, 300, Game.width, Game.height - 300, #ddd)
+
+			// Draw player.
+			Quad.draw(position.x - 20, position.y - 40, 40, 40, #000)
+
+			if (paused) {
+				// Draw pause screen + menu.
+				// Transparent black background.
+				Quad.draw(0, 0, Game.width, Game.height, #0009)
+
+				// Vertical line separator.
+				Quad.draw(282, 100, 1, 95, #888)
+				
+				// Title.
+				Game.printColor = #fff
+				Game.print("< PAUSED >", 200, 80)
+				
+				// Draw each bind.
+				binds.each {|list, bindIndex|
+					var name = list[0]
+					var ids = list[1]
+					var y = 100 + bindIndex * 14
+
+					Game.printColor = menuIndex == bindIndex ? #ff0 : #ddd
+					Game.print(name, 200, y)
+
+					Game.printColor = #ddd
+					ids.each {|id, idIndex|
+						Game.print(id, 300 + idIndex * 85, y)
+					}
+				}
+
+				// Binding display.
+				if (menuBinding) {
+					Quad.draw(0, 0, Game.width, Game.height, #0009)
+
+					Game.printColor = #fff
+					Game.print("Binding input for %(binds[menuIndex][0])", 250, 150)
+
+					if (menuBindingWarning) {
+						Game.printColor = #f00
+						Game.print(menuBindingWarning)
+					}
+				}
+			} else {
+				// Draw instructions.
+				Game.printColor = #444
+				Game.print("Press Escape/Start to pause the game")
+			}
+		}
 	</script>
 </section>
